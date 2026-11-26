@@ -64,13 +64,37 @@ h1.logo{font-size:52px;font-weight:900;letter-spacing:1px;line-height:1;
   gap:12px 10px;width:100%;max-width:460px;margin:18px auto 6px;padding:10px 4px 4px;min-height:180px}
 .tube{width:52px;height:158px;position:relative;cursor:pointer;transition:transform .18s ease;
   flex:0 0 auto}
+.tube::after{content:"";position:absolute;left:6px;right:6px;bottom:-7px;height:9px;border-radius:50%;
+  background:radial-gradient(ellipse at center,rgba(0,0,0,.45),rgba(0,0,0,0) 70%);
+  transition:opacity .25s;pointer-events:none;z-index:-1}
 .tube .glass{position:absolute;inset:0;border-radius:8px 8px 26px 26px;
-  background:rgba(255,255,255,.14);border:2px solid rgba(255,255,255,.55);
-  box-shadow:inset 0 0 0 2px rgba(255,255,255,.12),0 4px 10px rgba(0,0,0,.25);overflow:hidden}
-.tube .rim{position:absolute;left:-4px;right:-4px;top:-4px;height:12px;border-radius:8px;
-  background:rgba(255,255,255,.75);border:2px solid rgba(255,255,255,.6)}
+  background:linear-gradient(115deg,rgba(255,255,255,.34) 0%,rgba(255,255,255,.10) 22%,rgba(255,255,255,.04) 55%,rgba(255,255,255,.18) 100%);
+  border:2px solid rgba(255,255,255,.65);
+  box-shadow:inset 0 0 0 2px rgba(255,255,255,.10),inset -6px 0 10px rgba(0,0,0,.18),inset 6px 0 12px rgba(255,255,255,.22),0 6px 12px rgba(0,0,0,.30);
+  overflow:hidden}
+.tube .glass::before{content:"";position:absolute;top:6px;bottom:10px;left:7px;width:7px;border-radius:6px;
+  background:linear-gradient(180deg,rgba(255,255,255,.95),rgba(255,255,255,.25) 60%,rgba(255,255,255,.05));
+  z-index:3;pointer-events:none}
+.tube .glass::after{content:"";position:absolute;top:10px;bottom:14px;right:8px;width:4px;border-radius:4px;
+  background:linear-gradient(180deg,rgba(255,255,255,.5),rgba(255,255,255,.06));
+  z-index:3;pointer-events:none}
+.tube .rim{position:absolute;left:-4px;right:-4px;top:-4px;height:13px;border-radius:9px;
+  background:linear-gradient(180deg,rgba(255,255,255,.95) 0%,rgba(255,255,255,.55) 45%,rgba(255,255,255,.22) 100%);
+  border:2px solid rgba(255,255,255,.6);
+  box-shadow:0 2px 4px rgba(0,0,0,.25),inset 0 1px 0 #fff}
 .slot{position:absolute;left:3px;right:3px;height:0;opacity:0;border-radius:5px;
-  transition:height .38s ease,background .2s ease,opacity .25s ease}
+  transition:height .6s ease,background .2s ease,opacity .3s ease}
+.slot .bub{position:absolute;bottom:3px;border-radius:50%;pointer-events:none;
+  background:radial-gradient(circle at 35% 30%,rgba(255,255,255,.95),rgba(255,255,255,.25) 65%,rgba(255,255,255,.05));
+  animation:bubRise 2.8s linear infinite}
+@keyframes bubRise{0%{transform:translateY(0) scale(.7);opacity:0}
+  15%{opacity:.85}100%{transform:translateY(-32px) scale(1);opacity:0}}
+.surf{position:absolute;left:5px;right:5px;height:8px;border-radius:50%;z-index:2;
+  box-shadow:inset 0 2px 2px rgba(255,255,255,.85),0 1px 3px rgba(0,0,0,.25);
+  transition:bottom .6s ease,opacity .3s ease;pointer-events:none;opacity:0}
+.surf.slosh{animation:slosh .7s ease-in-out}
+@keyframes slosh{0%{transform:scaleX(1) rotate(0)}25%{transform:scaleX(1.14) rotate(-2.5deg)}
+  50%{transform:scaleX(.94) rotate(2deg)}75%{transform:scaleX(1.07) rotate(-1deg)}100%{transform:scaleX(1) rotate(0)}}
 .tube.selected{transform:translateY(-16px)}
 .tube.selected .glass{box-shadow:0 0 0 3px var(--gold),0 8px 18px rgba(0,0,0,.35)}
 .tube.hint-from{animation:hintPulse .45s ease-in-out 3}
@@ -78,11 +102,24 @@ h1.logo{font-size:52px;font-weight:900;letter-spacing:1px;line-height:1;
 @keyframes hintPulse{0%,100%{transform:translateY(0)}50%{transform:translateY(-16px);box-shadow:0 0 0 4px var(--gold)}}
 .tube.shake{animation:shake .35s ease}
 @keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
-.tube.pour-l{transform:translateY(-26px) rotate(-24deg);transform-origin:50% 90%}
-.tube.pour-r{transform:translateY(-26px) rotate(24deg);transform-origin:50% 90%}
-#stream{position:absolute;width:7px;border-radius:4px;z-index:5;pointer-events:none;
-  transform-origin:top center;opacity:0}
-#stream.on{opacity:.95;transition:opacity .12s}
+.tube.pouring{z-index:6}
+.tube.pouring::after{opacity:0}
+#stream{position:absolute;width:11px;border-radius:6px;z-index:5;pointer-events:none;
+  transform-origin:top center;opacity:0;box-shadow:0 0 10px rgba(255,255,255,.35)}
+#stream.on{opacity:.96;transition:opacity .12s}
+#stream .drop{position:absolute;left:50%;width:7px;height:9px;margin-left:-3.5px;
+  border-radius:50% 50% 60% 60%;opacity:0;pointer-events:none}
+#stream.on .drop{animation:dropFall .5s linear infinite}
+#stream.on .drop:nth-child(2){animation-delay:.16s}
+#stream.on .drop:nth-child(3){animation-delay:.32s}
+@keyframes dropFall{0%{transform:translateY(-4px);opacity:0}
+  20%{opacity:.95}100%{transform:translateY(16px);opacity:0}}
+.splash-drop{position:absolute;width:6px;height:6px;border-radius:50%;z-index:6;pointer-events:none;
+  background:radial-gradient(circle at 35% 30%,#fff,rgba(255,255,255,.4) 70%);
+  animation:splashUp .55s ease-out forwards}
+@keyframes splashUp{0%{transform:translate(0,0) scale(.6);opacity:1}
+  40%{transform:translate(var(--sx,0px),-14px) scale(1);opacity:1}
+  100%{transform:translate(var(--sx,0px),2px) scale(.5);opacity:0}}
 .hud{width:100%;max-width:420px;display:flex;gap:8px;align-items:center;justify-content:space-between;margin-top:2px}
 .hud .stat{background:rgba(0,0,0,.28);border:1px solid rgba(255,255,255,.2);border-radius:12px;
   padding:7px 11px;font-weight:800;font-size:14px}
@@ -130,10 +167,50 @@ h1.logo{font-size:52px;font-weight:900;letter-spacing:1px;line-height:1;
 .price{font-weight:800;color:var(--gold);white-space:nowrap}
 .daily-card{border:2px dashed var(--gold)}
 .footer{margin-top:auto;padding-top:18px;color:var(--muted);font-size:12px;text-align:center}
+/* ---- home hero / floating bubbles / progress ---- */
+h1.logo{animation:logoShine 4.5s ease-in-out infinite}
+@keyframes logoShine{0%,100%{filter:drop-shadow(0 3px 10px rgba(0,0,0,.35))}
+  50%{filter:drop-shadow(0 3px 18px rgba(125,211,252,.6))}}
+.bg-bubbles{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden}
+.bg-bubbles span{position:absolute;bottom:-30px;border-radius:50%;
+  background:radial-gradient(circle at 35% 30%,rgba(255,255,255,.9),rgba(255,255,255,.15) 60%,rgba(255,255,255,.04));
+  animation:floatUp linear infinite}
+.bg-bubbles span:nth-child(1){left:6%;width:14px;height:14px;animation-duration:11s;animation-delay:0s}
+.bg-bubbles span:nth-child(2){left:18%;width:9px;height:9px;animation-duration:14s;animation-delay:2s}
+.bg-bubbles span:nth-child(3){left:30%;width:18px;height:18px;animation-duration:16s;animation-delay:5s}
+.bg-bubbles span:nth-child(4){left:44%;width:10px;height:10px;animation-duration:12s;animation-delay:1s}
+.bg-bubbles span:nth-child(5){left:56%;width:15px;height:15px;animation-duration:15s;animation-delay:3s}
+.bg-bubbles span:nth-child(6){left:68%;width:8px;height:8px;animation-duration:10s;animation-delay:6s}
+.bg-bubbles span:nth-child(7){left:78%;width:16px;height:16px;animation-duration:17s;animation-delay:4s}
+.bg-bubbles span:nth-child(8){left:88%;width:11px;height:11px;animation-duration:13s;animation-delay:7s}
+.bg-bubbles span:nth-child(9){left:24%;width:7px;height:7px;animation-duration:9s;animation-delay:8s}
+.bg-bubbles span:nth-child(10){left:62%;width:12px;height:12px;animation-duration:15s;animation-delay:9s}
+@keyframes floatUp{0%{transform:translateY(0);opacity:0}
+  12%{opacity:.55}88%{opacity:.4}100%{transform:translateY(-108vh);opacity:0}}
+.screen{position:relative;z-index:1}
+.prog{height:10px;border-radius:999px;background:rgba(0,0,0,.35);overflow:hidden;margin-top:9px}
+.prog-fill{height:100%;border-radius:999px;background:linear-gradient(90deg,var(--accent),var(--accent2));width:0%;transition:width .5s ease}
+.hero{width:100%;max-width:420px;height:170px;position:relative;display:flex;justify-content:center;
+  align-items:flex-end;gap:30px;margin:4px 0 2px}
+.tube.mini{width:40px;height:118px;cursor:default;flex:0 0 auto}
+.hero-pour{transform-origin:50% 55%;z-index:5;animation:heroPour 5s ease-in-out infinite}
+@keyframes heroPour{0%,10%{transform:translate(0,0) rotate(0)}
+  26%,62%{transform:translate(12px,-52px) rotate(105deg)}
+  78%,100%{transform:translate(0,0) rotate(0)}}
+.hero-stream{position:absolute;left:calc(50% + 66px);top:78px;width:9px;height:34px;border-radius:5px;
+  background:linear-gradient(90deg,rgba(255,255,255,.8),#38bdf8 45%,#0284c7);
+  box-shadow:0 0 8px rgba(125,211,252,.6);opacity:0;transform-origin:top center;z-index:4;
+  animation:heroStream 5s ease-in-out infinite}
+@keyframes heroStream{0%,26%{opacity:0}34%,58%{opacity:.95}68%,100%{opacity:0}}
+.hero-fill{animation:heroFill 5s ease-in-out infinite}
+@keyframes heroFill{0%,26%{height:calc(25% - 5px)}58%,72%{height:calc(70% - 5px)}100%{height:calc(25% - 5px)}}
+.hero-drain{animation:heroDrain 5s ease-in-out infinite}
+@keyframes heroDrain{0%,26%{height:calc(25% - 5px)}58%,72%{height:0;opacity:0}100%{height:calc(25% - 5px)}}
 @media (max-width:360px){.tube{width:46px;height:142px}h1.logo{font-size:44px}}
 </style>
 </head>
 <body data-theme="ocean">
+<div class="bg-bubbles" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div>
 
 <!-- ================= HOME ================= -->
 <div class="screen active" id="screen-home">
@@ -143,6 +220,44 @@ h1.logo{font-size:52px;font-weight:900;letter-spacing:1px;line-height:1;
   </div>
   <h1 class="logo">💧 Dripply</h1>
   <div class="sub" data-i18n="tagline">Water Sort Puzzle — sort every colour, clear every tube!</div>
+
+  <div class="hero" aria-hidden="true">
+    <div class="tube mini">
+      <div class="glass">
+        <div class="slot" style="bottom:calc(0% + 2px);height:calc(25% - 5px);opacity:1;background:linear-gradient(180deg,rgba(255,255,255,.55),#fbbf24 30%,#f59e0b)"></div>
+        <div class="slot" style="bottom:calc(25% + 2px);height:calc(25% - 5px);opacity:1;background:linear-gradient(180deg,rgba(255,255,255,.55),#f472b6 30%,#db2777)"></div>
+      </div>
+      <div class="rim"></div>
+    </div>
+    <div class="tube mini hero-pour">
+      <div class="glass">
+        <div class="slot" style="bottom:calc(0% + 2px);height:calc(25% - 5px);opacity:1;background:linear-gradient(180deg,rgba(255,255,255,.55),#38bdf8 30%,#0284c7)"></div>
+        <div class="slot hero-drain" style="bottom:calc(25% + 2px);height:calc(25% - 5px);opacity:1;background:linear-gradient(180deg,rgba(255,255,255,.55),#4ade80 30%,#16a34a)"></div>
+      </div>
+      <div class="rim"></div>
+    </div>
+    <div class="tube mini">
+      <div class="glass">
+        <div class="slot hero-fill" style="bottom:calc(0% + 2px);height:calc(25% - 5px);opacity:1;background:linear-gradient(180deg,rgba(255,255,255,.55),#38bdf8 30%,#0284c7)"></div>
+      </div>
+      <div class="rim"></div>
+    </div>
+    <div class="hero-stream"></div>
+  </div>
+
+  <div class="card" style="margin-top:10px">
+    <div class="row"><b id="homeLevelLabel">Level 1</b><span class="pill" id="homeProgressText">1 / 60</span></div>
+    <div class="prog"><div class="prog-fill" id="homeProgressFill"></div></div>
+  </div>
+
+  <div class="row" style="max-width:420px;width:100%;margin-top:12px">
+    <div class="th-pick">
+      <button class="th-btn sel" data-theme-btn="ocean" aria-label="Ocean theme"><span style="background:linear-gradient(135deg,#38bdf8,#1e3a8a)"></span></button>
+      <button class="th-btn" data-theme-btn="sunset" aria-label="Sunset theme"><span style="background:linear-gradient(135deg,#ffb35c,#e0337f)"></span></button>
+      <button class="th-btn" data-theme-btn="candy" aria-label="Candy theme"><span style="background:linear-gradient(135deg,#ff8ad8,#7c5cff)"></span></button>
+    </div>
+    <button class="ghost-btn" id="btnLangHome">🌐 <span id="langLabelHome">हिन्दी</span></button>
+  </div>
 
   <div class="card daily-card" id="dailyCard">
     <div class="row"><b data-i18n="dailyReward">🎁 Daily Reward</b><span class="pill coin" id="dailyAmt">+100 🪙</span></div>
@@ -192,7 +307,7 @@ h1.logo{font-size:52px;font-weight:900;letter-spacing:1px;line-height:1;
     <span class="stat">⭐ <span id="starsNow">—</span></span>
     <button class="icon-btn" id="btnRestart" aria-label="Restart" style="width:38px;height:38px">↺</button>
   </div>
-  <div id="board"><div id="stream"></div></div>
+  <div id="board"><div id="stream"><div class="drop" style="top:22%"></div><div class="drop" style="top:52%"></div><div class="drop" style="top:82%"></div></div></div>
   <div class="act-row">
     <button class="ghost-btn" id="btnUndo">↩️ <span data-i18n="undo">Undo</span><span class="n" id="undoLeft"></span></button>
     <button class="ghost-btn" id="btnHint">💡 <span data-i18n="hint">Hint</span><span class="n" id="hintCost"></span></button>
@@ -523,6 +638,24 @@ var BASE_LAYOUTS = {"3":[[0,2,1,1],[0,2,1,2],[0,1,0,2],[],[]],"4":[[0,1,3,0],[3,
 /* 12 water colours (indices 0..11). */
 var COLORS = ["#ff5252","#ff9800","#ffeb3b","#8bc34a","#4caf50","#009688",
               "#00bcd4","#2196f3","#3f51b5","#9c27b0","#e91e63","#795548"];
+/* Colour helpers for the 3D water look: every water layer is a
+   vertical gradient (light top -> deep bottom) with a glossy top. */
+function mixHex(hex, target, amt){
+  var n = parseInt(hex.slice(1), 16);
+  var r = (n >> 16) & 255, g = (n >> 8) & 255, b = n & 255;
+  var t = parseInt(target.slice(1), 16);
+  var tr = (t >> 16) & 255, tg = (t >> 8) & 255, tb = t & 255;
+  r = Math.round(r + (tr - r) * amt); g = Math.round(g + (tg - g) * amt); b = Math.round(b + (tb - b) * amt);
+  return "rgb(" + r + "," + g + "," + b + ")";
+}
+function slotGradient(hex){
+  var light = mixHex(hex, "#ffffff", 0.45), dark = mixHex(hex, "#000000", 0.35);
+  return "linear-gradient(180deg, rgba(255,255,255,.55) 0%, " + light + " 18%, " + hex + " 45%, " + dark + " 100%)";
+}
+function surfGradient(hex){
+  var light = mixHex(hex, "#ffffff", 0.35);
+  return "linear-gradient(180deg, rgba(255,255,255,.95) 0%, " + light + " 45%, " + hex + " 100%)";
+}
 var HINT_COST = 30, TUBE_COST = 50, UNDO_COST = 10, FREE_UNDOS = 3;
 var REMOTE_URL = "https://raw.githubusercontent.com/SumitYadav06/Dripply/main/www/extra-levels.json";
 
@@ -600,7 +733,9 @@ function applyLang(){
   var els = document.querySelectorAll("[data-i18n]");
   for (var i=0;i<els.length;i++){ els[i].textContent = t(els[i].getAttribute("data-i18n")); }
   document.getElementById("langLabel").textContent = (lang === "en") ? "हिन्दी" : "English";
-  updateDailyUI(); updateCoinsUI();
+  var lh = document.getElementById("langLabelHome");
+  if (lh) lh.textContent = (lang === "en") ? "हिन्दी" : "English";
+  updateDailyUI(); updateCoinsUI(); renderHomeProgress();
 }
 
 /* ================= Save ================= */
@@ -649,13 +784,67 @@ function tone(freq, dur, type, vol, slideTo, delay){
 }
 function sfxClick(){ tone(660, 0.06, "triangle", 0.08); }
 function sfxSelect(){ tone(520, 0.07, "triangle", 0.10); tone(780, 0.08, "triangle", 0.08, null, 0.05); }
-function sfxPour(){
+/* ---- Water sounds: real pouring, not beeps. ---- */
+var noiseBuf = null;
+function getNoiseBuf(){
+  if (noiseBuf) return noiseBuf;
+  var ac = audio(); if (!ac) return null;
+  noiseBuf = ac.createBuffer(1, ac.sampleRate, ac.sampleRate);
+  var d = noiseBuf.getChannelData(0);
+  for (var i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1;
+  return noiseBuf;
+}
+/* Pouring stream: band-passed noise whose pitch falls as the pour
+   goes on — sounds like water running out of a glass. */
+function sfxPourStream(){
   if (!soundOn) return;
   var ac = audio(); if (!ac) return;
-  /* glug: two quick pitch drops + a little noise splash */
-  tone(420, 0.12, "sine", 0.12, 180);
-  tone(360, 0.12, "sine", 0.10, 150, 0.12);
-  tone(300, 0.14, "sine", 0.09, 130, 0.24);
+  var buf = getNoiseBuf(); if (!buf) return;
+  var t0 = ac.currentTime;
+  var src = ac.createBufferSource(); src.buffer = buf; src.loop = true;
+  var bp = ac.createBiquadFilter(); bp.type = "bandpass"; bp.Q.value = 0.9;
+  bp.frequency.setValueAtTime(950, t0);
+  bp.frequency.exponentialRampToValueAtTime(520, t0 + 0.7);
+  var lp = ac.createBiquadFilter(); lp.type = "lowpass"; lp.frequency.value = 1600;
+  var g = ac.createGain();
+  g.gain.setValueAtTime(0.0001, t0);
+  g.gain.exponentialRampToValueAtTime(0.16, t0 + 0.09);
+  g.gain.setValueAtTime(0.16, t0 + 0.55);
+  g.gain.exponentialRampToValueAtTime(0.0001, t0 + 0.8);
+  src.connect(bp); bp.connect(lp); lp.connect(g); g.connect(ac.destination);
+  src.start(t0); src.stop(t0 + 0.85);
+}
+/* Water FILL sound — plays on EVERY pour landing, when the water
+   level rises in the destination tube: soft glug-glug + a gentle
+   splash. Audible but gentle. */
+function sfxFill(){
+  if (!soundOn) return;
+  var ac = audio(); if (!ac) return;
+  var notes = [[300, 0], [250, 0.09], [210, 0.18]];
+  for (var i = 0; i < notes.length; i++){
+    (function (f, dl){
+      var t0 = ac.currentTime + dl;
+      var o = ac.createOscillator(), g = ac.createGain();
+      o.type = "sine";
+      o.frequency.setValueAtTime(f, t0);
+      o.frequency.exponentialRampToValueAtTime(Math.max(60, f * 0.55), t0 + 0.12);
+      g.gain.setValueAtTime(0.0001, t0);
+      g.gain.exponentialRampToValueAtTime(0.12, t0 + 0.015);
+      g.gain.exponentialRampToValueAtTime(0.0001, t0 + 0.13);
+      o.connect(g); g.connect(ac.destination);
+      o.start(t0); o.stop(t0 + 0.15);
+    })(notes[i][0], notes[i][1]);
+  }
+  var buf = getNoiseBuf(); if (!buf) return;
+  var t0 = ac.currentTime + 0.05;
+  var src = ac.createBufferSource(); src.buffer = buf;
+  var bp = ac.createBiquadFilter(); bp.type = "bandpass"; bp.frequency.value = 1400; bp.Q.value = 0.7;
+  var g = ac.createGain();
+  g.gain.setValueAtTime(0.0001, t0);
+  g.gain.exponentialRampToValueAtTime(0.07, t0 + 0.02);
+  g.gain.exponentialRampToValueAtTime(0.0001, t0 + 0.2);
+  src.connect(bp); bp.connect(g); g.connect(ac.destination);
+  src.start(t0); src.stop(t0 + 0.22);
 }
 function sfxError(){ tone(180, 0.18, "sawtooth", 0.10, 120); }
 function sfxWin(){
@@ -664,9 +853,11 @@ function sfxWin(){
   tone(1319, 0.35, "triangle", 0.10, null, 0.5);
 }
 function sfxCoin(){ tone(988, 0.08, "triangle", 0.10); tone(1319, 0.14, "triangle", 0.10, null, 0.07); }
-/* Fallback synth melody (used only if the mp3 files cannot load). */
-var MELODY = [523, 587, 659, 784, 659, 587, 523, 440, 494, 523, 587, 659, 587, 523, 440, 392];
-var BASS = [131, 0, 196, 0, 147, 0, 175, 0, 131, 0, 196, 0, 147, 0, 165, 0];
+/* Fallback synth melody (used only if the mp3 files cannot load).
+   Slow and relaxing: one long soft note every few beats, no fast
+   arpeggios — same calm feel as the mp3 tracks. */
+var MELODY = [72, 0, 0, 0, 76, 0, 0, 0, 79, 0, 0, 0, 76, 0, 74, 0];
+var BASS = [48, 0, 0, 0, 45, 0, 0, 0, 41, 0, 0, 0, 43, 0, 0, 0];
 function toneM(freq, dur, type, vol, delay){
   if (!musicOn) return;
   var ac = audio(); if (!ac) return;
@@ -682,14 +873,14 @@ function toneM(freq, dur, type, vol, delay){
 function musicTick(){
   if (!musicOn) return;
   var i = musicStep % 16;
-  toneM(MELODY[i], 0.34, "triangle", 0.05);
-  if (BASS[i]) toneM(BASS[i], 0.4, "sine", 0.06);
+  if (MELODY[i]) toneM(MELODY[i], 0.65, "sine", 0.035);
+  if (BASS[i]) toneM(BASS[i], 0.6, "sine", 0.04);
   musicStep++;
 }
 function ensureMusicEl(){
   if (musicEl) return musicEl;
   musicEl = new Audio();
-  musicEl.loop = true; musicEl.preload = "auto"; musicEl.volume = 0.5;
+  musicEl.loop = true; musicEl.preload = "auto"; musicEl.volume = 0.4;
   musicEl.addEventListener("error", function(){ musicFileOK = false; startSynthMusic(); });
   return musicEl;
 }
@@ -707,7 +898,7 @@ function startMusic(){
   } else startSynthMusic();
 }
 function stopMusic(){ if (musicEl) musicEl.pause(); stopSynthMusic(); }
-function startSynthMusic(){ if (musicTimer) return; musicTimer = setInterval(musicTick, 300); }
+function startSynthMusic(){ if (musicTimer) return; musicTimer = setInterval(musicTick, 700); }
 function stopSynthMusic(){ if (musicTimer){ clearInterval(musicTimer); musicTimer = null; } }
 /* Background-audio guard: music must STOP when the app is minimised /
    sent to Home. visibilitychange + pagehide + Capacitor App state
@@ -770,6 +961,17 @@ function showToast(msg){
 function updateCoinsUI(){
   var els = ["coinHome", "coinLevels", "coinGame", "coinShop"];
   for (var i = 0; i < els.length; i++){ var e = document.getElementById(els[i]); if (e) e.textContent = save.coins; }
+  renderHomeProgress();
+}
+function renderHomeProgress(){
+  var total = 60 + remoteLevels.length;
+  var cur2 = Math.min(save.unlocked, total);
+  var lbl = document.getElementById("homeLevelLabel");
+  if (lbl) lbl.textContent = t("level") + " " + cur2;
+  var txt = document.getElementById("homeProgressText");
+  if (txt) txt.textContent = cur2 + " / " + total;
+  var fill = document.getElementById("homeProgressFill");
+  if (fill) fill.style.width = Math.round((cur2 / total) * 100) + "%";
 }
 function confetti(){
   var colors = ["#ff5252", "#ffeb3b", "#4caf50", "#2196f3", "#e91e63", "#ff9800"];
@@ -1136,6 +1338,7 @@ function fetchRemoteLevels(){
         remoteLevels.sort(function(a, b){ return a.id - b.id; });
         save.remoteSeen = remoteLevels.length; saveSave();
         if (document.getElementById("screen-levels").classList.contains("active")) renderLevels();
+        renderHomeProgress();
         showToast(added + " " + t("remoteLevels"));
       }
     }).catch(function(){ /* offline / repo not created yet: ignore silently */ });
@@ -1144,6 +1347,7 @@ function fetchRemoteLevels(){
 
 /* ================= Game state ================= */
 var cur = null; /* {def, state, moves, selected, history, undosLeft, tubeUsed, animating} */
+var pourToken = 0; /* bumped on every new pour / level start: stale pour timers abort */
 var currentLevelNum = 1;
 var currentKind = "bundled";
 
@@ -1152,6 +1356,7 @@ function todayKey(){
   return d.getFullYear() + "-" + (d.getMonth() + 1) + "-" + d.getDate();
 }
 function startLevel(n, kind){
+  pourToken++;
   var def = (kind === "daily") ? dailyLevelDef() : levelDef(n);
   currentLevelNum = def.id;
   currentKind = def.kind;
@@ -1203,6 +1408,9 @@ function renderBoard(){
       slot.style.bottom = "calc(" + (s * 25) + "% + 2px)";
       glass.appendChild(slot);
     }
+    var surf = document.createElement("div");
+    surf.className = "surf";
+    glass.appendChild(surf);
     var rim = document.createElement("div");
     rim.className = "rim";
     tb.appendChild(glass);
@@ -1222,13 +1430,39 @@ function paintSlots(){
     var layers = cur.state[i];
     for (var s = 0; s < 4; s++){
       var slot = slots[s];
+      var bubs = slot.querySelectorAll(".bub");
       if (s < layers.length){
-        slot.style.background = COLORS[layers[s] % COLORS.length];
+        var hex = COLORS[layers[s] % COLORS.length];
+        slot.style.background = slotGradient(hex);
         slot.style.height = "calc(25% - 5px)";
         slot.style.opacity = "1";
+        if (!bubs.length){
+          for (var b = 0; b < 2; b++){
+            var bub = document.createElement("span");
+            bub.className = "bub";
+            var sz = 3 + Math.floor(Math.random() * 3);
+            bub.style.width = sz + "px"; bub.style.height = sz + "px";
+            bub.style.left = (12 + Math.random() * 60) + "%";
+            bub.style.animationDelay = (Math.random() * 2.8) + "s";
+            bub.style.animationDuration = (2.2 + Math.random() * 1.6) + "s";
+            slot.appendChild(bub);
+          }
+        }
       } else {
         slot.style.height = "0";
         slot.style.opacity = "0";
+        for (var b2 = 0; b2 < bubs.length; b2++) bubs[b2].remove();
+      }
+    }
+    var surf = tb.querySelector(".surf");
+    if (surf){
+      if (layers.length){
+        var topHex = COLORS[layers[layers.length - 1] % COLORS.length];
+        surf.style.background = surfGradient(topHex);
+        surf.style.bottom = "calc(" + (layers.length * 25) + "% + 1px)";
+        surf.style.opacity = "1";
+      } else {
+        surf.style.opacity = "0";
       }
     }
   }
@@ -1265,45 +1499,130 @@ function tryPour(from, to){
   if (!dst.length && run.len === src.length) return null; /* no-op pour */
   return { count: Math.min(run.len, space), color: run.color };
 }
+/* Animate the water levels during a pour: the source's top layers
+   shrink away, the destination's new layers grow in, and both
+   surfaces (meniscus) glide to their new heights. Purely visual —
+   the logical state is committed only at the end of the pour. */
+function animatePourLevels(from, to, count, hex){
+  var srcEl = tubeEl(from), dstEl = tubeEl(to);
+  if (!srcEl || !dstEl) return;
+  var srcSlots = srcEl.querySelectorAll(".slot");
+  var dstSlots = dstEl.querySelectorAll(".slot");
+  var srcLen = cur.state[from].length, dstLen = cur.state[to].length;
+  for (var k = 0; k < count; k++){
+    var s = srcSlots[srcLen - 1 - k];
+    if (s){ s.style.height = "0"; s.style.opacity = "0"; }
+  }
+  for (var k2 = 0; k2 < count; k2++){
+    var d = dstSlots[dstLen + k2];
+    if (d){
+      d.style.background = slotGradient(hex);
+      d.style.opacity = "1";
+      d.style.height = "calc(25% - 5px)";
+    }
+  }
+  var ss = srcEl.querySelector(".surf"), ds = dstEl.querySelector(".surf");
+  if (ss){
+    if (srcLen - count <= 0) ss.style.opacity = "0";
+    ss.style.bottom = "calc(" + ((srcLen - count) * 25) + "% + 1px)";
+  }
+  if (ds){
+    ds.style.background = surfGradient(hex);
+    ds.style.bottom = "calc(" + ((dstLen + count) * 25) + "% + 1px)";
+    ds.style.opacity = "1";
+    ds.classList.add("slosh");
+    setTimeout(function(){ ds.classList.remove("slosh"); }, 750);
+  }
+}
+function splashAt(x, y){
+  for (var i = 0; i < 4; i++){
+    var d = document.createElement("div");
+    d.className = "splash-drop";
+    d.style.left = (x + (Math.random() * 14 - 7)) + "px";
+    d.style.top = (y + Math.random() * 4) + "px";
+    d.style.setProperty("--sx", (Math.random() * 16 - 8) + "px");
+    boardEl.appendChild(d);
+    (function (el){ setTimeout(function(){ el.remove(); }, 650); })(d);
+  }
+}
 function doPour(from, to, count){
+  var tk = ++pourToken;
   cur.animating = true;
   cur.history.push(S.cloneState(cur.state));
   var srcEl = tubeEl(from), dstEl = tubeEl(to);
+  var hex = COLORS[S.topRun(cur.state[from]).color % COLORS.length];
+  var light = mixHex(hex, "#ffffff", 0.45), dark = mixHex(hex, "#000000", 0.35);
   var boardRect = boardEl.getBoundingClientRect();
   var r1 = srcEl.getBoundingClientRect(), r2 = dstEl.getBoundingClientRect();
   var x1 = r1.left + r1.width / 2 - boardRect.left;
   var y1 = r1.top - boardRect.top;
   var x2 = r2.left + r2.width / 2 - boardRect.left;
   var y2 = r2.top - boardRect.top;
-  var stream = document.getElementById("stream");
   var dx = x2 - x1, dy = y2 - y1;
-  var len = Math.sqrt(dx * dx + dy * dy);
-  var ang = Math.atan2(dx, -dy) * 180 / Math.PI;
-  stream.style.left = (x1 - 3) + "px";
-  stream.style.top = (y1 + 6) + "px";
-  stream.style.height = Math.max(20, len - 10) + "px";
-  stream.style.background = COLORS[S.topRun(cur.state[from]).color % COLORS.length];
-  stream.style.transform = "rotate(" + ang + "deg)";
-  stream.classList.add("on");
-  srcEl.classList.add(dx >= 0 ? "pour-r" : "pour-l");
-  sfxPour();
+  var dir = dx >= 0 ? 1 : -1;
+  var rot = dir * 118; /* tilt mouth-down */
+  /* Phase A — lift the whole glass up, slide it over the destination
+     and tilt it ~118 deg. The mouth ends up above the destination. */
+  var tx = dx - 68 * dir;
+  var ty = dy - 232; /* lift: mouth lands ~100px above the dest mouth */
+  if (ty < -360) ty = -360; /* worst case (bottom row -> top row): mouth still ~60px above dest */
+  srcEl.style.transition = "transform .3s ease-in";
+  srcEl.style.transformOrigin = "50% 55%";
+  srcEl.style.transform = "translate(" + tx + "px," + ty + "px) rotate(" + rot + "deg)";
+  srcEl.classList.add("pouring");
+  sfxPourStream();
+  /* Mouth position after the lift+tilt (same transform math):
+     origin at 55% height, mouth 87px above it, rotated by `rot`. */
+  var mx = x1 + tx + dir * 77;
+  var my = y1 + ty + 128;
+  var stream = document.getElementById("stream");
+  var drops = stream.querySelectorAll(".drop");
+  for (var di = 0; di < drops.length; di++){
+    drops[di].style.background = "radial-gradient(circle at 35% 30%, #fff, " + hex + " 70%)";
+  }
   setTimeout(function(){
-    /* commit the pour */
-    for (var k = 0; k < count; k++){
-      var c = cur.state[from].pop();
-      cur.state[to].push(c);
-    }
-    cur.moves++;
-    cur.selected = -1;
-    stream.classList.remove("on");
-    srcEl.classList.remove("pour-l", "pour-r");
-    cur.animating = false;
-    document.getElementById("movesNow").textContent = cur.moves;
-    document.getElementById("starsNow").textContent = "★".repeat(starsFor(cur.moves, cur.def.par));
-    paintSlots();
-    renderBoardSelection();
-    if (S.isSolved(cur.state)) onWin();
-  }, 430);
+    if (tk !== pourToken) return;
+    /* Phase B — the stream arcs from the tilted mouth down into the
+       destination; levels move smoothly; splash + slosh + fill sound. */
+    var sdx = x2 - mx, sdy = (y2 + 4) - my;
+    var len = Math.sqrt(sdx * sdx + sdy * sdy);
+    var ang = Math.atan2(sdx, sdy) * 180 / Math.PI;
+    stream.style.left = (mx - 5) + "px";
+    stream.style.top = my + "px";
+    stream.style.height = Math.max(24, len) + "px";
+    stream.style.background = "linear-gradient(90deg, rgba(255,255,255,.75) 0%, " + light + " 30%, " + hex + " 60%, " + dark + " 100%)";
+    stream.style.transform = "rotate(" + ang + "deg)";
+    stream.classList.add("on");
+    animatePourLevels(from, to, count, hex);
+    splashAt(x2, y2 + 2);
+    sfxFill();
+    setTimeout(function(){
+      if (tk !== pourToken) return;
+      /* Phase C — commit the pour, hide the stream, glide the glass
+         back upright into its slot. */
+      stream.classList.remove("on");
+      for (var k = 0; k < count; k++){
+        var c = cur.state[from].pop();
+        cur.state[to].push(c);
+      }
+      cur.moves++;
+      cur.selected = -1;
+      renderBoardSelection();
+      document.getElementById("movesNow").textContent = cur.moves;
+      document.getElementById("starsNow").textContent = "★".repeat(starsFor(cur.moves, cur.def.par));
+      paintSlots();
+      srcEl.style.transition = "transform .35s ease";
+      srcEl.style.transform = "";
+      srcEl.classList.remove("pouring");
+      setTimeout(function(){
+        if (tk !== pourToken) return;
+        cur.animating = false;
+        renderBoard();
+        renderBoardSelection();
+        if (S.isSolved(cur.state)) onWin();
+      }, 400);
+    }, 620);
+  }, 320);
 }
 function renderBoardSelection(){
   for (var i = 0; i < cur.state.length; i++){
@@ -1356,7 +1675,7 @@ function updateActionUI(){
   document.getElementById("tubeCost").textContent = "(" + TUBE_COST + " 🪙 / 🎥)";
 }
 function doUndo(){
-  if (!cur) return;
+  if (!cur || cur.animating) return;
   if (!cur.history.length){ showToast(t("noUndo")); return; }
   if (cur.undosLeft <= 0){
     askCoinsOrAd(t("getUndo"), UNDO_COST, function(){
@@ -1378,7 +1697,7 @@ function applyUndo(){
   updateActionUI();
 }
 function doHint(){
-  if (!cur) return;
+  if (!cur || cur.animating) return;
   askCoinsOrAd(t("getHint"), HINT_COST, function(){
     var mv = S.hintMove(cur.state, { maxNodes: 200000 });
     if (!mv){ showToast(t("noHint")); return; }
@@ -1393,7 +1712,7 @@ function doHint(){
   });
 }
 function doExtraTube(){
-  if (!cur) return;
+  if (!cur || cur.animating) return;
   if (cur.tubeUsed){ showToast(t("tubeUsed")); return; }
   askCoinsOrAd(t("getTube"), TUBE_COST, function(){
     cur.tubeUsed = true;
@@ -1527,6 +1846,11 @@ bind("btnSettingsBack", function(){ showScreen("home"); });
 bind("btnShop", function(){ updateCoinsUI(); showScreen("shop"); });
 bind("btnShopBack", function(){ showScreen("settings"); });
 bind("btnLang", function(){
+  lang = (lang === "en") ? "hi" : "en";
+  save.lang = lang; saveSave();
+  applyLang();
+});
+bind("btnLangHome", function(){
   lang = (lang === "en") ? "hi" : "en";
   save.lang = lang; saveSave();
   applyLang();
