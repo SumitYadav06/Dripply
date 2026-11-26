@@ -1,0 +1,16 @@
+{
+  "background_color": "#0B3B5E",
+  "description": "Water Sort Puzzle — sort coloured water into tubes, 60+ levels, endless mode, free with video ads.",
+  "display": "standalone",
+  "icons": [
+    {
+      "sizes": "1254x1254",
+      "src": "icon.png",
+      "type": "image/png"
+    }
+  ],
+  "name": "Dripply",
+  "short_name": "Dripply",
+  "start_url": "index.html",
+  "theme_color": "#0E7490"
+}
