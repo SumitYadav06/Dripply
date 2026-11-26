@@ -127,7 +127,9 @@ h1.logo{font-size:52px;font-weight:900;letter-spacing:1px;line-height:1;
 /* ---- modal / toast / ad ---- */
 .modal{position:fixed;inset:0;background:rgba(0,0,0,.55);display:flex;align-items:center;justify-content:center;z-index:50;padding:16px}
 .modal .box{background:#12314e;border:1px solid rgba(255,255,255,.25);border-radius:20px;
-  padding:22px 18px;width:100%;max-width:360px;text-align:center;box-shadow:0 14px 40px rgba(0,0,0,.5)}
+  padding:22px 18px;width:100%;max-width:360px;text-align:center;box-shadow:0 14px 40px rgba(0,0,0,.5);
+  animation:popIn .28s ease}
+@keyframes popIn{0%{transform:scale(.85);opacity:0}100%{transform:scale(1);opacity:1}}
 .modal h2{font-size:26px;margin-bottom:6px}
 .modal p{color:var(--muted);margin:6px 0 12px;font-size:15px}
 .stars{font-size:34px;letter-spacing:6px;color:var(--gold);margin:4px 0 8px}
@@ -195,15 +197,15 @@ h1.logo{animation:logoShine 4.5s ease-in-out infinite}
 @keyframes heroPour{0%,10%{transform:translate(0,0) rotate(0)}
   26%,62%{transform:translate(12px,-52px) rotate(105deg)}
   78%,100%{transform:translate(0,0) rotate(0)}}
-.hero-stream{position:absolute;left:calc(50% + 66px);top:78px;width:9px;height:34px;border-radius:5px;
+.hero-stream{position:absolute;left:calc(50% + 66px);top:78px;width:9px;height:58px;border-radius:5px;
   background:linear-gradient(90deg,rgba(255,255,255,.8),#38bdf8 45%,#0284c7);
   box-shadow:0 0 8px rgba(125,211,252,.6);opacity:0;transform-origin:top center;z-index:4;
   animation:heroStream 5s ease-in-out infinite}
 @keyframes heroStream{0%,26%{opacity:0}34%,58%{opacity:.95}68%,100%{opacity:0}}
 .hero-fill{animation:heroFill 5s ease-in-out infinite}
-@keyframes heroFill{0%,26%{height:calc(25% + 1px)}58%,72%{height:calc(70% + 1px)}100%{height:calc(25% + 1px)}}
+@keyframes heroFill{0%,30%{height:calc(25% + 1px)}58%{height:calc(70% + 1px)}78%{height:calc(70% + 1px)}100%{height:calc(25% + 1px)}}
 .hero-drain{animation:heroDrain 5s ease-in-out infinite}
-@keyframes heroDrain{0%,26%{height:calc(25% + 1px)}58%,72%{height:0;opacity:0}100%{height:calc(25% + 1px)}}
+@keyframes heroDrain{0%,30%{height:calc(25% + 1px);opacity:1}58%{height:0;opacity:0}78%{height:0;opacity:0}100%{height:calc(25% + 1px);opacity:1}}
 @media (max-width:360px){.tube{width:52px;height:164px}#board.big .tube{width:56px;height:176px}#board.small .tube{width:44px;height:140px}h1.logo{font-size:44px}}
 </style>
 </head>
@@ -1486,10 +1488,10 @@ function onTubeTap(i){
     if (!cur.state[i].length){ return; }
     cur.selected = i;
     sfxSelect();
-    renderBoard();
+    renderBoardSelection(); /* toggle class only — the .18s transition animates the lift; a full renderBoard() rebuild would make it snap */
     return;
   }
-  if (cur.selected === i){ cur.selected = -1; renderBoard(); return; }
+  if (cur.selected === i){ cur.selected = -1; renderBoardSelection(); return; }
   var from = cur.selected, to = i;
   var mv = tryPour(from, to);
   if (!mv){
