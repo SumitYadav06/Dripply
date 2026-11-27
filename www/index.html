@@ -152,12 +152,6 @@ h1.logo{font-size:52px;font-weight:900;letter-spacing:1px;line-height:1;
   color:#fff;padding:11px 18px;border-radius:999px;font-size:15px;font-weight:700;z-index:80;
   opacity:0;pointer-events:none;transition:opacity .25s;max-width:88vw;text-align:center}
 #toast.show{opacity:1}
-#adScreen{position:fixed;inset:0;background:#0a0a0a;z-index:90;display:none;flex-direction:column;
-  align-items:center;justify-content:center;gap:14px;text-align:center;padding:20px}
-#adScreen.show{display:flex}
-#adScreen .adbox{width:min(88vw,340px);height:190px;border-radius:16px;
-  background:linear-gradient(135deg,#334155,#0ea5e9);display:flex;align-items:center;justify-content:center;
-  font-size:22px;font-weight:900}
 .confetti{position:fixed;top:-12px;width:9px;height:14px;z-index:70;pointer-events:none;
   animation:fall linear forwards}
 @keyframes fall{to{transform:translateY(105vh) rotate(720deg);opacity:.9}}
@@ -426,13 +420,6 @@ h1.logo{animation:logoShine 4.5s ease-in-out infinite}
     <button class="big-btn" id="btnStuckUndo">↩️ <span data-i18n="undo">Undo</span></button>
     <button class="ghost-btn" id="btnStuckRestart" style="width:100%;margin-top:10px" data-i18n="restart">Restart</button>
   </div>
-</div>
-
-<!-- ================= AD DEMO OVERLAY ================= -->
-<div id="adScreen">
-  <div class="adbox">📺 Ad</div>
-  <div style="color:#fff;font-size:16px" id="adCount">Ad in 3…</div>
-  <div style="color:#aaa;font-size:13px">Demo ad — real ads show in the installed app</div>
 </div>
 
 <div id="toast"></div>
@@ -722,7 +709,7 @@ en:{
   
   shopNote:"Hint and Undo are also available inside a level — by stars or by watching an ad.",
   level:"Level", daily:"Daily", endless:"Endless",
-  adIn:"Ad in", adNotFinished:"Ad not finished — no reward.",
+  adIn:"Ad in", adNotFinished:"Ad not finished — no reward.", adNotReady:"Ad not ready yet — try again in a moment.",
   noStars:"Not enough stars — watch an ad instead?",
   watchAd:"Watch Ad", useStars:"Use Stars", cancel:"Cancel",
   getHint:"Get a hint?", getTube:"Add an extra tube?", getUndo:"Get +5 undos?",
@@ -756,7 +743,7 @@ hi:{
   
   shopNote:"संकेत और वापस लेवल के अंदर भी मिलते हैं — स्टार से या विज्ञापन देखकर।",
   level:"लेवल", daily:"रोज़ की", endless:"अनंत",
-  adIn:"विज्ञापन", adNotFinished:"विज्ञापन पूरा नहीं हुआ — कोई इनाम नहीं।",
+  adIn:"विज्ञापन", adNotFinished:"विज्ञापन पूरा नहीं हुआ — कोई इनाम नहीं।", adNotReady:"विज्ञापन अभी तैयार नहीं है — थोड़ी देर में फिर कोशिश करें।",
   noStars:"स्टार कम हैं — विज्ञापन देखोगे?",
   watchAd:"विज्ञापन देखें", useStars:"स्टार इस्तेमाल करें", cancel:"रद्द करें",
   getHint:"संकेत लेना है?", getTube:"extra ट्यूब जोड़नी है?", getUndo:"+5 वापस लेने हैं?",
@@ -1081,25 +1068,6 @@ function confetti(){
   }
 }
 
-/* ================= Demo ad overlay (web preview / no fill) ================= */
-function showAdBreakDemo(done){
-  var scr = document.getElementById("adScreen");
-  scr.classList.add("show");
-  var left = 3;
-  var el = document.getElementById("adCount");
-  el.textContent = t("adIn") + " " + left + "…";
-  var iv = setInterval(function(){
-    left--;
-    if (left <= 0){
-      clearInterval(iv);
-      scr.classList.remove("show");
-      done();
-    } else {
-      el.textContent = t("adIn") + " " + left + "…";
-    }
-  }, 1000);
-}
-
 /* ================= Ads — REAL Unity Ads (APK only) =================
    Unity Ads SDK 4.x via a minimal local Capacitor plugin
    (plugins/unity-ads in this repo — no maintained npm plugin for
@@ -1108,9 +1076,9 @@ function showAdBreakDemo(done){
    * APK (native): the plugin talks to the real Unity Ads SDK.
      Game ID + placements are the real Dripply Unity IDs (created
      2026-11-27; no store URL was needed at signup).
-   * Web preview: no Unity SDK here — the bridge stays uninitialised
-     and the game falls back to the short demo overlay, exactly as
-     before. The demo is never presented as a real ad.
+   * Web preview: no Unity SDK here — the bridge stays uninitialised,
+     so rewarded ads just say "not ready" and interstitials are
+     skipped. There is no demo/fake ad anywhere in the app.
    * No App Open: Unity Ads has no app-open format — do not invent one.
      The cold-start splash stays a plain splash, not an ad.
    * Placements: banner on Home only, interstitial after every 3rd
@@ -1258,31 +1226,33 @@ window.unityShowRewarded = function(onReward, onLoadFail, onNotEarned){
 };
 
 /* Rewarded helper used by every opt-in reward in the game.
-   grant() runs ONLY when Unity reports the reward earned (COMPLETED), or after
-   the demo overlay when no real ad could load (web preview / no
-   fill). Closing the ad early grants nothing. */
+   grant() runs ONLY when Unity reports the reward earned (COMPLETED).
+   If no real ad is ready, the player is told to try again later —
+   no reward is ever granted without a real completed ad.
+   Closing the ad early grants nothing. */
 function watchRewardedAd(grant){
   if (window.UnityAdsNative && window.UnityAdsNative.isReady()){
     window.UnityAdsNative.showRewarded(
       function(){ grant(); },
-      function(){ showAdBreakDemo(function(){ grant(); }); },
+      function(){ showToast(t("adNotReady")); },
       function(){ showToast(t("adNotFinished")); }
     );
   } else {
-    showAdBreakDemo(function(){ grant(); });
+    showToast(t("adNotReady"));
   }
 }
 /* Interstitial after every 3rd completed level. `done` runs only
-   after the ad is dismissed (or the demo finishes). */
+   after the ad is dismissed; if no ad is ready the game just
+   continues — no fake break is ever shown. */
 var levelsCompletedSinceAd = 0;
 function maybeShowInterstitial(done){
   levelsCompletedSinceAd++;
   if (levelsCompletedSinceAd < 3){ done(); return; }
   levelsCompletedSinceAd = 0;
   if (window.UnityAdsNative && window.UnityAdsNative.isReady()){
-    window.UnityAdsNative.showInterstitial(done, function(){ showAdBreakDemo(done); });
+    window.UnityAdsNative.showInterstitial(done, done);
   } else {
-    showAdBreakDemo(done);
+    done();
   }
 }
 
@@ -2078,9 +2048,8 @@ updateStarsUI();
 updateDailyUI();
 document.addEventListener("click", function(){ startMusic(); }, { once: true });
 if (window.UnityAdsNative) window.UnityAdsNative.init();
-/* No App Open format in Unity Ads — the cold-start overlay below
-   is a plain splash, never an ad. */
-showAdBreakDemo(function(){ /* splash done */ });
+/* No App Open format in Unity Ads — nothing shows on cold start
+   except the plain splash, never an ad. */
 setTimeout(fetchRemoteLevels, 600);
 </script>
 </body>
