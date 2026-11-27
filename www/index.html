@@ -1100,32 +1100,32 @@ function showAdBreakDemo(done){
   }, 1000);
 }
 
-/* ================= Ads — REAL AdMob (APK only) =================
-   Same bridge pattern as the other games (Fruit Slice / BubbleFodo):
-   * APK (native): window.AdMobNative talks to the real AdMob SDK
-     through @capacitor-community/admob v6 (Capacitor 6, installed by
-     the GitHub workflow). The workflow also writes the App ID into
-     AndroidManifest + strings.xml after `cap sync`.
-   * App Open: this plugin version has NO App Open API, so the
-     app-open slot stays a demo overlay. It is never faked as a real
-     ad. A plugin with App Open support is a separate job.
+/* ================= Ads — REAL Unity Ads (APK only) =================
+   Unity Ads SDK 4.x via a minimal local Capacitor plugin
+   (plugins/unity-ads in this repo — no maintained npm plugin for
+   Unity Ads exists, so the plugin is written here: UnityAds.initialize
+   / load / show + BannerView, wrapped as window.UnityAdsNative).
+   * APK (native): the plugin talks to the real Unity Ads SDK.
+     Game ID + placements are the real Dripply Unity IDs (created
+     2026-11-27; no store URL was needed at signup).
+   * Web preview: no Unity SDK here — the bridge stays uninitialised
+     and the game falls back to the short demo overlay, exactly as
+     before. The demo is never presented as a real ad.
+   * No App Open: Unity Ads has no app-open format — do not invent one.
+     The cold-start splash stays a plain splash, not an ad.
    * Placements: banner on Home only, interstitial after every 3rd
      level completed, rewarded only when the player taps Watch Ad
      (Hint / Extra Tube / Undos / Daily double).
-     Nothing is forced during play.
-   * >>> PLACEHOLDER IDs: Google's official TEST AdMob IDs below.
-     They must be replaced with the real Dripply AdMob IDs (new AdMob
-     app) before publishing — search for TEST-ADMOB-PLACEHOLDER.
-     Test IDs show test ads only and earn nothing. <<< */
-window.ADMOB_CONFIG = {
-  appId:              'ca-app-pub-2948876721824340~5359025385', /* ADMOB App ID */
-  bannerUnitId:       'ca-app-pub-2948876721824340/3307577110', /* ADMOB Banner */
-  interstitialUnitId: 'ca-app-pub-2948876721824340/6355965171', /* ADMOB Interstitial */
-  appOpenUnitId:      'ca-app-pub-2948876721824340/2217409619', /* ADMOB App Open */
-  rewardedUnitId:     'ca-app-pub-2948876721824340/5090984962'  /* ADMOB Rewarded */
+     Nothing is forced during play. testMode is false (release). */
+window.UNITY_CONFIG = {
+  gameId: '800457104',
+  bannerPlacementId: 'BP_Banner_Android',
+  interstitialPlacementId: 'BP_Interstitial_Android',
+  rewardedPlacementId: 'BP_Rewarded_Android',
+  testMode: false
 };
-window.AdMobNative = (function(){
-  var cfg = window.ADMOB_CONFIG;
+window.UnityAdsNative = (function(){
+  var cfg = window.UNITY_CONFIG;
   var plugin = null, inited = false, initPromise = null;
   var bannerShown = false;
   var interstitialReady = false;
@@ -1135,25 +1135,25 @@ window.AdMobNative = (function(){
     catch(e){ return false; }
   }
   function getPlugin(){
-    try{ var C = window.Capacitor; if(!C || !C.Plugins) return null; return C.Plugins.AdMob || null; }
+    try{ var C = window.Capacitor; if(!C || !C.Plugins) return null; return C.Plugins.UnityAds || null; }
     catch(e){ return null; }
   }
   function preloadInterstitial(){
     if(!inited) return;
     try{
-      plugin.prepareInterstitial({adId: cfg.interstitialUnitId}).then(function(){ interstitialReady = true; })
+      plugin.loadInterstitial({placementId: cfg.interstitialPlacementId}).then(function(){ interstitialReady = true; })
       .catch(function(){ interstitialReady = false; });
     }catch(e){ interstitialReady = false; }
   }
   function preloadRewarded(){
     if(!inited) return;
-    try{ plugin.prepareRewardVideoAd({adId: cfg.rewardedUnitId}).catch(function(){}); }
+    try{ plugin.loadRewarded({placementId: cfg.rewardedPlacementId}).catch(function(){}); }
     catch(e){}
   }
   function showHomeBanner(){
     if(!inited || bannerShown) return;
     try{
-      plugin.showBanner({adId: cfg.bannerUnitId, adSize: 'BANNER', position: 'BOTTOM_CENTER', margin: 0}).then(function(){
+      plugin.showBanner({placementId: cfg.bannerPlacementId}).then(function(){
         bannerShown = true;
         try{ document.body.classList.add('native-ads'); }catch(e){}
       }).catch(function(){});
@@ -1183,15 +1183,17 @@ window.AdMobNative = (function(){
       }
     }, 120000);
     try{
-      var p = plugin.showInterstitial();
-      if(p && p.then){
-        p.catch(function(){
-          var fb = pendingInterstitialFallback;
-          pendingInterstitialCb = null; pendingInterstitialFallback = null;
-          preloadInterstitial();
-          if(fb) fb();
-        });
-      }
+      plugin.showInterstitial({placementId: cfg.interstitialPlacementId}).then(function(){
+        var cb = pendingInterstitialCb;
+        pendingInterstitialCb = null; pendingInterstitialFallback = null;
+        preloadInterstitial();
+        if(cb) cb();
+      }).catch(function(){
+        var fb = pendingInterstitialFallback;
+        pendingInterstitialCb = null; pendingInterstitialFallback = null;
+        preloadInterstitial();
+        if(fb) fb();
+      });
     }catch(e){
       pendingInterstitialCb = null; pendingInterstitialFallback = null;
       preloadInterstitial();
@@ -1201,18 +1203,15 @@ window.AdMobNative = (function(){
   function showRewarded(onRewarded, onLoadFail, onNotEarned){
     if(!inited){ if(onLoadFail) onLoadFail(); return; }
     try{
-      plugin.prepareRewardVideoAd({adId: cfg.rewardedUnitId}).then(function(){
-        var shown = plugin.showRewardVideoAd();
-        if(shown && shown.then){
-          shown.then(function(reward){
-            preloadRewarded();
-            if(reward){ if(onRewarded) onRewarded(); }
-            else if(onNotEarned) onNotEarned();
-          }).catch(function(){
-            preloadRewarded();
-            if(onNotEarned) onNotEarned();
-          });
-        } else if(onNotEarned) onNotEarned();
+      plugin.loadRewarded({placementId: cfg.rewardedPlacementId}).then(function(){
+        plugin.showRewarded({placementId: cfg.rewardedPlacementId}).then(function(res){
+          preloadRewarded();
+          if(res && res.earned){ if(onRewarded) onRewarded(); }
+          else if(onNotEarned) onNotEarned();
+        }).catch(function(){
+          preloadRewarded();
+          if(onNotEarned) onNotEarned();
+        });
       }).catch(function(){ if(onLoadFail) onLoadFail(); });
     }catch(e){ if(onLoadFail) onLoadFail(); }
   }
@@ -1222,39 +1221,20 @@ window.AdMobNative = (function(){
       if(!isNative()){ resolve(false); return; }
       plugin = getPlugin();
       if(!plugin || !plugin.initialize){ resolve(false); return; }
+      var settled = false;
+      function done(v){ if(!settled){ settled = true; resolve(v); } }
+      setTimeout(function(){ done(false); }, 15000);
       try{
-        if(plugin.addListener){
-          plugin.addListener('interstitialAdDismissed', function(){
-            var cb = pendingInterstitialCb;
-            pendingInterstitialCb = null; pendingInterstitialFallback = null;
+        plugin.initialize({gameId: cfg.gameId, testMode: cfg.testMode}).then(function(res){
+          if(res && res.initialized){
+            inited = true;
             preloadInterstitial();
-            if(cb) cb();
-          });
-          plugin.addListener('interstitialAdFailedToShow', function(){
-            var fb = pendingInterstitialFallback;
-            pendingInterstitialCb = null; pendingInterstitialFallback = null;
-            preloadInterstitial();
-            if(fb) fb();
-          });
-          plugin.addListener('interstitialAdFailedToLoad', function(){ interstitialReady = false; });
-        }
-      }catch(e){}
-      plugin.initialize().then(function(){
-        inited = true;
-        try{
-          if(plugin.requestConsentInfo){
-            plugin.requestConsentInfo().then(function(info){
-              if(info && info.isConsentFormAvailable && info.status === 'REQUIRED' && plugin.showConsentForm){
-                plugin.showConsentForm().catch(function(){});
-              }
-            }).catch(function(){});
-          }
-        }catch(e){}
-        preloadInterstitial();
-        preloadRewarded();
-        showHomeBanner();
-        resolve(true);
-      }).catch(function(){ resolve(false); });
+            preloadRewarded();
+            showHomeBanner();
+            done(true);
+          } else done(false);
+        }).catch(function(){ done(false); });
+      }catch(e){ done(false); }
     });
     return initPromise;
   }
@@ -1268,22 +1248,22 @@ window.AdMobNative = (function(){
     showRewarded: showRewarded
   };
 })();
-window.admobShowInterstitial = function(onClose, onFallback){
-  if(window.AdMobNative) window.AdMobNative.showInterstitial(onClose, onFallback);
+window.unityShowInterstitial = function(onClose, onFallback){
+  if(window.UnityAdsNative) window.UnityAdsNative.showInterstitial(onClose, onFallback);
   else if(onFallback) onFallback();
 };
-window.admobShowRewarded = function(onReward, onLoadFail, onNotEarned){
-  if(window.AdMobNative) window.AdMobNative.showRewarded(onReward, onLoadFail, onNotEarned);
+window.unityShowRewarded = function(onReward, onLoadFail, onNotEarned){
+  if(window.UnityAdsNative) window.UnityAdsNative.showRewarded(onReward, onLoadFail, onNotEarned);
   else if(onLoadFail) onLoadFail();
 };
 
 /* Rewarded helper used by every opt-in reward in the game.
-   grant() runs ONLY when AdMob reports the reward earned, or after
+   grant() runs ONLY when Unity reports the reward earned (COMPLETED), or after
    the demo overlay when no real ad could load (web preview / no
    fill). Closing the ad early grants nothing. */
 function watchRewardedAd(grant){
-  if (window.AdMobNative && window.AdMobNative.isReady()){
-    window.AdMobNative.showRewarded(
+  if (window.UnityAdsNative && window.UnityAdsNative.isReady()){
+    window.UnityAdsNative.showRewarded(
       function(){ grant(); },
       function(){ showAdBreakDemo(function(){ grant(); }); },
       function(){ showToast(t("adNotFinished")); }
@@ -1299,8 +1279,8 @@ function maybeShowInterstitial(done){
   levelsCompletedSinceAd++;
   if (levelsCompletedSinceAd < 3){ done(); return; }
   levelsCompletedSinceAd = 0;
-  if (window.AdMobNative && window.AdMobNative.isReady()){
-    window.AdMobNative.showInterstitial(done, function(){ showAdBreakDemo(done); });
+  if (window.UnityAdsNative && window.UnityAdsNative.isReady()){
+    window.UnityAdsNative.showInterstitial(done, function(){ showAdBreakDemo(done); });
   } else {
     showAdBreakDemo(done);
   }
@@ -1473,7 +1453,7 @@ function startLevel(n, kind){
   document.getElementById("stuckModal").classList.add("hidden");
   renderBoard();
   updateActionUI();
-  if (window.AdMobNative) window.AdMobNative.hideBanner();
+  if (window.UnityAdsNative) window.UnityAdsNative.hideBanner();
   showScreen("game");
   startMusic();
 }
@@ -1968,7 +1948,7 @@ function bind(id, fn){
   if (el) el.addEventListener("click", function(){ audio(); sfxClick(); fn(); });
 }
 bind("btnPlay", function(){ startLevel(save.unlocked, "bundled"); });
-bind("btnLevels", function(){ renderLevels(); updateStarsUI(); if (window.AdMobNative) window.AdMobNative.showHomeBanner(); showScreen("levels"); });
+bind("btnLevels", function(){ renderLevels(); updateStarsUI(); if (window.UnityAdsNative) window.UnityAdsNative.showHomeBanner(); showScreen("levels"); });
 bind("btnLevelsBack", function(){ updateStarsUI(); showScreen("home"); });
 bind("btnEndless", function(){ startLevel(Math.max(save.unlocked, 97), "endless"); });
 bind("btnDaily", function(){
@@ -1982,7 +1962,7 @@ bind("btnDailyClaim", function(){
     claimDaily(false);
   }
 });
-bind("btnGameHome", function(){ updateStarsUI(); updateDailyUI(); showScreen("home"); if (window.AdMobNative) window.AdMobNative.showHomeBanner(); });
+bind("btnGameHome", function(){ updateStarsUI(); updateDailyUI(); showScreen("home"); if (window.UnityAdsNative) window.UnityAdsNative.showHomeBanner(); });
 bind("btnRestart", function(){ if (cur) startLevel(cur.def.kind === "daily" ? 0 : cur.def.id, cur.def.kind); });
 bind("btnUndo", function(){ doUndo(); });
 bind("btnHint", function(){ doHint(); });
@@ -1995,7 +1975,7 @@ bind("btnNext", function(){
 bind("btnWinHome", function(){
   document.getElementById("winModal").classList.add("hidden");
   updateStarsUI(); updateDailyUI(); showScreen("home");
-  if (window.AdMobNative) window.AdMobNative.showHomeBanner();
+  if (window.UnityAdsNative) window.UnityAdsNative.showHomeBanner();
 });
 bind("btnStuckUndo", function(){
   document.getElementById("stuckModal").classList.add("hidden");
@@ -2097,9 +2077,9 @@ syncMuteUI();
 updateStarsUI();
 updateDailyUI();
 document.addEventListener("click", function(){ startMusic(); }, { once: true });
-if (window.AdMobNative) window.AdMobNative.init();
-/* App Open slot: no API in this plugin version — demo overlay once
-   per cold start, never faked as a real ad. */
+if (window.UnityAdsNative) window.UnityAdsNative.init();
+/* No App Open format in Unity Ads — the cold-start overlay below
+   is a plain splash, never an ad. */
 showAdBreakDemo(function(){ /* splash done */ });
 setTimeout(fetchRemoteLevels, 600);
 </script>
