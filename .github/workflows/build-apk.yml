@@ -30,6 +30,34 @@ jobs:
           if [ ! -d android ]; then npx cap add android; fi
           npx cap sync android
 
+      - name: Raise minSdk to 26 (Unity Ads plugin needs 26)
+        # The Unity Ads plugin declares minSdkVersion 26; the generated
+        # app project resolves to 22, and the manifest merger fails the
+        # build ("uses-sdk:minSdkVersion 22 cannot be smaller than
+        # version 26"). Android 8.0+ (API 26) covers ~all active phones.
+        run: |
+          python3 - << 'EOF'
+          import pathlib, re, sys
+          patched = []
+          for fname in ('android/variables.gradle', 'android/app/build.gradle'):
+              p = pathlib.Path(fname)
+              if not p.exists():
+                  continue
+              t = p.read_text()
+              t2, n1 = re.subn(r'minSdkVersion\s*=\s*\d+', 'minSdkVersion = 26', t)
+              t2, n2 = re.subn(r'minSdkVersion\s+\d+', 'minSdkVersion 26', t2)
+              t2, n3 = re.subn(r'\bminSdk\s*=\s*\d+', 'minSdk = 26', t2)
+              t2, n4 = re.subn(r'\bminSdk\s+\d+', 'minSdk 26', t2)
+              if n1 + n2 + n3 + n4:
+                  p.write_text(t2)
+                  patched.append((fname, n1 + n2 + n3 + n4))
+          if not patched:
+              print('ERROR: no minSdk line found to raise in android project')
+              sys.exit(1)
+          for f, n in patched:
+              print('raised minSdk to 26 in', f, '(%d replacement%s)' % (n, 's' if n > 1 else ''))
+          EOF
+
       - name: Verify Unity Ads wiring
         # Fail loudly if the Unity plugin did not register with
         # Capacitor, or an old ad-network ID is still in the shipped
