@@ -465,6 +465,17 @@ body.net-gated *{animation-play-state:paused !important}
   </div>
 </div>
 
+<!-- ================= UPDATE AVAILABLE ================= -->
+<div class="modal hidden" id="updateModal">
+  <div class="box">
+    <div class="drop">⬆️</div>
+    <h2>Naya version aa gaya hai — Update karo</h2>
+    <p>A new version is available — Update now</p>
+    <button class="big-btn" id="btnUpdateNow">⬇️ Update karo</button>
+    <button class="ghost-btn" id="btnUpdateLater" style="width:100%;margin-top:10px">Baad me / Later</button>
+  </div>
+</div>
+
 <div id="toast"></div>
 
 <script>
@@ -1464,6 +1475,59 @@ function fetchRemoteLevels(){
   }catch(e){ /* fetch unavailable: ignore silently */ }
 }
 
+/* App version check ("Old version — Update karo"). Old APKs cannot
+   be changed retroactively, so the check lives in NEW builds: CI
+   stamps APP_VERSION to the build's run number (= versionCode) and
+   the app compares it with www/version.json ("latest") fetched from
+   the public repo on launch. Unstamped build (website preview):
+   APP_VERSION is a string, never a number — no prompt, play
+   normally. Fetch fails / bad JSON / bad shape: silently ignored,
+   the game works fully offline. APP_VERSION < latest: one designed
+   full-screen modal per launch, with Update (opens the release APK
+   link) and "Baad me / Later" (dismisses for this session only). */
+var APP_VERSION = "__APP_VERSION__";
+var VERSION_URL = "https://raw.githubusercontent.com/SumitYadav06/Dripply/main/www/version.json";
+var updateShown = false;
+function validVersionInfo(d){
+  if (!d || typeof d !== "object") return false;
+  if (typeof d.latest !== "number" || !isFinite(d.latest)) return false;
+  if (typeof d.apkUrl !== "string" || d.apkUrl.indexOf("https://github.com/SumitYadav06/") !== 0) return false;
+  return true;
+}
+function showUpdateModal(apkUrl){
+  if (updateShown) return; updateShown = true;
+  try{
+    var ov = document.getElementById("updateModal"); if (!ov) return;
+    var go = document.getElementById("btnUpdateNow");
+    var later = document.getElementById("btnUpdateLater");
+    if (go) go.onclick = function(){
+      var w = null;
+      try{ w = window.open(apkUrl, "_blank"); }catch(e){ w = null; }
+      if (!w){ try{ window.location.href = apkUrl; }catch(e2){} }
+    };
+    if (later) later.onclick = function(){ ov.classList.add("hidden"); };
+    ov.classList.remove("hidden");
+  }catch(e){ /* modal must never break the game */ }
+}
+function checkAppVersion(){
+  if (typeof APP_VERSION !== "number") return; /* website preview / unstamped build: never prompt */
+  try{
+    if (typeof fetch !== "function") return;
+    var ctrl = ("AbortController" in window) ? new AbortController() : null;
+    var timer = null;
+    if (ctrl) timer = setTimeout(function(){ try{ ctrl.abort(); }catch(e){} }, 4000);
+    var opts = ctrl ? { signal: ctrl.signal, cache: "no-store" } : { cache: "no-store" };
+    fetch(VERSION_URL, opts).then(function(res){
+      if (timer) clearTimeout(timer);
+      if (!res || !res.ok) return null;
+      return res.json();
+    }).then(function(data){
+      if (!validVersionInfo(data)) return;
+      if (APP_VERSION < data.latest) showUpdateModal(data.apkUrl);
+    }).catch(function(){ if (timer) clearTimeout(timer); });
+  }catch(e){ /* offline / no fetch: ignore silently */ }
+}
+
 /* ================= Game state ================= */
 var cur = null; /* {def, state, moves, selected, history, undosLeft, tubeUsed, animating} */
 var pourToken = 0; /* bumped on every new pour / level start: stale pour timers abort */
@@ -2162,6 +2226,7 @@ if (window.UnityAdsNative) window.UnityAdsNative.init();
 /* No App Open format in Unity Ads — nothing shows on cold start
    except the plain splash, never an ad. */
 setTimeout(fetchRemoteLevels, 600);
+setTimeout(checkAppVersion, 600);
 </script>
 </body>
 </html>
