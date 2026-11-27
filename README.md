@@ -20,24 +20,33 @@ KEYSTORE_PASSWORD / KEY_ALIAS / KEY_PASSWORD), so updates install over
 the previous version without uninstall. versionCode is the GitHub run
 number, so it always increases.
 
-## Ads — AdMob (⚠️ TEST IDs — replace before publishing)
+## Ads — Unity Ads (since 2026-11-27; the previous network was fully removed)
 
 Earning is ads-only (video ads, no pop-ups, no paid Premium):
 
-- App Open ad — once, when the app opens (demo overlay for now: the AdMob
-  plugin used here has no App Open API, so this slot is never faked as a
-  real ad; a plugin with App Open support is a separate job)
-- Banner — Home screen only, never while playing (real native banner)
+- Banner — Home screen only, never while playing (real native banner,
+  320×50 pinned to the bottom)
 - Interstitial — after every 3rd completed level (real ad first,
   3-second demo overlay only as fallback)
 - Rewarded video — only when the player taps Watch Ad: Hint, Extra Tube,
-  +5 Undos, Free Coins, or doubling the daily reward; the reward is
-  granted only when AdMob reports it earned
+  +5 Undos, or doubling the daily reward; the reward is granted only
+  when Unity reports the ad watched to the end (COMPLETED)
+- No App Open: Unity Ads has no app-open format, so there is no
+  app-open ad slot at all (the cold-start screen is a plain splash)
 
-**The IDs in `www/index.html` are the real Dripply AdMob IDs**
-(App ID `ca-app-pub-2948876721824340~5359025385`, created 2026-11-26).
-Each game has its own AdMob app and its own IDs; IDs from another game
-do not work here. Real ads start only after AdMob review approval.
+**The IDs in `www/index.html` are the real Dripply Unity IDs**
+(Android Game ID `800457104`, placements `BP_Rewarded_Android`,
+`BP_Interstitial_Android`, `BP_Banner_Android`, created 2026-11-27 —
+no store URL was needed at signup). Each game has its own Unity app
+and its own IDs; IDs from another game do not work here.
+
+**Integration:** Unity Ads Android SDK 4.18.0 through a minimal local
+Capacitor plugin in `plugins/unity-ads/` (no maintained npm plugin for
+Unity Ads exists, so the plugin is written here: `initialize` / load /
+show + `BannerView`, wrapped in JS as `window.UnityAdsNative`). The
+workflow verifies the wiring on every build (plugin registered, Game
+ID + 3 placements present, no old-network IDs) and fails the build
+otherwise. Release build uses `testMode: false`.
 
 ## Remote levels — add levels WITHOUT a new APK
 
@@ -83,7 +92,7 @@ Rules per level:
 
 **What needs a new APK and what does not:**
 - New levels via `extra-levels.json` → NO new APK.
-- Game rules, code, art, music, ad placements or AdMob IDs → new APK.
+- Game rules, code, art, music, ad placements or Unity IDs → new APK.
 
 ## Content
 
