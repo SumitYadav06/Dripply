@@ -102,16 +102,31 @@ h1.logo{font-size:52px;font-weight:900;letter-spacing:1px;line-height:1;
 @keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
 .tube.pouring{z-index:6}
 .tube.pouring::after{opacity:0}
-#stream{position:absolute;width:11px;border-radius:6px;z-index:5;pointer-events:none;
-  transform-origin:top center;opacity:0;box-shadow:0 0 10px rgba(255,255,255,.35)}
-#stream.on{opacity:.96;transition:opacity .12s}
-#stream .drop{position:absolute;left:50%;width:7px;height:9px;margin-left:-3.5px;
-  border-radius:50% 50% 60% 60%;opacity:0;pointer-events:none}
-#stream.on .drop{animation:dropFall .5s linear infinite}
-#stream.on .drop:nth-child(2){animation-delay:.16s}
-#stream.on .drop:nth-child(3){animation-delay:.32s}
-@keyframes dropFall{0%{transform:translateY(-4px);opacity:0}
-  20%{opacity:.95}100%{transform:translateY(16px);opacity:0}}
+/* ---- REAL pouring stream (v5): a tapered, slightly curved ribbon of
+   water (wide at the mouth, narrowing as it falls) drawn as an SVG
+   inside the #stream wrapper, with fat droplets breaking off it and a
+   splash ring where it lands. The wrapper is still positioned/rotated
+   exactly like before, so the pour geometry is unchanged. ---- */
+#stream{position:absolute;width:16px;border-radius:6px;z-index:5;pointer-events:none;
+  transform-origin:top center;opacity:0}
+#stream.on{opacity:.97;transition:opacity .12s}
+#stream svg{display:block;width:100%;height:100%;overflow:visible}
+#stream .sdrop{opacity:0}
+#stream.on .sdrop{animation:sdropFall .55s linear infinite}
+#stream.on .sdrop:nth-child(3){animation-delay:.18s}
+#stream.on .sdrop:nth-child(4){animation-delay:.36s}
+@keyframes sdropFall{0%{transform:translateY(-6px);opacity:0}
+  25%{opacity:1}100%{transform:translateY(26px);opacity:0}}
+.splash-ring{position:absolute;width:34px;height:12px;margin-left:-17px;border-radius:50%;
+  border:3px solid rgba(255,255,255,.9);z-index:6;pointer-events:none;
+  animation:ringOut .6s ease-out forwards}
+@keyframes ringOut{0%{transform:scale(.4);opacity:1}
+  100%{transform:scale(1.5);opacity:0}}
+/* ---- bottom-up fill column (v5): during a pour the receiving tube
+   fills as ONE continuous column rising from the bottom, not layers
+   popping in at their slots. ---- */
+.fill-anim{position:absolute;left:3px;right:3px;border-radius:0 0 20px 20px;
+  z-index:2;pointer-events:none;transition:height .75s ease}
 .splash-drop{position:absolute;width:6px;height:6px;border-radius:50%;z-index:6;pointer-events:none;
   background:radial-gradient(circle at 35% 30%,#fff,rgba(255,255,255,.4) 70%);
   animation:splashUp .55s ease-out forwards}
@@ -193,19 +208,34 @@ h1.logo{animation:logoShine 4.5s ease-in-out infinite}
 .hero{width:100%;max-width:420px;height:170px;position:relative;display:flex;justify-content:center;
   align-items:flex-end;gap:30px;margin:4px 0 2px}
 .tube.mini{width:40px;height:118px;cursor:default;flex:0 0 auto}
-.hero-pour{transform-origin:50% 55%;z-index:5;animation:heroPour 5s ease-in-out infinite}
-@keyframes heroPour{0%,10%{transform:translate(0,0) rotate(0)}
-  26%,62%{transform:translate(12px,-52px) rotate(105deg)}
-  78%,100%{transform:translate(0,0) rotate(0)}}
-.hero-stream{position:absolute;left:calc(50% + 66px);top:78px;width:9px;height:58px;border-radius:5px;
-  background:linear-gradient(90deg,rgba(255,255,255,.8),#38bdf8 45%,#0284c7);
-  box-shadow:0 0 8px rgba(125,211,252,.6);opacity:0;transform-origin:top center;z-index:4;
-  animation:heroStream 5s ease-in-out infinite}
-@keyframes heroStream{0%,26%{opacity:0}34%,58%{opacity:.95}68%,100%{opacity:0}}
-.hero-fill{animation:heroFill 5s ease-in-out infinite}
-@keyframes heroFill{0%,30%{height:calc(25% + 1px)}58%{height:calc(70% + 1px)}78%{height:calc(70% + 1px)}100%{height:calc(25% + 1px)}}
-.hero-drain{animation:heroDrain 5s ease-in-out infinite}
-@keyframes heroDrain{0%,30%{height:calc(25% + 1px);opacity:1}58%{height:0;opacity:0}78%{height:0;opacity:0}100%{height:calc(25% + 1px);opacity:1}}
+.hero-pour{transform-origin:50% 55%;z-index:5;animation:heroPour 6s ease-in-out infinite}
+@keyframes heroPour{0%,12%{transform:translate(0,0) rotate(0)}
+  24%,58%{transform:translate(14px,-54px) rotate(112deg)}
+  72%,100%{transform:translate(0,0) rotate(0)}}
+.hero-stream{position:absolute;left:calc(50% + 66px);top:78px;width:14px;height:58px;border-radius:5px;
+  background:linear-gradient(90deg,rgba(255,255,255,.85),#38bdf8 45%,#0284c7);
+  clip-path:polygon(0 0,100% 0,76% 100%,24% 100%);
+  box-shadow:0 0 10px rgba(125,211,252,.7);opacity:0;transform-origin:top center;z-index:4;
+  animation:heroStream 6s ease-in-out infinite}
+.hero-stream .hdrop{position:absolute;left:50%;width:6px;height:8px;margin-left:-3px;
+  border-radius:50% 50% 60% 60%;background:radial-gradient(circle at 35% 30%,#fff,#38bdf8 70%);
+  opacity:0;pointer-events:none;animation:hdropLoop 6s ease-in-out infinite}
+.hero-stream .hdrop:nth-child(2){animation-delay:.2s}
+.hero-stream .hdrop:nth-child(3){animation-delay:.4s}
+@keyframes hdropLoop{0%,30%{transform:translateY(-4px);opacity:0}
+  36%{opacity:.95}56%{transform:translateY(22px);opacity:.9}
+  60%,100%{transform:translateY(22px);opacity:0}}
+.hero-splash{position:absolute;left:calc(50% + 66px);top:128px;width:26px;height:9px;margin-left:-6px;
+  border-radius:50%;border:2px solid rgba(255,255,255,.85);z-index:4;pointer-events:none;opacity:0;
+  animation:heroSplash 6s ease-in-out infinite}
+@keyframes heroSplash{0%,34%{transform:scale(.5);opacity:0}
+  40%{transform:scale(.85);opacity:1}56%{transform:scale(1.4);opacity:0}
+  100%{transform:scale(1.4);opacity:0}}
+@keyframes heroStream{0%,24%{opacity:0}32%,56%{opacity:.96}66%,100%{opacity:0}}
+.hero-fill{animation:heroFill 6s ease-in-out infinite}
+@keyframes heroFill{0%,30%{height:calc(25% + 1px)}56%{height:calc(70% + 1px)}72%{height:calc(70% + 1px)}100%{height:calc(25% + 1px)}}
+.hero-drain{animation:heroDrain 6s ease-in-out infinite}
+@keyframes heroDrain{0%,30%{height:calc(25% + 1px);opacity:1}56%{height:0;opacity:0}72%{height:0;opacity:0}100%{height:calc(25% + 1px);opacity:1}}
 @media (max-width:360px){.tube{width:52px;height:164px}#board.big .tube{width:56px;height:176px}#board.small .tube{width:44px;height:140px}h1.logo{font-size:44px}}
 </style>
 </head>
@@ -216,7 +246,7 @@ h1.logo{animation:logoShine 4.5s ease-in-out infinite}
 <div class="screen active" id="screen-home">
   <div class="topbar">
     <button class="icon-btn" id="btnSettings" aria-label="Settings">⚙️</button>
-    <span class="pill coin">🪙 <span id="coinHome">0</span></span>
+    <span class="pill coin">⭐ <span id="starsHome">0</span></span>
   </div>
   <h1 class="logo">💧 Dripply</h1>
   <div class="sub" data-i18n="tagline">Water Sort Puzzle — sort every colour, clear every tube!</div>
@@ -242,7 +272,8 @@ h1.logo{animation:logoShine 4.5s ease-in-out infinite}
       </div>
       <div class="rim"></div>
     </div>
-    <div class="hero-stream"></div>
+    <div class="hero-stream"><span class="hdrop" style="top:20%"></span><span class="hdrop" style="top:50%"></span><span class="hdrop" style="top:80%"></span></div>
+    <div class="hero-splash"></div>
   </div>
 
   <div class="card" style="margin-top:10px">
@@ -260,7 +291,7 @@ h1.logo{animation:logoShine 4.5s ease-in-out infinite}
   </div>
 
   <div class="card daily-card" id="dailyCard">
-    <div class="row"><b data-i18n="dailyReward">🎁 Daily Reward</b><span class="pill coin" id="dailyAmt">+100 🪙</span></div>
+    <div class="row"><b data-i18n="dailyReward">🎁 Daily Reward</b><span class="pill coin" id="dailyAmt">💡 1 free Hint</span></div>
     <div class="row" style="margin-top:10px">
       <span style="color:var(--muted);font-size:14px" id="dailyInfo">Come back every day!</span>
       <button class="ghost-btn" id="btnDailyClaim">Claim</button>
@@ -272,7 +303,7 @@ h1.logo{animation:logoShine 4.5s ease-in-out infinite}
 
   <div class="card" style="margin-top:12px">
     <div class="row"><b data-i18n="dailyChallenge">📅 Daily Challenge</b><span class="pill" id="dailyState">—</span></div>
-    <p style="color:var(--muted);font-size:14px;margin:8px 0" data-i18n="dailyDesc">One special puzzle every day. Solve it for +50 coins!</p>
+    <p style="color:var(--muted);font-size:14px;margin:8px 0" data-i18n="dailyDesc">One special puzzle every day. Solve it for a free Hint!</p>
     <button class="ghost-btn" id="btnDaily" style="width:100%" data-i18n="playDaily">Play Daily Puzzle</button>
   </div>
 
@@ -280,7 +311,7 @@ h1.logo{animation:logoShine 4.5s ease-in-out infinite}
     <div class="row"><b data-i18n="howTo">❓ How to play</b></div>
     <p style="color:var(--muted);font-size:14px;margin-top:6px" data-i18n="howToText">Tap a tube, then tap another tube to pour. Pour only on the same colour or an empty tube. Sort every tube to one colour to win!</p>
   </div>
-  <div class="footer">Dripply • Water Sort Puzzle • v1.0 • Ads only, no payments</div>
+  <div class="footer">Dripply • Water Sort Puzzle • v5.0 • Ads only, no payments</div>
 </div>
 
 <!-- ================= LEVELS ================= -->
@@ -288,7 +319,7 @@ h1.logo{animation:logoShine 4.5s ease-in-out infinite}
   <div class="topbar">
     <button class="icon-btn" id="btnLevelsBack">←</button>
     <b style="font-size:19px" data-i18n="levels">🧩 Levels</b>
-    <span class="pill coin">🪙 <span id="coinLevels">0</span></span>
+    <span class="pill coin">⭐ <span id="starsLevels">0</span></span>
   </div>
   <div style="color:var(--muted);font-size:14px" id="levelsInfo"></div>
   <div class="lv-grid" id="lvGrid"></div>
@@ -300,7 +331,7 @@ h1.logo{animation:logoShine 4.5s ease-in-out infinite}
   <div class="topbar">
     <button class="icon-btn" id="btnGameHome">🏠</button>
     <b style="font-size:18px" id="gameTitle">Level 1</b>
-    <span class="pill coin">🪙 <span id="coinGame">0</span></span>
+    <span class="pill coin">⭐ <span id="starsGame">0</span></span>
   </div>
   <div class="game-body">
   <div class="hud">
@@ -309,7 +340,7 @@ h1.logo{animation:logoShine 4.5s ease-in-out infinite}
     <button class="icon-btn" id="btnRestart" aria-label="Restart" style="width:38px;height:38px">↺</button>
     <button class="icon-btn" id="btnMute" aria-label="Mute" style="width:38px;height:38px">🔊</button>
   </div>
-  <div id="board"><div id="stream"><div class="drop" style="top:22%"></div><div class="drop" style="top:52%"></div><div class="drop" style="top:82%"></div></div></div>
+  <div id="board"><div id="stream"><svg viewBox="0 0 16 100" preserveAspectRatio="none"><defs><linearGradient id="streamGrad" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#ffffff" stop-opacity=".85"/><stop offset="30%" stop-color="#38bdf8"/><stop offset="100%" stop-color="#0284c7"/></linearGradient></defs><path id="streamPath" d="M2,0 C5,35 11,65 6,100 L10,100 C15,65 9,35 14,0 Z" fill="url(#streamGrad)"/><circle class="sdrop" cx="8" cy="22" r="3" fill="#ffffff"/><circle class="sdrop" cx="8" cy="52" r="3.5" fill="#ffffff"/><circle class="sdrop" cx="8" cy="82" r="2.5" fill="#ffffff"/></svg></div></div>
   <div class="act-row">
     <button class="ghost-btn" id="btnUndo">↩️ <span data-i18n="undo">Undo</span><span class="n" id="undoLeft"></span></button>
     <button class="ghost-btn" id="btnHint">💡 <span data-i18n="hint">Hint</span><span class="n" id="hintCost"></span></button>
@@ -348,7 +379,7 @@ h1.logo{animation:logoShine 4.5s ease-in-out infinite}
       </div>
     </div>
     <div class="set-row">
-      <div><div class="lab" data-i18n="reset">Reset Progress</div><div class="sub2" data-i18n="reset_s">Coins, stars and unlocked levels</div></div>
+      <div><div class="lab" data-i18n="reset">Reset Progress</div><div class="sub2" data-i18n="reset_s">Stars and unlocked levels</div></div>
       <button class="ghost-btn" id="btnReset">Reset</button>
     </div>
   </div>
@@ -360,27 +391,19 @@ h1.logo{animation:logoShine 4.5s ease-in-out infinite}
   <div class="topbar">
     <button class="icon-btn" id="btnShopBack">←</button>
     <b style="font-size:19px" data-i18n="shop">🛍️ Shop</b>
-    <span class="pill coin">🪙 <span id="coinShop">0</span></span>
+    <span class="pill coin">⭐ <span id="starsShop">0</span></span>
   </div>
   <div class="card">
     <div class="shop-item">
-      <div><div class="nm">💡 <span data-i18n="hint">Hint</span></div><div class="ds" data-i18n="hint_s">Shows one correct next move</div></div>
-      <button class="ghost-btn" data-buy="hint"><span class="price">30 🪙</span></button>
-    </div>
-    <div class="shop-item">
-      <div><div class="nm">🧪 <span data-i18n="extraTube">+ Tube</span></div><div class="ds" data-i18n="tube_s">One extra empty tube for a level</div></div>
-      <button class="ghost-btn" data-buy="tube"><span class="price">50 🪙</span></button>
-    </div>
-    <div class="shop-item">
-      <div><div class="nm">↩️ <span data-i18n="undoPack">Undo Pack</span></div><div class="ds" data-i18n="undo_s">+5 undos for your next level</div></div>
-      <button class="ghost-btn" data-buy="undo"><span class="price">10 🪙</span></button>
+      <div><div class="nm">💡 <span data-i18n="hint">Hint</span></div><div class="ds" data-i18n="hint_s">Shows one correct next move — stored as a free Hint</div></div>
+      <button class="ghost-btn" data-buy="hint"><span class="price">30 ⭐ / 🎥</span></button>
     </div>
     <div class="shop-item" style="border-bottom:none">
-      <div><div class="nm">🎥 <span data-i18n="freeCoins">Free Coins</span></div><div class="ds" data-i18n="freeCoins_s">Watch a short video, get 40 coins</div></div>
-      <button class="ghost-btn" data-buy="ad"><span class="price">▶ Watch Ad</span></button>
+      <div><div class="nm">↩️ <span data-i18n="undoPack">Undo Pack</span></div><div class="ds" data-i18n="undo_s">+5 undos for your next level</div></div>
+      <button class="ghost-btn" data-buy="undo"><span class="price">🎥 Watch Ad</span></button>
     </div>
   </div>
-  <p style="color:var(--muted);font-size:13px;text-align:center;margin-top:12px" data-i18n="shopNote">Hint, Tube and Undo are also available inside a level — by coins or by watching an ad.</p>
+  <p style="color:var(--muted);font-size:13px;text-align:center;margin-top:12px" data-i18n="shopNote">Hint and Undo are also available inside a level — by stars or by watching an ad.</p>
 </div>
 
 <!-- ================= WIN MODAL ================= -->
@@ -389,7 +412,7 @@ h1.logo{animation:logoShine 4.5s ease-in-out infinite}
     <h2 data-i18n="youWin">🎉 You Win!</h2>
     <div class="stars" id="winStars">★★★</div>
     <p id="winText"></p>
-    <p class="coin" style="font-size:18px;font-weight:800" id="winCoins"></p>
+    <p class="coin" style="font-size:18px;font-weight:800" id="winReward"></p>
     <button class="big-btn" id="btnNext" data-i18n="next">Next Level →</button>
     <button class="ghost-btn" id="btnWinHome" style="width:100%;margin-top:10px" data-i18n="home">Home</button>
   </div>
@@ -594,9 +617,11 @@ h1.logo{animation:logoShine 4.5s ease-in-out infinite}
     var c = 3 + Math.floor((n - 1) / 7);
     return c > 10 ? 10 : c;
   }
-  /* Colours for endless levels after the bundled 60. */
+  /* Colours for endless levels after the bundled + remote levels.
+     Rises fast (v5: harder endless) — 10 colours to 75, 11 to 90,
+     12 colours from 91 on. */
   function colorsForEndless(n) {
-    var c = 10 + Math.floor((n - 61) / 25);
+    var c = 10 + Math.floor((n - 61) / 15);
     return c > 12 ? 12 : c;
   }
 
@@ -642,12 +667,11 @@ h1.logo{animation:logoShine 4.5s ease-in-out infinite}
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   root.DripplySolver = api;
 })(typeof window !== 'undefined' ? window : globalThis);
-
 </script>
 
 <script>
 /* ================= Data ================= */
-var LEVELS = [{"id":1,"colors":3,"par":11,"tubes":[[0,1,2,0],[2,1,0,1],[2,0,1,2],[],[]]},{"id":2,"colors":3,"par":8,"tubes":[[1,0,2,2],[1,1,0,2],[2,0,0,1],[],[]]},{"id":3,"colors":3,"par":9,"tubes":[[0,1,2,1],[1,1,2,0],[0,0,2,2],[],[]]},{"id":4,"colors":3,"par":11,"tubes":[[0,0,1,2],[2,0,1,1],[0,2,1,2],[],[]]},{"id":5,"colors":3,"par":6,"tubes":[[2,1,0,0],[2,0,0,2],[1,1,1,2],[],[]]},{"id":6,"colors":3,"par":8,"tubes":[[1,1,2,0],[2,0,0,1],[2,1,2,0],[],[]]},{"id":7,"colors":3,"par":8,"tubes":[[0,0,1,1],[2,2,1,0],[2,1,2,0],[],[]]},{"id":8,"colors":4,"par":12,"tubes":[[3,3,1,0],[0,0,2,2],[1,1,2,3],[2,3,0,1],[],[]]},{"id":9,"colors":4,"par":16,"tubes":[[2,1,0,0],[3,2,3,2],[0,1,3,3],[0,1,2,1],[],[]]},{"id":10,"colors":4,"par":17,"tubes":[[3,2,3,0],[1,2,3,3],[0,2,0,1],[1,0,2,1],[],[]]},{"id":11,"colors":4,"par":16,"tubes":[[3,0,1,0],[2,0,3,0],[3,1,1,2],[2,3,2,1],[],[]]},{"id":12,"colors":4,"par":11,"tubes":[[0,2,2,3],[2,0,2,1],[0,1,3,3],[1,1,3,0],[],[]]},{"id":13,"colors":4,"par":13,"tubes":[[1,1,1,2],[3,3,0,2],[0,2,0,0],[2,3,1,3],[],[]]},{"id":14,"colors":4,"par":12,"tubes":[[0,2,2,0],[3,1,3,0],[1,3,2,2],[3,0,1,1],[],[]]},{"id":15,"colors":5,"par":18,"tubes":[[4,0,3,4],[2,4,4,3],[3,2,0,1],[1,1,0,2],[3,2,1,0],[],[]]},{"id":16,"colors":5,"par":25,"tubes":[[1,0,3,4],[2,1,3,1],[4,4,2,2],[0,4,3,0],[0,3,2,1],[],[]]},{"id":17,"colors":5,"par":16,"tubes":[[3,4,1,3],[3,4,2,0],[4,2,0,1],[2,0,1,1],[0,3,4,2],[],[]]},{"id":18,"colors":5,"par":19,"tubes":[[3,0,4,2],[1,4,1,4],[0,1,3,1],[4,0,0,2],[2,2,3,3],[],[]]},{"id":19,"colors":5,"par":17,"tubes":[[3,1,2,2],[0,3,4,4],[2,0,1,4],[4,1,0,3],[1,0,3,2],[],[]]},{"id":20,"colors":5,"par":20,"tubes":[[0,1,4,2],[3,1,3,4],[1,4,4,2],[0,3,0,2],[0,2,3,1],[],[]]},{"id":21,"colors":5,"par":18,"tubes":[[2,4,4,0],[3,0,1,3],[3,0,1,1],[4,2,1,0],[4,2,2,3],[],[]]},{"id":22,"colors":6,"par":29,"tubes":[[2,3,1,1],[5,1,2,4],[2,4,0,5],[4,1,2,0],[3,5,3,4],[0,5,0,3],[],[]]},{"id":23,"colors":6,"par":24,"tubes":[[3,1,4,0],[4,1,2,3],[4,1,5,2],[5,5,2,3],[4,0,0,3],[1,5,2,0],[],[]]},{"id":24,"colors":6,"par":21,"tubes":[[2,5,0,5],[1,0,1,4],[3,1,4,4],[0,4,1,2],[5,0,2,3],[3,5,3,2],[],[]]},{"id":25,"colors":6,"par":24,"tubes":[[2,5,0,0],[2,1,5,3],[4,4,3,4],[1,2,3,5],[0,1,0,4],[2,5,1,3],[],[]]},{"id":26,"colors":6,"par":24,"tubes":[[4,2,4,5],[5,0,5,3],[4,2,1,2],[1,0,1,3],[0,4,2,1],[3,3,0,5],[],[]]},{"id":27,"colors":6,"par":28,"tubes":[[2,5,2,1],[0,5,4,3],[0,3,2,5],[1,4,0,4],[0,2,3,1],[1,3,5,4],[],[]]},{"id":28,"colors":6,"par":28,"tubes":[[0,4,4,3],[2,3,1,1],[2,2,5,1],[5,3,0,1],[4,2,3,4],[0,5,0,5],[],[]]},{"id":29,"colors":7,"par":28,"tubes":[[5,2,1,1],[2,4,2,5],[1,3,6,3],[6,6,4,1],[0,5,4,0],[5,0,0,3],[4,3,6,2],[],[]]},{"id":30,"colors":7,"par":32,"tubes":[[6,5,3,3],[2,6,6,1],[4,2,1,3],[1,0,0,1],[4,2,4,5],[4,0,5,3],[6,0,2,5],[],[]]},{"id":31,"colors":7,"par":31,"tubes":[[5,4,1,0],[2,3,4,3],[0,2,6,1],[6,2,6,6],[0,3,3,5],[4,4,2,5],[1,0,5,1],[],[]]},{"id":32,"colors":7,"par":29,"tubes":[[1,2,6,2],[5,0,1,0],[2,1,4,0],[5,5,3,1],[0,6,6,5],[4,2,4,4],[6,3,3,3],[],[]]},{"id":33,"colors":7,"par":32,"tubes":[[1,6,3,4],[0,2,6,5],[1,6,5,3],[3,0,5,2],[4,5,2,4],[0,3,1,1],[4,2,6,0],[],[]]},{"id":34,"colors":7,"par":22,"tubes":[[2,3,3,1],[5,6,4,6],[2,0,1,3],[0,4,6,0],[2,6,5,5],[4,4,1,5],[0,3,1,2],[],[]]},{"id":35,"colors":7,"par":29,"tubes":[[0,6,2,0],[2,4,1,3],[0,3,5,6],[2,4,4,5],[3,1,3,1],[6,0,1,5],[4,5,2,6],[],[]]},{"id":36,"colors":8,"par":36,"tubes":[[4,6,0,3],[2,6,2,0],[7,1,1,3],[5,1,4,5],[5,1,2,6],[0,4,6,7],[3,7,7,5],[0,3,4,2],[],[]]},{"id":37,"colors":8,"par":30,"tubes":[[5,7,2,4],[0,2,5,6],[3,1,7,7],[0,2,4,1],[5,3,3,5],[6,1,0,6],[4,6,1,3],[7,2,0,4],[],[]]},{"id":38,"colors":8,"par":30,"tubes":[[2,5,7,6],[1,4,7,4],[1,7,1,2],[0,1,3,5],[4,3,3,5],[7,0,0,6],[0,6,4,6],[5,3,2,2],[],[]]},{"id":39,"colors":8,"par":36,"tubes":[[3,1,7,1],[2,4,0,0],[7,6,6,6],[4,7,7,5],[4,3,1,0],[6,2,2,1],[2,5,5,0],[3,5,3,4],[],[]]},{"id":40,"colors":8,"par":33,"tubes":[[5,4,6,0],[0,0,5,1],[2,4,2,3],[6,4,5,7],[7,3,2,1],[4,7,3,6],[6,2,5,0],[1,3,7,1],[],[]]},{"id":41,"colors":8,"par":37,"tubes":[[1,6,7,6],[0,1,5,3],[0,6,7,4],[2,6,7,3],[2,5,5,1],[0,3,4,0],[3,4,1,5],[2,4,2,7],[],[]]},{"id":42,"colors":8,"par":31,"tubes":[[4,1,0,4],[3,6,6,2],[2,4,6,1],[5,0,1,4],[7,0,5,6],[0,7,7,7],[5,1,3,2],[2,3,3,5],[],[]]},{"id":43,"colors":9,"par":44,"tubes":[[5,5,2,4],[0,4,2,3],[4,4,5,7],[1,7,0,8],[8,3,6,2],[8,0,3,8],[6,1,2,1],[0,1,6,7],[6,7,5,3],[],[]]},{"id":44,"colors":9,"par":37,"tubes":[[8,6,3,7],[5,0,2,6],[1,0,6,4],[2,1,4,7],[7,0,4,3],[1,1,8,3],[5,2,7,6],[8,2,8,3],[5,5,4,0],[],[]]},{"id":45,"colors":9,"par":40,"tubes":[[3,8,0,2],[1,6,7,2],[0,1,0,1],[8,3,3,4],[5,8,7,6],[4,2,5,4],[8,6,4,5],[7,6,3,2],[7,0,5,1],[],[]]},{"id":46,"colors":9,"par":33,"tubes":[[4,8,2,7],[2,0,1,3],[1,4,0,2],[3,8,4,0],[7,5,5,3],[6,8,2,8],[1,1,4,6],[6,6,3,5],[0,7,7,5],[],[]]},{"id":47,"colors":9,"par":43,"tubes":[[7,6,5,0],[8,4,6,4],[1,8,0,1],[1,2,3,3],[8,2,4,5],[7,0,3,2],[7,5,6,8],[3,7,0,5],[1,6,4,2],[],[]]},{"id":48,"colors":9,"par":34,"tubes":[[6,3,7,1],[3,3,6,7],[2,5,5,5],[0,4,7,4],[4,1,7,2],[8,8,4,0],[6,6,0,3],[8,5,8,1],[2,1,2,0],[],[]]},{"id":49,"colors":9,"par":33,"tubes":[[6,3,4,8],[7,1,6,8],[2,5,3,0],[7,1,6,7],[1,0,7,5],[5,2,8,4],[5,4,2,3],[6,8,3,4],[0,2,1,0],[],[]]},{"id":50,"colors":10,"par":51,"tubes":[[0,9,6,1],[2,4,5,1],[6,5,4,2],[0,1,8,8],[3,5,3,7],[0,4,5,2],[7,4,0,9],[8,1,7,6],[9,8,2,6],[9,7,3,3],[],[]]},{"id":51,"colors":10,"par":45,"tubes":[[6,0,3,7],[7,0,0,8],[4,9,7,1],[9,9,8,1],[2,5,5,5],[2,0,3,1],[3,7,6,9],[1,4,4,5],[8,2,4,3],[6,2,8,6],[],[]]},{"id":52,"colors":10,"par":40,"tubes":[[5,2,5,0],[8,2,1,6],[1,1,8,4],[7,6,5,4],[4,1,0,7],[6,2,7,9],[9,5,2,4],[0,7,3,3],[8,8,9,6],[3,9,0,3],[],[]]},{"id":53,"colors":10,"par":42,"tubes":[[5,8,1,3],[6,5,7,4],[7,7,3,4],[2,0,7,1],[6,5,4,9],[8,4,1,0],[3,2,9,3],[9,6,2,8],[0,0,9,2],[5,8,6,1],[],[]]},{"id":54,"colors":10,"par":31,"tubes":[[5,5,7,8],[1,9,0,2],[3,8,4,3],[6,1,3,7],[1,6,5,9],[9,1,8,4],[2,5,4,4],[9,6,2,8],[0,0,0,3],[6,2,7,7],[],[]]},{"id":55,"colors":10,"par":42,"tubes":[[8,5,0,8],[5,0,5,4],[1,3,9,7],[1,4,4,3],[5,7,8,0],[3,2,9,3],[6,8,2,6],[1,7,1,6],[2,9,6,2],[9,7,0,4],[],[]]},{"id":56,"colors":10,"par":44,"tubes":[[5,0,9,5],[9,3,7,1],[8,9,8,8],[7,0,1,6],[1,0,2,4],[3,5,2,1],[2,5,4,6],[6,8,4,9],[3,2,7,0],[7,4,6,3],[],[]]},{"id":57,"colors":10,"par":54,"tubes":[[4,9,6,8],[5,7,2,2],[5,1,2,3],[5,3,3,8],[4,9,6,8],[4,8,4,1],[6,9,1,6],[3,2,0,7],[1,7,0,9],[0,5,0,7],[],[]]},{"id":58,"colors":10,"par":40,"tubes":[[6,9,2,2],[9,3,9,6],[0,5,7,8],[6,5,0,5],[3,0,8,1],[5,3,7,8],[7,2,3,2],[4,1,6,1],[4,7,0,4],[8,9,1,4],[],[]]},{"id":59,"colors":10,"par":46,"tubes":[[0,5,6,5],[2,8,1,1],[4,3,9,6],[9,0,6,3],[8,5,5,9],[2,8,2,0],[4,8,7,6],[9,1,0,7],[2,1,3,4],[3,4,7,7],[],[]]},{"id":60,"colors":10,"par":50,"tubes":[[1,9,8,4],[9,7,2,4],[9,3,8,5],[1,0,6,0],[4,0,6,1],[7,2,6,8],[5,9,5,0],[7,6,1,7],[2,8,2,4],[3,3,3,5],[],[]]}];
+var LEVELS = [{"id":1,"colors":3,"par":11,"tubes":[[0,1,2,0],[2,1,0,1],[2,0,1,2],[],[]]},{"id":2,"colors":3,"par":8,"tubes":[[1,0,2,2],[1,1,0,2],[2,0,0,1],[],[]]},{"id":3,"colors":3,"par":9,"tubes":[[0,1,2,1],[1,1,2,0],[0,0,2,2],[],[]]},{"id":4,"colors":3,"par":11,"tubes":[[0,0,1,2],[2,0,1,1],[0,2,1,2],[],[]]},{"id":5,"colors":3,"par":6,"tubes":[[2,1,0,0],[2,0,0,2],[1,1,1,2],[],[]]},{"id":6,"colors":3,"par":8,"tubes":[[1,1,2,0],[2,0,0,1],[2,1,2,0],[],[]]},{"id":7,"colors":3,"par":8,"tubes":[[0,0,1,1],[2,2,1,0],[2,1,2,0],[],[]]},{"id":8,"colors":4,"par":12,"tubes":[[3,3,1,0],[0,0,2,2],[1,1,2,3],[2,3,0,1],[],[]]},{"id":9,"colors":4,"par":16,"tubes":[[2,1,0,0],[3,2,3,2],[0,1,3,3],[0,1,2,1],[],[]]},{"id":10,"colors":4,"par":17,"tubes":[[3,2,3,0],[1,2,3,3],[0,2,0,1],[1,0,2,1],[],[]]},{"id":11,"colors":4,"par":16,"tubes":[[3,0,1,0],[2,0,3,0],[3,1,1,2],[2,3,2,1],[],[]]},{"id":12,"colors":4,"par":11,"tubes":[[0,2,2,3],[2,0,2,1],[0,1,3,3],[1,1,3,0],[],[]]},{"id":13,"colors":4,"par":13,"tubes":[[1,1,1,2],[3,3,0,2],[0,2,0,0],[2,3,1,3],[],[]]},{"id":14,"colors":4,"par":12,"tubes":[[0,2,2,0],[3,1,3,0],[1,3,2,2],[3,0,1,1],[],[]]},{"id":15,"colors":5,"par":18,"tubes":[[4,0,3,4],[2,4,4,3],[3,2,0,1],[1,1,0,2],[3,2,1,0],[],[]]},{"id":16,"colors":5,"par":25,"tubes":[[1,0,3,4],[2,1,3,1],[4,4,2,2],[0,4,3,0],[0,3,2,1],[],[]]},{"id":17,"colors":5,"par":16,"tubes":[[3,4,1,3],[3,4,2,0],[4,2,0,1],[2,0,1,1],[0,3,4,2],[],[]]},{"id":18,"colors":5,"par":19,"tubes":[[3,0,4,2],[1,4,1,4],[0,1,3,1],[4,0,0,2],[2,2,3,3],[],[]]},{"id":19,"colors":5,"par":17,"tubes":[[3,1,2,2],[0,3,4,4],[2,0,1,4],[4,1,0,3],[1,0,3,2],[],[]]},{"id":20,"colors":5,"par":20,"tubes":[[0,1,4,2],[3,1,3,4],[1,4,4,2],[0,3,0,2],[0,2,3,1],[],[]]},{"id":21,"colors":5,"par":18,"tubes":[[2,4,4,0],[3,0,1,3],[3,0,1,1],[4,2,1,0],[4,2,2,3],[],[]]},{"id":22,"colors":6,"par":29,"tubes":[[2,3,1,1],[5,1,2,4],[2,4,0,5],[4,1,2,0],[3,5,3,4],[0,5,0,3],[],[]]},{"id":23,"colors":6,"par":24,"tubes":[[3,1,4,0],[4,1,2,3],[4,1,5,2],[5,5,2,3],[4,0,0,3],[1,5,2,0],[],[]]},{"id":24,"colors":6,"par":21,"tubes":[[2,5,0,5],[1,0,1,4],[3,1,4,4],[0,4,1,2],[5,0,2,3],[3,5,3,2],[],[]]},{"id":25,"colors":6,"par":24,"tubes":[[2,5,0,0],[2,1,5,3],[4,4,3,4],[1,2,3,5],[0,1,0,4],[2,5,1,3],[],[]]},{"id":26,"colors":6,"par":24,"tubes":[[4,2,4,5],[5,0,5,3],[4,2,1,2],[1,0,1,3],[0,4,2,1],[3,3,0,5],[],[]]},{"id":27,"colors":6,"par":28,"tubes":[[2,5,2,1],[0,5,4,3],[0,3,2,5],[1,4,0,4],[0,2,3,1],[1,3,5,4],[],[]]},{"id":28,"colors":6,"par":28,"tubes":[[0,4,4,3],[2,3,1,1],[2,2,5,1],[5,3,0,1],[4,2,3,4],[0,5,0,5],[],[]]},{"id":29,"colors":7,"par":28,"tubes":[[5,2,1,1],[2,4,2,5],[1,3,6,3],[6,6,4,1],[0,5,4,0],[5,0,0,3],[4,3,6,2],[],[]]},{"id":30,"colors":7,"par":32,"tubes":[[6,5,3,3],[2,6,6,1],[4,2,1,3],[1,0,0,1],[4,2,4,5],[4,0,5,3],[6,0,2,5],[],[]]},{"id":31,"colors":7,"par":31,"tubes":[[5,4,1,0],[2,3,4,3],[0,2,6,1],[6,2,6,6],[0,3,3,5],[4,4,2,5],[1,0,5,1],[],[]]},{"id":32,"colors":7,"par":29,"tubes":[[1,2,6,2],[5,0,1,0],[2,1,4,0],[5,5,3,1],[0,6,6,5],[4,2,4,4],[6,3,3,3],[],[]]},{"id":33,"colors":7,"par":32,"tubes":[[1,6,3,4],[0,2,6,5],[1,6,5,3],[3,0,5,2],[4,5,2,4],[0,3,1,1],[4,2,6,0],[],[]]},{"id":34,"colors":7,"par":22,"tubes":[[2,3,3,1],[5,6,4,6],[2,0,1,3],[0,4,6,0],[2,6,5,5],[4,4,1,5],[0,3,1,2],[],[]]},{"id":35,"colors":7,"par":29,"tubes":[[0,6,2,0],[2,4,1,3],[0,3,5,6],[2,4,4,5],[3,1,3,1],[6,0,1,5],[4,5,2,6],[],[]]},{"id":36,"colors":8,"par":36,"tubes":[[4,6,0,3],[2,6,2,0],[7,1,1,3],[5,1,4,5],[5,1,2,6],[0,4,6,7],[3,7,7,5],[0,3,4,2],[],[]]},{"id":37,"colors":8,"par":30,"tubes":[[5,7,2,4],[0,2,5,6],[3,1,7,7],[0,2,4,1],[5,3,3,5],[6,1,0,6],[4,6,1,3],[7,2,0,4],[],[]]},{"id":38,"colors":8,"par":30,"tubes":[[2,5,7,6],[1,4,7,4],[1,7,1,2],[0,1,3,5],[4,3,3,5],[7,0,0,6],[0,6,4,6],[5,3,2,2],[],[]]},{"id":39,"colors":8,"par":36,"tubes":[[3,1,7,1],[2,4,0,0],[7,6,6,6],[4,7,7,5],[4,3,1,0],[6,2,2,1],[2,5,5,0],[3,5,3,4],[],[]]},{"id":40,"colors":8,"par":33,"tubes":[[5,4,6,0],[0,0,5,1],[2,4,2,3],[6,4,5,7],[7,3,2,1],[4,7,3,6],[6,2,5,0],[1,3,7,1],[],[]]},{"id":41,"colors":8,"par":37,"tubes":[[1,6,7,6],[0,1,5,3],[0,6,7,4],[2,6,7,3],[2,5,5,1],[0,3,4,0],[3,4,1,5],[2,4,2,7],[],[]]},{"id":42,"colors":8,"par":31,"tubes":[[4,1,0,4],[3,6,6,2],[2,4,6,1],[5,0,1,4],[7,0,5,6],[0,7,7,7],[5,1,3,2],[2,3,3,5],[],[]]},{"id":43,"colors":9,"par":44,"tubes":[[5,5,2,4],[0,4,2,3],[4,4,5,7],[1,7,0,8],[8,3,6,2],[8,0,3,8],[6,1,2,1],[0,1,6,7],[6,7,5,3],[],[]]},{"id":44,"colors":9,"par":37,"tubes":[[8,6,3,7],[5,0,2,6],[1,0,6,4],[2,1,4,7],[7,0,4,3],[1,1,8,3],[5,2,7,6],[8,2,8,3],[5,5,4,0],[],[]]},{"id":45,"colors":9,"par":40,"tubes":[[3,8,0,2],[1,6,7,2],[0,1,0,1],[8,3,3,4],[5,8,7,6],[4,2,5,4],[8,6,4,5],[7,6,3,2],[7,0,5,1],[],[]]},{"id":46,"colors":9,"par":33,"tubes":[[4,8,2,7],[2,0,1,3],[1,4,0,2],[3,8,4,0],[7,5,5,3],[6,8,2,8],[1,1,4,6],[6,6,3,5],[0,7,7,5],[],[]]},{"id":47,"colors":9,"par":43,"tubes":[[7,6,5,0],[8,4,6,4],[1,8,0,1],[1,2,3,3],[8,2,4,5],[7,0,3,2],[7,5,6,8],[3,7,0,5],[1,6,4,2],[],[]]},{"id":48,"colors":9,"par":34,"tubes":[[6,3,7,1],[3,3,6,7],[2,5,5,5],[0,4,7,4],[4,1,7,2],[8,8,4,0],[6,6,0,3],[8,5,8,1],[2,1,2,0],[],[]]},{"id":49,"colors":9,"par":33,"tubes":[[6,3,4,8],[7,1,6,8],[2,5,3,0],[7,1,6,7],[1,0,7,5],[5,2,8,4],[5,4,2,3],[6,8,3,4],[0,2,1,0],[],[]]},{"id":50,"colors":10,"par":51,"tubes":[[0,9,6,1],[2,4,5,1],[6,5,4,2],[0,1,8,8],[3,5,3,7],[0,4,5,2],[7,4,0,9],[8,1,7,6],[9,8,2,6],[9,7,3,3],[],[]]},{"id":51,"colors":10,"par":45,"tubes":[[6,0,3,7],[7,0,0,8],[4,9,7,1],[9,9,8,1],[2,5,5,5],[2,0,3,1],[3,7,6,9],[1,4,4,5],[8,2,4,3],[6,2,8,6],[],[]]},{"id":52,"colors":10,"par":40,"tubes":[[5,2,5,0],[8,2,1,6],[1,1,8,4],[7,6,5,4],[4,1,0,7],[6,2,7,9],[9,5,2,4],[0,7,3,3],[8,8,9,6],[3,9,0,3],[],[]]},{"id":53,"colors":10,"par":42,"tubes":[[5,8,1,3],[6,5,7,4],[7,7,3,4],[2,0,7,1],[6,5,4,9],[8,4,1,0],[3,2,9,3],[9,6,2,8],[0,0,9,2],[5,8,6,1],[],[]]},{"id":54,"colors":10,"par":31,"tubes":[[5,5,7,8],[1,9,0,2],[3,8,4,3],[6,1,3,7],[1,6,5,9],[9,1,8,4],[2,5,4,4],[9,6,2,8],[0,0,0,3],[6,2,7,7],[],[]]},{"id":55,"colors":10,"par":42,"tubes":[[8,5,0,8],[5,0,5,4],[1,3,9,7],[1,4,4,3],[5,7,8,0],[3,2,9,3],[6,8,2,6],[1,7,1,6],[2,9,6,2],[9,7,0,4],[],[]]},{"id":56,"colors":10,"par":44,"tubes":[[5,0,9,5],[9,3,7,1],[8,9,8,8],[7,0,1,6],[1,0,2,4],[3,5,2,1],[2,5,4,6],[6,8,4,9],[3,2,7,0],[7,4,6,3],[],[]]},{"id":57,"colors":10,"par":54,"tubes":[[4,9,6,8],[5,7,2,2],[5,1,2,3],[5,3,3,8],[4,9,6,8],[4,8,4,1],[6,9,1,6],[3,2,0,7],[1,7,0,9],[0,5,0,7],[],[]]},{"id":58,"colors":10,"par":40,"tubes":[[6,9,2,2],[9,3,9,6],[0,5,7,8],[6,5,0,5],[3,0,8,1],[5,3,7,8],[7,2,3,2],[4,1,6,1],[4,7,0,4],[8,9,1,4],[],[]]},{"id":59,"colors":10,"par":46,"tubes":[[0,5,6,5],[2,8,1,1],[4,3,9,6],[9,0,6,3],[8,5,5,9],[2,8,2,0],[4,8,7,6],[9,1,0,7],[2,1,3,4],[3,4,7,7],[],[]]},{"id":60,"colors":10,"par":50,"tubes":[[1,9,8,4],[9,7,2,4],[9,3,8,5],[1,0,6,0],[4,0,6,1],[7,2,6,8],[5,9,5,0],[7,6,1,7],[2,8,2,4],[3,3,3,5],[],[]]},{"id":61,"colors":10,"par":70,"tubes":[[6,1,0,3],[0,4,5,4],[2,1,9,7],[0,5,1,5],[9,8,9,4],[3,7,4,7],[0,8,2,9],[3,1,7,8],[6,6,3,5],[6,8,2,2],[],[]]},{"id":62,"colors":10,"par":58,"tubes":[[8,5,3,4],[9,0,9,1],[0,4,3,3],[7,9,7,7],[2,6,4,8],[8,1,1,0],[8,5,2,4],[5,6,9,2],[6,0,2,5],[3,1,6,7],[],[]]},{"id":63,"colors":10,"par":57,"tubes":[[2,1,1,4],[3,8,4,3],[0,7,2,4],[4,3,5,9],[8,9,2,8],[3,0,5,6],[6,7,0,1],[9,2,6,5],[7,5,9,0],[6,1,8,7],[],[]]},{"id":64,"colors":10,"par":58,"tubes":[[6,5,2,0],[5,4,8,3],[7,6,1,8],[3,9,2,4],[7,6,7,5],[0,9,8,0],[1,0,1,9],[5,3,4,1],[9,7,8,2],[4,2,3,6],[],[]]},{"id":65,"colors":10,"par":75,"tubes":[[6,2,1,9],[0,4,6,7],[3,8,1,7],[4,1,2,5],[4,8,9,1],[4,2,3,8],[6,7,5,2],[6,9,3,5],[7,0,5,9],[0,8,0,3],[],[]]},{"id":66,"colors":10,"par":58,"tubes":[[8,1,5,8],[7,2,6,1],[3,7,4,5],[3,8,1,9],[3,0,6,8],[0,9,5,6],[3,0,7,9],[1,9,4,4],[0,2,5,6],[4,2,7,2],[],[]]},{"id":67,"colors":10,"par":58,"tubes":[[1,9,4,8],[6,9,7,4],[9,0,1,3],[3,0,2,8],[3,5,7,5],[0,1,4,9],[7,5,2,8],[3,4,1,2],[8,6,7,0],[5,2,6,6],[],[]]},{"id":68,"colors":10,"par":69,"tubes":[[9,1,2,7],[9,3,1,0],[8,3,6,7],[0,6,5,1],[4,5,4,8],[7,0,8,9],[7,3,8,2],[9,0,6,6],[2,3,5,4],[4,2,1,5],[],[]]},{"id":69,"colors":10,"par":58,"tubes":[[4,2,1,7],[9,5,7,5],[0,4,3,8],[6,9,6,5],[5,4,2,3],[0,1,9,6],[0,3,8,4],[2,8,3,7],[0,6,7,9],[2,8,1,1],[],[]]},{"id":70,"colors":10,"par":62,"tubes":[[3,9,3,4],[6,1,9,7],[8,7,8,0],[5,6,9,4],[6,1,2,3],[7,3,4,5],[7,1,9,8],[0,6,5,2],[4,1,5,2],[0,0,8,2],[],[]]},{"id":71,"colors":11,"par":66,"tubes":[[0,6,10,10],[3,9,7,8],[8,6,4,8],[5,7,1,3],[4,3,10,10],[9,2,9,6],[0,8,7,5],[1,5,4,1],[9,4,2,6],[0,2,5,2],[3,0,1,7],[],[]]},{"id":72,"colors":11,"par":77,"tubes":[[6,6,7,6],[4,1,3,5],[0,9,5,2],[8,9,3,3],[7,4,5,6],[1,10,4,2],[10,8,0,10],[1,3,2,7],[8,8,4,9],[5,2,10,0],[1,0,9,7],[],[]]},{"id":73,"colors":11,"par":73,"tubes":[[5,2,2,10],[4,2,6,3],[6,4,10,9],[0,8,9,10],[4,0,8,7],[7,10,1,0],[4,3,1,5],[7,8,5,7],[3,8,0,6],[6,2,5,9],[1,9,1,3],[],[]]},{"id":74,"colors":11,"par":64,"tubes":[[2,0,3,7],[1,0,8,1],[8,7,6,2],[2,9,7,10],[5,9,5,10],[0,10,10,2],[5,3,8,4],[6,4,4,9],[4,1,7,9],[8,6,3,6],[5,1,3,0],[],[]]},{"id":75,"colors":11,"par":70,"tubes":[[2,4,2,4],[10,9,8,2],[1,0,10,0],[5,6,5,5],[3,6,7,6],[7,4,1,1],[1,8,9,0],[3,3,9,2],[3,10,5,4],[8,0,7,10],[6,9,7,8],[],[]]},{"id":76,"colors":11,"par":70,"tubes":[[5,2,6,7],[1,0,8,1],[9,10,6,6],[5,2,10,4],[3,9,1,7],[10,0,4,7],[4,9,0,5],[5,8,1,3],[6,3,0,2],[9,8,4,2],[10,8,7,3],[],[]]},{"id":77,"colors":11,"par":66,"tubes":[[7,4,6,6],[9,8,5,8],[2,10,3,10],[0,9,0,9],[1,8,2,6],[10,9,1,0],[1,5,4,1],[5,4,7,2],[10,8,0,3],[3,7,3,6],[5,4,2,7],[],[]]},{"id":78,"colors":11,"par":73,"tubes":[[7,7,5,4],[5,7,9,2],[6,4,1,3],[10,7,0,2],[8,10,3,8],[6,5,6,0],[2,9,9,4],[5,10,8,4],[3,9,2,0],[6,1,1,1],[10,8,3,0],[],[]]},{"id":79,"colors":12,"par":100,"tubes":[[10,3,7,11],[11,4,5,4],[9,2,7,8],[0,5,6,8],[6,9,6,5],[9,2,1,11],[6,4,4,7],[2,5,7,3],[3,0,1,1],[9,0,8,10],[2,10,0,11],[3,1,10,8],[],[]]},{"id":80,"colors":12,"par":74,"tubes":[[5,1,0,5],[11,4,6,0],[6,10,2,3],[1,10,1,2],[4,11,8,7],[10,2,11,2],[6,3,6,7],[9,11,0,5],[9,7,9,10],[8,0,7,4],[1,8,9,5],[4,3,8,3],[],[]]}];
 var BASE_LAYOUTS = {"3":[[0,2,1,1],[0,2,1,2],[0,1,0,2],[],[]],"4":[[0,1,3,0],[3,3,2,1],[0,2,1,2],[3,0,2,1],[],[]],"5":[[0,1,0,3],[4,4,1,1],[3,2,2,1],[2,0,0,4],[4,3,2,3],[],[]],"6":[[1,5,0,2],[4,2,3,1],[2,3,1,3],[0,4,2,0],[4,1,5,4],[5,5,3,0],[],[]],"7":[[5,3,3,0],[5,0,4,6],[2,3,2,5],[3,6,6,1],[5,1,2,0],[1,2,0,4],[6,4,1,4],[],[]],"8":[[0,3,7,5],[3,4,2,0],[1,3,6,2],[1,5,5,0],[6,7,3,6],[2,1,4,4],[4,0,1,7],[7,6,5,2],[],[]],"9":[[6,5,4,4],[5,5,4,3],[2,1,7,8],[1,4,2,0],[8,2,0,3],[2,3,0,7],[3,7,1,8],[5,0,6,6],[7,1,6,8],[],[]],"10":[[6,3,7,1],[7,0,0,9],[4,7,2,8],[2,4,6,6],[1,5,0,1],[8,3,4,5],[6,0,9,2],[8,1,9,2],[5,3,3,5],[7,9,4,8],[],[]],"11":[[9,8,4,1],[2,6,8,0],[5,3,4,6],[4,8,7,2],[2,10,6,5],[7,2,4,0],[0,3,3,10],[5,6,1,7],[10,0,1,8],[1,3,7,9],[5,9,9,10],[],[]],"12":[[9,0,4,9],[5,11,0,5],[1,7,10,10],[11,0,10,9],[5,0,3,11],[6,8,2,10],[8,9,7,2],[1,11,4,2],[8,3,6,1],[3,5,8,3],[1,6,6,2],[4,7,7,4],[],[]]};
 /* 12 water colours (indices 0..11) — chosen for maximum distinction:
    neighbours differ clearly in hue AND lightness, so no two colours
@@ -674,7 +698,7 @@ function slotGradientFlat(hex){
   var light = mixHex(hex, "#ffffff", 0.12), dark = mixHex(hex, "#000000", 0.35);
   return "linear-gradient(180deg, " + light + " 0%, " + hex + " 45%, " + dark + " 100%)";
 }
-var HINT_COST = 30, TUBE_COST = 50, UNDO_COST = 10, FREE_UNDOS = 3;
+var HINT_STARS = 30, FREE_UNDOS = 3; /* v5: stars are the only currency — no coins */
 var REMOTE_URL = "https://raw.githubusercontent.com/SumitYadav06/Dripply/main/www/extra-levels.json";
 
 /* ================= I18N ================= */
@@ -683,7 +707,7 @@ en:{
   tagline:"Water Sort Puzzle — sort every colour, clear every tube!",
   play:"▶ Play", levels:"🧩 Levels", settings:"⚙️ Settings", shop:"🛍️ Shop", home:"Home",
   dailyReward:"🎁 Daily Reward", dailyChallenge:"📅 Daily Challenge",
-  dailyDesc:"One special puzzle every day. Solve it for +50 coins!",
+  dailyDesc:"One special puzzle every day. Solve it for a free Hint!",
   playDaily:"Play Daily Puzzle", howTo:"❓ How to play",
   howToText:"Tap a tube, then tap another tube to pour. Pour only on the same colour or an empty tube. Sort every tube to one colour to win!",
   moves:"Moves", undo:"Undo", hint:"Hint", extraTube:"+ Tube",
@@ -692,24 +716,24 @@ en:{
   sound:"Sound", sound_s:"Pour, win and tap sounds",
   music:"Music", music_s:"Original background music",
   theme:"Theme", theme_s:"Background style",
-  reset:"Reset Progress", reset_s:"Coins, stars and unlocked levels",
+  reset:"Reset Progress", reset_s:"Stars and unlocked levels",
   hint_s:"Shows one correct next move", tube_s:"One extra empty tube for a level",
   undoPack:"Undo Pack", undo_s:"+5 undos for your next level",
-  freeCoins:"Free Coins", freeCoins_s:"Watch a short video, get 40 coins",
-  shopNote:"Hint, Tube and Undo are also available inside a level — by coins or by watching an ad.",
+  
+  shopNote:"Hint and Undo are also available inside a level — by stars or by watching an ad.",
   level:"Level", daily:"Daily", endless:"Endless",
   adIn:"Ad in", adNotFinished:"Ad not finished — no reward.",
-  noCoins:"Not enough coins — watch an ad instead?",
-  watchAd:"Watch Ad", useCoins:"Use Coins", cancel:"Cancel",
+  noStars:"Not enough stars — watch an ad instead?",
+  watchAd:"Watch Ad", useStars:"Use Stars", cancel:"Cancel",
   getHint:"Get a hint?", getTube:"Add an extra tube?", getUndo:"Get +5 undos?",
-  hintFree:"Hint is on the house!", tubeUsed:"Extra tube already used in this level.",
+  hintFree:"Hint is on the house!", freeHint:"free Hint", tubeUsed:"Extra tube already used in this level.",
   noUndo:"No undos left.", noHint:"No hint found.", stuck:"😶 No moves left!",
   stuckText:"No more pours possible — undo a move or restart the level.", restart:"Restart",
   dailyDone:"Daily puzzle done! Come back tomorrow.",
   dailyClaimed:"Daily reward claimed!", dailyDouble:"Double with ad?",
   streak:"day streak", locked:"Locked — finish the previous level first.",
-  resetDone:"Progress reset.", resetConfirm:"Reset all progress? Coins and stars will be lost.",
-  needWatch:"Watch a short ad to continue.", coinsEarned:"coins earned!",
+  resetDone:"Progress reset.", resetConfirm:"Reset all progress? Stars will be lost.",
+  needWatch:"Watch a short ad to continue.", starsEarned:"stars earned!",
   completed:"Completed!", remoteLevels:"extra levels loaded from the web",
   endlessDone:"Endless level complete!", newBest:"New best!"
 },
@@ -717,7 +741,7 @@ hi:{
   tagline:"वॉटर सॉर्ट पज़ल — हर रंग अलग करो, हर ट्यूब साफ़ करो!",
   play:"▶ खेलें", levels:"🧩 लेवल", settings:"⚙️ सेटिंग्स", shop:"🛍️ दुकान", home:"होम",
   dailyReward:"🎁 रोज़ का इनाम", dailyChallenge:"📅 रोज़ की चुनौती",
-  dailyDesc:"हर दिन एक खास पज़ल। हल करो और +50 सिक्के पाओ!",
+  dailyDesc:"हर दिन एक खास पज़ल। हल करो और मुफ़्त संकेत पाओ!",
   playDaily:"रोज़ की पज़ल खेलें", howTo:"❓ कैसे खेलें",
   howToText:"एक ट्यूब पर टैप करो, फिर दूसरी ट्यूब पर टैप करके डालो। सिर्फ़ उसी रंग पर या खाली ट्यूब में डालो। हर ट्यूब को एक रंग का बनाकर जीतो!",
   moves:"चालें", undo:"वापस", hint:"संकेत", extraTube:"+ ट्यूब",
@@ -726,24 +750,24 @@ hi:{
   sound:"आवाज़", sound_s:"डालने, जीतने और टैप की आवाज़ें",
   music:"संगीत", music_s:"ओरिजिनल बैकग्राउंड संगीत",
   theme:"थीम", theme_s:"बैकग्राउंड स्टाइल",
-  reset:"प्रोग्रेस रीसेट", reset_s:"सिक्के, स्टार और खुले लेवल",
+  reset:"प्रोग्रेस रीसेट", reset_s:"स्टार और खुले लेवल",
   hint_s:"एक सही अगली चाल दिखाता है", tube_s:"एक लेवल के लिए एक extra खाली ट्यूब",
   undoPack:"वापस पैक", undo_s:"अगले लेवल के लिए +5 वापस",
-  freeCoins:"मुफ़्त सिक्के", freeCoins_s:"छोटा वीडियो देखो, 40 सिक्के पाओ",
-  shopNote:"संकेत, ट्यूब और वापस लेवल के अंदर भी मिलते हैं — सिक्कों से या विज्ञापन देखकर।",
+  
+  shopNote:"संकेत और वापस लेवल के अंदर भी मिलते हैं — स्टार से या विज्ञापन देखकर।",
   level:"लेवल", daily:"रोज़ की", endless:"अनंत",
   adIn:"विज्ञापन", adNotFinished:"विज्ञापन पूरा नहीं हुआ — कोई इनाम नहीं।",
-  noCoins:"सिक्के कम हैं — विज्ञापन देखोगे?",
-  watchAd:"विज्ञापन देखें", useCoins:"सिक्के इस्तेमाल करें", cancel:"रद्द करें",
+  noStars:"स्टार कम हैं — विज्ञापन देखोगे?",
+  watchAd:"विज्ञापन देखें", useStars:"स्टार इस्तेमाल करें", cancel:"रद्द करें",
   getHint:"संकेत लेना है?", getTube:"extra ट्यूब जोड़नी है?", getUndo:"+5 वापस लेने हैं?",
-  hintFree:"संकेत मुफ़्त में!", tubeUsed:"इस लेवल में extra ट्यूब पहले से इस्तेमाल हो चुकी है।",
+  hintFree:"संकेत मुफ़्त में!", freeHint:"मुफ़्त संकेत", tubeUsed:"इस लेवल में extra ट्यूब पहले से इस्तेमाल हो चुकी है।",
   noUndo:"वापस नहीं बचे।", noHint:"कोई संकेत नहीं मिला।", stuck:"😶 कोई चाल नहीं बची!",
   stuckText:"अब कोई डालना संभव नहीं — एक चाल वापस लो या लेवल फिर से शुरू करो।", restart:"फिर से खेलें",
   dailyDone:"रोज़ की पज़ल हो गई! कल फिर आना।",
   dailyClaimed:"रोज़ का इनाम मिल गया!", dailyDouble:"विज्ञापन से दोगुना करें?",
   streak:"दिन की लकीर", locked:"बंद है — पहले पिछला लेवल पूरा करो।",
-  resetDone:"प्रोग्रेस रीसेट हो गई।", resetConfirm:"सारी प्रोग्रेस रीसेट करनी है? सिक्के और स्टार खो जाएँगे।",
-  needWatch:"आगे बढ़ने के लिए छोटा विज्ञापन देखो।", coinsEarned:"सिक्के मिले!",
+  resetDone:"प्रोग्रेस रीसेट हो गई।", resetConfirm:"सारी प्रोग्रेस रीसेट करनी है? स्टार खो जाएँगे।",
+  needWatch:"आगे बढ़ने के लिए छोटा विज्ञापन देखो।", starsEarned:"स्टार मिले!",
   completed:"पूरा हुआ!", remoteLevels:"वेब से extra लेवल लोड हुए",
   endlessDone:"अनंत लेवल पूरा हुआ!", newBest:"नया बेस्ट!"
 }};
@@ -755,26 +779,57 @@ function applyLang(){
   document.getElementById("langLabel").textContent = (lang === "en") ? "हिन्दी" : "English";
   var lh = document.getElementById("langLabelHome");
   if (lh) lh.textContent = (lang === "en") ? "हिन्दी" : "English";
-  updateDailyUI(); updateCoinsUI(); renderHomeProgress();
+  updateDailyUI(); updateStarsUI(); renderHomeProgress();
 }
 
 /* ================= Save ================= */
 var SAVE_KEY = "dripply-save-v1";
 var save = null;
 function defaultSave(){
-  return { v:1, coins:100, lang:"en", sound:true, music:true, theme:"ocean",
-    unlocked:1, stars:{}, completed:{}, undoPacks:0,
+  return { v:2, lang:"en", sound:true, music:true, theme:"ocean",
+    unlocked:1, stars:{}, starsSpent:0, freeHints:0, completed:{}, undoPacks:0,
     daily:{ lastClaim:"", streak:0 }, dailyDone:{}, remoteSeen:0 };
 }
 function loadSave(){
   try{
     var raw = window.localStorage.getItem(SAVE_KEY);
-    if (raw){ var d = JSON.parse(raw); if (d && d.v === 1) return d; }
+    if (raw){
+      var d = JSON.parse(raw);
+      if (d && d.v === 2) return d;
+      if (d && d.v === 1){
+        /* v5 migration: coins removed (stars only). Stars and progress
+           carry over. Old remote ids 61-66 are now new bundled hard
+           levels, so any stars/completed recorded for them are cleared. */
+        var m = defaultSave();
+        m.lang = d.lang || "en";
+        m.sound = (d.sound !== false); m.music = (d.music !== false);
+        m.theme = d.theme || "ocean";
+        m.unlocked = d.unlocked || 1;
+        if (d.stars) for (var k in d.stars){ var n = parseInt(k, 10); if (n < 61 || n > 66) m.stars[k] = d.stars[k]; }
+        if (d.completed) for (var k2 in d.completed){ var n2 = parseInt(k2, 10); if (n2 < 61 || n2 > 66) m.completed[k2] = d.completed[k2]; }
+        m.undoPacks = d.undoPacks || 0;
+        m.daily = d.daily || { lastClaim:"", streak:0 };
+        m.dailyDone = d.dailyDone || {};
+        m.remoteSeen = d.remoteSeen || 0;
+        return m;
+      }
+    }
   }catch(e){}
   return defaultSave();
 }
 function saveSave(){
   try{ window.localStorage.setItem(SAVE_KEY, JSON.stringify(save)); }catch(e){}
+}
+/* Spendable star balance: best stars per level minus stars spent.
+   Stars are only earned by beating a level with MORE stars than
+   before, so they are genuinely scarce — replaying a 3-star level
+   earns nothing new, and the only way to get more is to win harder
+   levels or watch an ad. */
+function totalStars(){
+  var tot = 0;
+  for (var k in save.stars) tot += save.stars[k] || 0;
+  tot -= (save.starsSpent || 0);
+  return tot < 0 ? 0 : tot;
 }
 save = loadSave();
 lang = (save.lang === "hi") ? "hi" : "en";
@@ -828,8 +883,8 @@ function sfxPourStream(){
   var lp = ac.createBiquadFilter(); lp.type = "lowpass"; lp.frequency.value = 1600;
   var g = ac.createGain();
   g.gain.setValueAtTime(0.0001, t0);
-  g.gain.exponentialRampToValueAtTime(0.16, t0 + 0.09);
-  g.gain.setValueAtTime(0.16, t0 + 0.55);
+  g.gain.exponentialRampToValueAtTime(0.22, t0 + 0.09);
+  g.gain.setValueAtTime(0.22, t0 + 0.55);
   g.gain.exponentialRampToValueAtTime(0.0001, t0 + 0.8);
   src.connect(bp); bp.connect(lp); lp.connect(g); g.connect(ac.destination);
   src.start(t0); src.stop(t0 + 0.85);
@@ -837,10 +892,26 @@ function sfxPourStream(){
 /* Water FILL sound — plays on EVERY pour landing, when the water
    level rises in the destination tube: soft glug-glug + a gentle
    splash. Audible but gentle. */
+/* v5: MUCH louder and unmistakable — a bright droplet "plip" first,
+   then four deep glugs (gain 0.12 -> 0.22) and a louder splash
+   (0.07 -> 0.14). The old fill was so quiet the user heard no drop
+   sound at all. */
 function sfxFill(){
   if (!soundOn) return;
   var ac = audio(); if (!ac) return;
-  var notes = [[300, 0], [250, 0.09], [210, 0.18]];
+  (function (){
+    var t0 = ac.currentTime;
+    var o = ac.createOscillator(), g = ac.createGain();
+    o.type = "sine";
+    o.frequency.setValueAtTime(900, t0);
+    o.frequency.exponentialRampToValueAtTime(320, t0 + 0.09);
+    g.gain.setValueAtTime(0.0001, t0);
+    g.gain.exponentialRampToValueAtTime(0.25, t0 + 0.01);
+    g.gain.exponentialRampToValueAtTime(0.0001, t0 + 0.12);
+    o.connect(g); g.connect(ac.destination);
+    o.start(t0); o.stop(t0 + 0.14);
+  })();
+  var notes = [[300, 0], [250, 0.09], [210, 0.18], [180, 0.27]];
   for (var i = 0; i < notes.length; i++){
     (function (f, dl){
       var t0 = ac.currentTime + dl;
@@ -849,7 +920,7 @@ function sfxFill(){
       o.frequency.setValueAtTime(f, t0);
       o.frequency.exponentialRampToValueAtTime(Math.max(60, f * 0.55), t0 + 0.12);
       g.gain.setValueAtTime(0.0001, t0);
-      g.gain.exponentialRampToValueAtTime(0.12, t0 + 0.015);
+      g.gain.exponentialRampToValueAtTime(0.22, t0 + 0.015);
       g.gain.exponentialRampToValueAtTime(0.0001, t0 + 0.13);
       o.connect(g); g.connect(ac.destination);
       o.start(t0); o.stop(t0 + 0.15);
@@ -861,7 +932,7 @@ function sfxFill(){
   var bp = ac.createBiquadFilter(); bp.type = "bandpass"; bp.frequency.value = 1400; bp.Q.value = 0.7;
   var g = ac.createGain();
   g.gain.setValueAtTime(0.0001, t0);
-  g.gain.exponentialRampToValueAtTime(0.07, t0 + 0.02);
+  g.gain.exponentialRampToValueAtTime(0.14, t0 + 0.02);
   g.gain.exponentialRampToValueAtTime(0.0001, t0 + 0.2);
   src.connect(bp); bp.connect(g); g.connect(ac.destination);
   src.start(t0); src.stop(t0 + 0.22);
@@ -872,7 +943,7 @@ function sfxWin(){
   for (var i = 0; i < n.length; i++) tone(n[i], 0.18, "triangle", 0.12, null, i * 0.12);
   tone(1319, 0.35, "triangle", 0.10, null, 0.5);
 }
-function sfxCoin(){ tone(988, 0.08, "triangle", 0.10); tone(1319, 0.14, "triangle", 0.10, null, 0.07); }
+function sfxReward(){ tone(988, 0.08, "triangle", 0.10); tone(1319, 0.14, "triangle", 0.10, null, 0.07); }
 /* Fallback synth melody (used only if the mp3 files cannot load).
    Slow and relaxing: one long soft note every few beats, no fast
    arpeggios — same calm feel as the mp3 tracks. */
@@ -978,13 +1049,14 @@ function showToast(msg){
   if (toastTimer) clearTimeout(toastTimer);
   toastTimer = setTimeout(function(){ el.classList.remove("show"); }, 2200);
 }
-function updateCoinsUI(){
-  var els = ["coinHome", "coinLevels", "coinGame", "coinShop"];
-  for (var i = 0; i < els.length; i++){ var e = document.getElementById(els[i]); if (e) e.textContent = save.coins; }
+function updateStarsUI(){
+  var tot = totalStars();
+  var els = ["starsHome", "starsLevels", "starsGame", "starsShop"];
+  for (var i = 0; i < els.length; i++){ var e = document.getElementById(els[i]); if (e) e.textContent = tot; }
   renderHomeProgress();
 }
 function renderHomeProgress(){
-  var total = 60 + remoteLevels.length;
+  var total = 80 + remoteLevels.length;
   var cur2 = Math.min(save.unlocked, total);
   var lbl = document.getElementById("homeLevelLabel");
   if (lbl) lbl.textContent = t("level") + " " + cur2;
@@ -993,7 +1065,7 @@ function renderHomeProgress(){
   var fill = document.getElementById("homeProgressFill");
   if (fill) fill.style.width = Math.round((cur2 / total) * 100) + "%";
   var st = document.getElementById("homeStarsText");
-  if (st){ var tot = 0; for (var k in save.stars) tot += save.stars[k] || 0; st.textContent = "⭐ " + tot; }
+  if (st){ st.textContent = "⭐ " + totalStars(); } /* v5: one star number everywhere — the spendable balance */
 }
 function confetti(){
   var colors = ["#e53935", "#ffee58", "#2e7d32", "#2979ff", "#f48fb1", "#ff9100"];
@@ -1039,7 +1111,7 @@ function showAdBreakDemo(done){
      ad. A plugin with App Open support is a separate job.
    * Placements: banner on Home only, interstitial after every 3rd
      level completed, rewarded only when the player taps Watch Ad
-     (Hint / Extra Tube / Undos / Free Coins / Daily double).
+     (Hint / Extra Tube / Undos / Daily double).
      Nothing is forced during play.
    * >>> PLACEHOLDER IDs: Google's official TEST AdMob IDs below.
      They must be replaced with the real Dripply AdMob IDs (new AdMob
@@ -1513,15 +1585,18 @@ function tryPour(from, to){
   if (!dst.length && run.len === src.length) return null; /* no-op pour */
   return { count: Math.min(run.len, space), color: run.color };
 }
-/* Animate the water levels during a pour: the source's top layers
-   shrink away, the destination's new layers grow in, and the column
-   stays one continuous liquid. Purely visual —
-   the logical state is committed only at the end of the pour. */
+/* v5 — BOTTOM-UP FILL: the receiving tube fills as ONE continuous
+   column rising from the bottom. A single .fill-anim element grows
+   from the current water level over the pour; the real slots are NOT
+   popped in at their final positions (that made water look like it
+   started from the middle when two same-colour layers poured at
+   once). The logical state is committed only at the end of the
+   pour (doPour phase C), which paints the real slots and removes
+   the fill column. */
 function animatePourLevels(from, to, count, hex){
   var srcEl = tubeEl(from), dstEl = tubeEl(to);
   if (!srcEl || !dstEl) return;
   var srcSlots = srcEl.querySelectorAll(".slot");
-  var dstSlots = dstEl.querySelectorAll(".slot");
   var srcLen = cur.state[from].length, dstLen = cur.state[to].length;
   for (var k = 0; k < count; k++){
     var s = srcSlots[srcLen - 1 - k];
@@ -1531,15 +1606,25 @@ function animatePourLevels(from, to, count, hex){
   if (ns && srcLen - count > 0){
     ns.style.background = slotGradient(COLORS[cur.state[from][srcLen - count - 1] % COLORS.length]);
   }
-  for (var k2 = 0; k2 < count; k2++){
-    var d = dstSlots[dstLen + k2];
-    if (d){
-      d.style.background = (dstLen + k2 === dstLen + count - 1) ? slotGradient(hex) : slotGradientFlat(hex);
-      d.style.borderRadius = (dstLen + k2 === 0) ? "0 0 20px 20px" : "0";
-      d.style.opacity = "1";
-      d.style.height = "calc(25% + 1px)";
-    }
-  }
+  var glass = dstEl.querySelector(".glass");
+  var oldFill = dstEl.querySelector(".fill-anim");
+  if (oldFill) oldFill.remove();
+  var fill = document.createElement("div");
+  fill.className = "fill-anim";
+  fill.style.bottom = "calc(" + (dstLen * 25) + "%)";
+  fill.style.height = "0";
+  fill.style.background = slotGradient(hex);
+  glass.appendChild(fill);
+  void fill.offsetHeight; /* reflow so the height transition animates */
+  fill.style.height = "calc(" + (count * 25) + "% + " + count + "px)";
+}
+function splashRing(x, y){
+  var r = document.createElement("div");
+  r.className = "splash-ring";
+  r.style.left = x + "px";
+  r.style.top = y + "px";
+  boardEl.appendChild(r);
+  setTimeout(function(){ r.remove(); }, 650);
 }
 function splashAt(x, y){
   for (var i = 0; i < 4; i++){
@@ -1590,10 +1675,15 @@ function doPour(from, to, count){
   var mx = x1 + tx + dir * 0.486 * H;
   var my = y1 + ty + 0.808 * H;
   var stream = document.getElementById("stream");
-  var drops = stream.querySelectorAll(".drop");
-  for (var di = 0; di < drops.length; di++){
-    drops[di].style.background = "radial-gradient(circle at 35% 30%, #fff, " + hex + " 70%)";
+  /* Colour the SVG stream: gradient stops (light -> dark) and droplets. */
+  var grad = document.getElementById("streamGrad");
+  if (grad){
+    var stops = grad.querySelectorAll("stop");
+    if (stops[1]) stops[1].setAttribute("stop-color", light);
+    if (stops[2]) stops[2].setAttribute("stop-color", dark);
   }
+  var sdrops = stream.querySelectorAll(".sdrop");
+  for (var di = 0; di < sdrops.length; di++){ sdrops[di].setAttribute("fill", hex); }
   setTimeout(function(){
     if (tk !== pourToken) return;
     /* Phase B — the stream arcs from the tilted mouth down into the
@@ -1601,14 +1691,14 @@ function doPour(from, to, count){
     var sdx = x2 - mx, sdy = (y2 + 4) - my;
     var len = Math.sqrt(sdx * sdx + sdy * sdy);
     var ang = Math.atan2(sdx, sdy) * 180 / Math.PI;
-    stream.style.left = (mx - 5) + "px";
+    stream.style.left = (mx - 8) + "px";
     stream.style.top = my + "px";
     stream.style.height = Math.max(24, len) + "px";
-    stream.style.background = "linear-gradient(90deg, rgba(255,255,255,.75) 0%, " + light + " 30%, " + hex + " 60%, " + dark + " 100%)";
     stream.style.transform = "rotate(" + ang + "deg)";
     stream.classList.add("on");
     animatePourLevels(from, to, count, hex);
     splashAt(x2, y2 + 2);
+    splashRing(x2, y2 + 2);
     sfxFill();
     setTimeout(function(){
       if (tk !== pourToken) return;
@@ -1632,6 +1722,7 @@ function doPour(from, to, count){
       renderBoardSelection();
       document.getElementById("movesNow").textContent = cur.moves;
       document.getElementById("starsNow").textContent = "★".repeat(starsFor(cur.moves, cur.def.par));
+      var fa = dstEl.querySelector(".fill-anim"); if (fa) fa.remove();
       paintSlots();
       srcEl.style.transition = "transform .35s ease";
       srcEl.style.transform = "";
@@ -1644,8 +1735,8 @@ function doPour(from, to, count){
         if (S.isSolved(cur.state)) onWin();
         else checkStuck();
       }, 400);
-    }, 620);
-  }, 320);
+    }, 800);
+  }, 450);
 }
 function renderBoardSelection(){
   for (var i = 0; i < cur.state.length; i++){
@@ -1655,20 +1746,18 @@ function renderBoardSelection(){
 }
 
 /* ================= Win ================= */
+/* Win (v5, stars only): no coins are awarded. Stars are the only
+   currency — 1-3 by moves vs par. A daily win grants 1 free Hint. */
 function onWin(){
   sfxWin();
   confetti();
   var stars = starsFor(cur.moves, cur.def.par);
-  var coins = 0;
-  if (cur.def.kind === "daily") coins = 50;
-  else coins = (stars === 3) ? 30 : (stars === 2) ? 25 : 20;
-  save.coins += coins;
   var isNew = false;
   if (cur.def.kind === "bundled"){
     var prev = save.stars[cur.def.id] || 0;
     if (stars > prev){ save.stars[cur.def.id] = stars; isNew = true; }
     save.completed[cur.def.id] = 1;
-    if (cur.def.id >= save.unlocked && cur.def.id < 60 + 1000) save.unlocked = Math.max(save.unlocked, cur.def.id + 1);
+    if (cur.def.id >= save.unlocked && cur.def.id < 80 + 1000) save.unlocked = Math.max(save.unlocked, cur.def.id + 1);
   } else if (cur.def.kind === "remote"){
     save.stars[cur.def.id] = Math.max(save.stars[cur.def.id] || 0, stars);
     save.completed[cur.def.id] = 1;
@@ -1678,14 +1767,16 @@ function onWin(){
     save.unlocked = Math.max(save.unlocked, cur.def.id + 1);
   } else if (cur.def.kind === "daily"){
     save.dailyDone[cur.def.dateKey] = 1;
+    save.freeHints++;
   }
   saveSave();
-  updateCoinsUI();
+  updateStarsUI();
   document.getElementById("winStars").textContent = "★".repeat(stars) + "☆".repeat(3 - stars);
   document.getElementById("winText").textContent =
     (cur.def.kind === "daily" ? t("dailyChallenge") : t("level") + " " + cur.def.id) + " — " +
     t("completed") + (isNew ? " " + t("newBest") : "");
-  document.getElementById("winCoins").textContent = "+" + coins + " 🪙 " + t("coinsEarned");
+  document.getElementById("winReward").textContent =
+    (cur.def.kind === "daily") ? ("💡 +1 " + t("freeHint")) : ("★".repeat(stars) + " " + t("starsEarned"));
   document.getElementById("btnNext").style.display = (cur.def.kind === "daily") ? "none" : "";
   document.getElementById("winModal").classList.remove("hidden");
   maybeShowInterstitial(function(){ /* ad shown/dismissed; win modal stays */ });
@@ -1706,14 +1797,14 @@ function checkStuck(){
 /* ================= Undo / Hint / Extra tube ================= */
 function updateActionUI(){
   document.getElementById("undoLeft").textContent = cur ? ("(" + cur.undosLeft + " " + t("undo").toLowerCase() + ")") : "";
-  document.getElementById("hintCost").textContent = "(" + HINT_COST + " 🪙 / 🎥)";
-  document.getElementById("tubeCost").textContent = "(" + TUBE_COST + " 🪙 / 🎥)";
+  document.getElementById("hintCost").textContent = "(" + HINT_STARS + " ⭐ / 🎥)" + (save.freeHints > 0 ? " • 💡" + save.freeHints : "");
+  document.getElementById("tubeCost").textContent = "(🎥)";
 }
 function doUndo(){
   if (!cur || cur.animating) return;
   if (!cur.history.length){ showToast(t("noUndo")); return; }
   if (cur.undosLeft <= 0){
-    askCoinsOrAd(t("getUndo"), UNDO_COST, function(){
+    askAdOnly(t("getUndo"), function(){
       cur.undosLeft += 5; updateActionUI(); applyUndo();
     });
     return;
@@ -1738,49 +1829,64 @@ function applyUndo(){
    the player makes the hinted move (see doPour); any other move
    invalidates it and the next hint re-solves. */
 var hintCache = null; /* {key, moves} */
+/* Hint (v5): a free Hint from the daily reward is used first;
+   otherwise it costs 30 stars, or a rewarded ad. Stars are scarce,
+   so most players will watch the ad. */
 function doHint(){
   if (!cur || cur.animating) return;
-  askCoinsOrAd(t("getHint"), HINT_COST, function(){
-    var key = S.stateKey(cur.state);
-    if (!hintCache || hintCache.key !== key || !hintCache.moves.length){
-      var res = S.solve(cur.state, { maxNodes: 200000 });
-      if (!res.solved || !res.moves.length){ showToast(t("noHint")); return; }
-      hintCache = { key: key, moves: res.moves };
-    }
-    var mv = hintCache.moves[0];
-    var a = tubeEl(mv.from), b = tubeEl(mv.to);
-    if (a) a.classList.add("hint-from");
-    if (b) b.classList.add("hint-to");
-    setTimeout(function(){
-      if (a) a.classList.remove("hint-from");
-      if (b) b.classList.remove("hint-to");
-    }, 1500);
-    sfxSelect();
-  });
+  if (save.freeHints > 0){
+    save.freeHints--; saveSave(); updateStarsUI(); updateActionUI();
+    showHintMove();
+    return;
+  }
+  askStarsOrAd(t("getHint"), HINT_STARS, function(){ showHintMove(); });
+}
+function showHintMove(){
+  var key = S.stateKey(cur.state);
+  if (!hintCache || hintCache.key !== key || !hintCache.moves.length){
+    var res = S.solve(cur.state, { maxNodes: 200000 });
+    if (!res.solved || !res.moves.length){ showToast(t("noHint")); return; }
+    hintCache = { key: key, moves: res.moves };
+  }
+  var mv = hintCache.moves[0];
+  var a = tubeEl(mv.from), b = tubeEl(mv.to);
+  if (a) a.classList.add("hint-from");
+  if (b) b.classList.add("hint-to");
+  setTimeout(function(){
+    if (a) a.classList.remove("hint-from");
+    if (b) b.classList.remove("hint-to");
+  }, 1500);
+  sfxSelect();
 }
 function doExtraTube(){
   if (!cur || cur.animating) return;
   if (cur.tubeUsed){ showToast(t("tubeUsed")); return; }
-  askCoinsOrAd(t("getTube"), TUBE_COST, function(){
+  askAdOnly(t("getTube"), function(){
     cur.tubeUsed = true;
     hintCache = null;
     cur.history.push(S.cloneState(cur.state));
     cur.state.push([]);
     renderBoard();
     updateActionUI();
-    sfxCoin();
+    sfxReward();
   });
 }
-/* Pay with coins if possible; otherwise offer the rewarded ad.
-   If the player has enough coins, coins are spent (no ad shown).
-   If not, the rewarded ad is offered. */
-function askCoinsOrAd(question, cost, onPaid){
-  if (save.coins >= cost){
-    save.coins -= cost; saveSave(); updateCoinsUI();
+/* Pay with stars if possible; otherwise offer the rewarded ad.
+   Stars are scarce (earned only by beating levels with more stars),
+   so players who run out must watch an ad. */
+function askStarsOrAd(question, cost, onPaid){
+  if (totalStars() >= cost){
+    save.starsSpent += cost; saveSave(); updateStarsUI(); updateActionUI();
     onPaid();
     return;
   }
-  if (window.confirm(t("noCoins"))){
+  if (window.confirm(t("noStars"))){
+    watchRewardedAd(function(){ onPaid(); });
+  }
+}
+/* Watch Ad only (no star option): Extra Tube and extra Undo. */
+function askAdOnly(question, onPaid){
+  if (window.confirm(t("needWatch"))){
     watchRewardedAd(function(){ onPaid(); });
   }
 }
@@ -1789,7 +1895,7 @@ function askCoinsOrAd(question, cost, onPaid){
 function renderLevels(){
   var grid = document.getElementById("lvGrid");
   grid.innerHTML = "";
-  var total = 60 + remoteLevels.length;
+  var total = 80 + remoteLevels.length;
   var showUpTo = Math.min(total + 1, Math.max(save.unlocked + 1, 1));
   for (var n = 1; n <= showUpTo; n++){
     var b = document.createElement("button");
@@ -1827,13 +1933,15 @@ function nextStreak(){
   var yKey = y.getFullYear() + "-" + (y.getMonth() + 1) + "-" + y.getDate();
   return (save.daily.lastClaim === yKey) ? (save.daily.streak || 0) + 1 : 1;
 }
+/* Daily reward (v5, stars-only): 1 free Hint, +1 per streak day
+   after the first, capped at 3. Double with ad = twice the hints. */
 function dailyAmount(){
-  return Math.min(250, 100 + (nextStreak() - 1) * 25);
+  return Math.min(3, nextStreak());
 }
 function updateDailyUI(){
   var key = todayKey();
   var claimed = save.daily.lastClaim === key;
-  document.getElementById("dailyAmt").textContent = "+" + dailyAmount() + " 🪙";
+  document.getElementById("dailyAmt").textContent = "💡 " + dailyAmount() + " " + t("freeHint");
   document.getElementById("dailyInfo").textContent =
     claimed ? t("dailyClaimed") : ((save.daily.streak || 0) + " " + t("streak"));
   document.getElementById("btnDailyClaim").style.display = claimed ? "none" : "";
@@ -1846,12 +1954,12 @@ function claimDaily(doubleIt){
   var amt = dailyAmount();
   if (doubleIt) amt *= 2;
   save.daily.streak = nextStreak();
-  save.coins += amt;
+  save.freeHints += amt;
   save.daily.lastClaim = key;
   saveSave();
-  updateCoinsUI(); updateDailyUI();
-  sfxCoin();
-  showToast("+" + amt + " 🪙 " + t("dailyClaimed"));
+  updateStarsUI(); updateDailyUI();
+  sfxReward();
+  showToast("💡 +" + amt + " " + t("freeHint") + " • " + t("dailyClaimed"));
 }
 
 /* ================= Wiring ================= */
@@ -1860,9 +1968,9 @@ function bind(id, fn){
   if (el) el.addEventListener("click", function(){ audio(); sfxClick(); fn(); });
 }
 bind("btnPlay", function(){ startLevel(save.unlocked, "bundled"); });
-bind("btnLevels", function(){ renderLevels(); updateCoinsUI(); if (window.AdMobNative) window.AdMobNative.showHomeBanner(); showScreen("levels"); });
-bind("btnLevelsBack", function(){ updateCoinsUI(); showScreen("home"); });
-bind("btnEndless", function(){ startLevel(Math.max(save.unlocked, 61), "endless"); });
+bind("btnLevels", function(){ renderLevels(); updateStarsUI(); if (window.AdMobNative) window.AdMobNative.showHomeBanner(); showScreen("levels"); });
+bind("btnLevelsBack", function(){ updateStarsUI(); showScreen("home"); });
+bind("btnEndless", function(){ startLevel(Math.max(save.unlocked, 97), "endless"); });
 bind("btnDaily", function(){
   if (save.dailyDone[todayKey()]){ showToast(t("dailyDone")); return; }
   startLevel(0, "daily");
@@ -1874,7 +1982,7 @@ bind("btnDailyClaim", function(){
     claimDaily(false);
   }
 });
-bind("btnGameHome", function(){ updateCoinsUI(); updateDailyUI(); showScreen("home"); if (window.AdMobNative) window.AdMobNative.showHomeBanner(); });
+bind("btnGameHome", function(){ updateStarsUI(); updateDailyUI(); showScreen("home"); if (window.AdMobNative) window.AdMobNative.showHomeBanner(); });
 bind("btnRestart", function(){ if (cur) startLevel(cur.def.kind === "daily" ? 0 : cur.def.id, cur.def.kind); });
 bind("btnUndo", function(){ doUndo(); });
 bind("btnHint", function(){ doHint(); });
@@ -1886,7 +1994,7 @@ bind("btnNext", function(){
 });
 bind("btnWinHome", function(){
   document.getElementById("winModal").classList.add("hidden");
-  updateCoinsUI(); updateDailyUI(); showScreen("home");
+  updateStarsUI(); updateDailyUI(); showScreen("home");
   if (window.AdMobNative) window.AdMobNative.showHomeBanner();
 });
 bind("btnStuckUndo", function(){
@@ -1899,7 +2007,7 @@ bind("btnStuckRestart", function(){
 });
 bind("btnSettings", function(){ showScreen("settings"); });
 bind("btnSettingsBack", function(){ showScreen("home"); });
-bind("btnShop", function(){ updateCoinsUI(); showScreen("shop"); });
+bind("btnShop", function(){ updateStarsUI(); showScreen("shop"); });
 bind("btnShopBack", function(){ showScreen("settings"); });
 bind("btnLang", function(){
   lang = (lang === "en") ? "hi" : "en";
@@ -1918,7 +2026,7 @@ bind("btnReset", function(){
   save.lang = keepLang; save.theme = keepTheme;
   lang = keepLang;
   saveSave();
-  applyLang(); setTheme(keepTheme); updateCoinsUI(); updateDailyUI();
+  applyLang(); setTheme(keepTheme); updateStarsUI(); updateDailyUI();
   showToast(t("resetDone"));
   showScreen("home");
 });
@@ -1936,18 +2044,20 @@ document.getElementById("tglMusic").addEventListener("click", function(){
    sound effects and music; the Settings toggles stay in sync. */
 function syncMuteUI(){
   var el = document.getElementById("btnMute");
-  if (el) el.textContent = (soundOn || musicOn) ? "🔊" : "🔇";
+  if (el) el.textContent = musicOn ? "🔊" : "🔇";
   var ts = document.getElementById("tglSound"); if (ts) ts.classList.toggle("on", soundOn);
   var tm = document.getElementById("tglMusic"); if (tm) tm.classList.toggle("on", musicOn);
 }
+/* Master mute on the play screen silences ONLY the background music.
+   Sound effects are never muted by this button — muting music must
+   never silence the pour/drop sounds (v5 fix). */
 document.getElementById("btnMute").addEventListener("click", function(){
   audio();
-  var turnOn = !(soundOn || musicOn);
-  soundOn = turnOn; musicOn = turnOn;
-  save.sound = soundOn; save.music = musicOn; saveSave();
+  musicOn = !musicOn;
+  save.music = musicOn; saveSave();
   syncMuteUI();
   if (musicOn) startMusic(); else stopMusic();
-  if (soundOn) sfxClick();
+  sfxClick();
 });
 var themeBtns = document.querySelectorAll("[data-theme-btn]");
 for (var ti = 0; ti < themeBtns.length; ti++){
@@ -1956,22 +2066,24 @@ for (var ti = 0; ti < themeBtns.length; ti++){
     setTheme(this.getAttribute("data-theme-btn"));
   });
 }
+/* Shop (v5, stars only): a Hint costs 30 stars (stored as a free Hint
+   for a later level) or a rewarded ad; Undo Pack is ad only. */
 var buyBtns = document.querySelectorAll("[data-buy]");
 for (var bi = 0; bi < buyBtns.length; bi++){
   buyBtns[bi].addEventListener("click", function(){
     audio(); sfxClick();
     var kind = this.getAttribute("data-buy");
     if (kind === "hint"){
-      if (save.coins >= HINT_COST){ save.coins -= HINT_COST; saveSave(); updateCoinsUI(); showToast("💡 " + t("hint")); }
-      else watchRewardedAd(function(){ save.coins += 0; showToast("💡 " + t("hintFree")); });
-    } else if (kind === "tube"){
-      if (save.coins >= TUBE_COST){ save.coins -= TUBE_COST; saveSave(); updateCoinsUI(); showToast("🧪 " + t("extraTube")); }
-      else watchRewardedAd(function(){ showToast("🧪 " + t("hintFree")); });
+      if (totalStars() >= HINT_STARS){
+        save.starsSpent += HINT_STARS;
+        save.freeHints++;
+        saveSave(); updateStarsUI();
+        showToast("💡 +1 " + t("freeHint"));
+      } else {
+        watchRewardedAd(function(){ save.freeHints++; saveSave(); updateStarsUI(); showToast("💡 " + t("hintFree")); });
+      }
     } else if (kind === "undo"){
-      if (save.coins >= UNDO_COST){ save.coins -= UNDO_COST; save.undoPacks++; saveSave(); updateCoinsUI(); showToast("↩️ +5 " + t("undo")); }
-      else watchRewardedAd(function(){ save.undoPacks++; saveSave(); showToast("↩️ +5 " + t("undo")); });
-    } else if (kind === "ad"){
-      watchRewardedAd(function(){ save.coins += 40; saveSave(); updateCoinsUI(); sfxCoin(); showToast("+40 🪙"); });
+      watchRewardedAd(function(){ save.undoPacks++; saveSave(); showToast("↩️ +5 " + t("undo")); });
     }
   });
 }
@@ -1982,7 +2094,7 @@ setTheme(save.theme || "ocean");
 document.getElementById("tglSound").classList.toggle("on", soundOn);
 document.getElementById("tglMusic").classList.toggle("on", musicOn);
 syncMuteUI();
-updateCoinsUI();
+updateStarsUI();
 updateDailyUI();
 document.addEventListener("click", function(){ startMusic(); }, { once: true });
 if (window.AdMobNative) window.AdMobNative.init();
