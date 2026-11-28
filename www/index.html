@@ -34,6 +34,13 @@ h1.logo{font-size:52px;font-weight:900;letter-spacing:1px;line-height:1;
   background:linear-gradient(90deg,#7dd3fc,#fde68a,#f9a8d4,#a5b4fc);
   -webkit-background-clip:text;background-clip:text;color:transparent;
   filter:drop-shadow(0 3px 10px rgba(0,0,0,.35));margin-top:8px}
+/* ---- glossy 3D droplet logo (v6): a real SVG droplet — teal-blue
+   gradient, white shine, sparkle + soft shadow — next to the title,
+   replacing the plain 💧 emoji which looked flat and unfinished. ---- */
+.logo-drop{display:inline-block;vertical-align:-14px;margin-right:2px}
+.logo-drop svg{display:block;width:50px;height:66px;filter:drop-shadow(0 4px 8px rgba(0,0,0,.4));
+  animation:dropBob 2.6s ease-in-out infinite}
+@keyframes dropBob{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
 .sub{color:var(--muted);font-size:15px;margin:6px 0 16px}
 .card{background:var(--card);border:1px solid rgba(255,255,255,.18);border-radius:18px;
   padding:14px 16px;width:100%;max-width:420px;backdrop-filter:blur(6px)}
@@ -56,7 +63,6 @@ h1.logo{font-size:52px;font-weight:900;letter-spacing:1px;line-height:1;
 .lv-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:9px;width:100%;max-width:420px;margin-top:12px}
 .lv{aspect-ratio:1;border-radius:14px;background:var(--card);border:1px solid rgba(255,255,255,.2);
   font-size:17px;font-weight:800;position:relative}
-.lv .st{position:absolute;right:3px;top:2px;font-size:10px;color:var(--gold);letter-spacing:1px}
 .lv.done{background:linear-gradient(135deg,rgba(105,219,124,.45),rgba(105,219,124,.2))}
 .lv.locked{opacity:.45}
 .lv.remote{border-color:var(--gold)}
@@ -153,9 +159,6 @@ h1.logo{font-size:52px;font-weight:900;letter-spacing:1px;line-height:1;
   animation:popIn .35s cubic-bezier(.34,1.56,.64,1)}
 #choiceModal .drop{font-size:46px;animation:bob 1.6s ease-in-out infinite}
 @keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
-#choiceModal .float-stars{font-size:22px;color:var(--gold);letter-spacing:8px;animation:twinkle 1.2s ease-in-out infinite}
-@keyframes twinkle{0%,100%{opacity:.5;transform:scale(.92)}50%{opacity:1;transform:scale(1.08)}}
-.stars{font-size:34px;letter-spacing:6px;color:var(--gold);margin:4px 0 8px}
 #toast{position:fixed;left:50%;bottom:110px;transform:translateX(-50%);background:rgba(0,0,0,.82);
   color:#fff;padding:11px 18px;border-radius:999px;font-size:15px;font-weight:700;z-index:80;
   opacity:0;pointer-events:none;transition:opacity .25s;max-width:88vw;text-align:center}
@@ -238,7 +241,7 @@ h1.logo{animation:logoShine 4.5s ease-in-out infinite}
 @keyframes heroFill{0%,30%{height:calc(25% + 1px)}56%{height:calc(70% + 1px)}72%{height:calc(70% + 1px)}100%{height:calc(25% + 1px)}}
 .hero-drain{animation:heroDrain 6s ease-in-out infinite}
 @keyframes heroDrain{0%,30%{height:calc(25% + 1px);opacity:1}56%{height:0;opacity:0}72%{height:0;opacity:0}100%{height:calc(25% + 1px);opacity:1}}
-@media (max-width:360px){.tube{width:52px;height:164px}#board.big .tube{width:56px;height:176px}#board.small .tube{width:44px;height:140px}h1.logo{font-size:44px}}
+@media (max-width:360px){.tube{width:52px;height:164px}#board.big .tube{width:56px;height:176px}#board.small .tube{width:44px;height:140px}h1.logo{font-size:44px}.logo-drop svg{width:42px;height:56px}}
 </style>
 </head>
 <body data-theme="ocean">
@@ -271,9 +274,9 @@ body.net-gated *{animation-play-state:paused !important}
 <div class="screen active" id="screen-home">
   <div class="topbar">
     <button class="icon-btn" id="btnSettings" aria-label="Settings">⚙️</button>
-    <span class="pill coin">⭐ <span id="starsHome">0</span></span>
+    <span style="width:44px"></span>
   </div>
-  <h1 class="logo">💧 Dripply</h1>
+  <h1 class="logo"><span class="logo-drop" aria-hidden="true"><svg viewBox="0 0 64 84" width="50" height="66"><defs><linearGradient id="lgDrop" x1="0" y1="0" x2="0.3" y2="1"><stop offset="0%" stop-color="#cffafe"/><stop offset="30%" stop-color="#22d3ee"/><stop offset="65%" stop-color="#0284c7"/><stop offset="100%" stop-color="#075985"/></linearGradient><radialGradient id="lgShine" cx="0.5" cy="0.5" r="0.5"><stop offset="0%" stop-color="#ffffff" stop-opacity="0.95"/><stop offset="100%" stop-color="#ffffff" stop-opacity="0"/></radialGradient></defs><ellipse cx="32" cy="78" rx="19" ry="4" fill="rgba(0,0,0,0.35)"/><path d="M32 3 C32 3 7 33 7 51 A25 25 0 0 0 57 51 C57 33 32 3 32 3 Z" fill="url(#lgDrop)" stroke="rgba(255,255,255,0.7)" stroke-width="1.5"/><ellipse cx="23" cy="45" rx="6.5" ry="11" fill="url(#lgShine)" transform="rotate(-18 23 45)"/><circle cx="41" cy="59" r="3" fill="#ffffff" opacity="0.9"/><circle cx="45" cy="65" r="1.6" fill="#ffffff" opacity="0.7"/></svg></span> Dripply</h1>
   <div class="sub" data-i18n="tagline">Water Sort Puzzle — sort every colour, clear every tube!</div>
 
   <div class="hero" aria-hidden="true">
@@ -302,7 +305,7 @@ body.net-gated *{animation-play-state:paused !important}
   </div>
 
   <div class="card" style="margin-top:10px">
-    <div class="row"><b id="homeLevelLabel">Level 1</b><span class="pill" id="homeStarsText">⭐ 0</span><span class="pill" id="homeProgressText">1 / 60</span></div>
+    <div class="row"><b id="homeLevelLabel">Level 1</b><span class="pill" id="homeProgressText">1 / 60</span></div>
     <div class="prog"><div class="prog-fill" id="homeProgressFill"></div></div>
   </div>
 
@@ -316,7 +319,7 @@ body.net-gated *{animation-play-state:paused !important}
   </div>
 
   <div class="card daily-card" id="dailyCard">
-    <div class="row"><b data-i18n="dailyReward">🎁 Daily Reward</b><span class="pill coin" id="dailyAmt">💡 1 free Hint</span></div>
+    <div class="row"><b data-i18n="dailyReward">🎁 Daily Reward</b><span class="pill coin" id="dailyAmt">↩️ 1 Undo Pack</span></div>
     <div class="row" style="margin-top:10px">
       <span style="color:var(--muted);font-size:14px" id="dailyInfo">Come back every day!</span>
       <button class="ghost-btn" id="btnDailyClaim">Claim</button>
@@ -328,7 +331,7 @@ body.net-gated *{animation-play-state:paused !important}
 
   <div class="card" style="margin-top:12px">
     <div class="row"><b data-i18n="dailyChallenge">📅 Daily Challenge</b><span class="pill" id="dailyState">—</span></div>
-    <p style="color:var(--muted);font-size:14px;margin:8px 0" data-i18n="dailyDesc">One special puzzle every day. Solve it for a free Hint!</p>
+    <p style="color:var(--muted);font-size:14px;margin:8px 0" data-i18n="dailyDesc">One special puzzle every day. Solve it for a reward!</p>
     <button class="ghost-btn" id="btnDaily" style="width:100%" data-i18n="playDaily">Play Daily Puzzle</button>
   </div>
 
@@ -336,7 +339,7 @@ body.net-gated *{animation-play-state:paused !important}
     <div class="row"><b data-i18n="howTo">❓ How to play</b></div>
     <p style="color:var(--muted);font-size:14px;margin-top:6px" data-i18n="howToText">Tap a tube, then tap another tube to pour. Pour only on the same colour or an empty tube. Sort every tube to one colour to win!</p>
   </div>
-  <div class="footer">Dripply • Water Sort Puzzle • v5.0 • Ads only, no payments</div>
+  <div class="footer">Dripply • Water Sort Puzzle • v6.0 • Ads only, no payments</div>
 </div>
 
 <!-- ================= LEVELS ================= -->
@@ -344,7 +347,7 @@ body.net-gated *{animation-play-state:paused !important}
   <div class="topbar">
     <button class="icon-btn" id="btnLevelsBack">←</button>
     <b style="font-size:19px" data-i18n="levels">🧩 Levels</b>
-    <span class="pill coin">⭐ <span id="starsLevels">0</span></span>
+    <span style="width:44px"></span>
   </div>
   <div style="color:var(--muted);font-size:14px" id="levelsInfo"></div>
   <div class="lv-grid" id="lvGrid"></div>
@@ -356,12 +359,11 @@ body.net-gated *{animation-play-state:paused !important}
   <div class="topbar">
     <button class="icon-btn" id="btnGameHome">🏠</button>
     <b style="font-size:18px" id="gameTitle">Level 1</b>
-    <span class="pill coin">⭐ <span id="starsGame">0</span></span>
+    <span style="width:44px"></span>
   </div>
   <div class="game-body">
   <div class="hud">
     <span class="stat"><span data-i18n="moves">Moves</span>: <span id="movesNow">0</span>/<span id="movesPar">0</span></span>
-    <span class="stat">⭐ <span id="starsNow">—</span></span>
     <button class="icon-btn" id="btnRestart" aria-label="Restart" style="width:38px;height:38px">↺</button>
     <button class="icon-btn" id="btnMute" aria-label="Mute" style="width:38px;height:38px">🔊</button>
   </div>
@@ -404,7 +406,7 @@ body.net-gated *{animation-play-state:paused !important}
       </div>
     </div>
     <div class="set-row">
-      <div><div class="lab" data-i18n="reset">Reset Progress</div><div class="sub2" data-i18n="reset_s">Stars and unlocked levels</div></div>
+      <div><div class="lab" data-i18n="reset">Reset Progress</div><div class="sub2" data-i18n="reset_s">Unlocked levels</div></div>
       <button class="ghost-btn" id="btnReset">Reset</button>
     </div>
   </div>
@@ -416,28 +418,24 @@ body.net-gated *{animation-play-state:paused !important}
   <div class="topbar">
     <button class="icon-btn" id="btnShopBack">←</button>
     <b style="font-size:19px" data-i18n="shop">🛍️ Shop</b>
-    <span class="pill coin">⭐ <span id="starsShop">0</span></span>
+    <span style="width:44px"></span>
   </div>
   <div class="card">
-    <div class="shop-item">
-      <div><div class="nm">💡 <span data-i18n="hint">Hint</span></div><div class="ds" data-i18n="hint_s">Shows one correct next move — stored as a free Hint</div></div>
-      <button class="ghost-btn" data-buy="hint"><span class="price">30 ⭐ / 🎥</span></button>
-    </div>
     <div class="shop-item" style="border-bottom:none">
       <div><div class="nm">↩️ <span data-i18n="undoPack">Undo Pack</span></div><div class="ds" data-i18n="undo_s">+5 undos for your next level</div></div>
       <button class="ghost-btn" data-buy="undo"><span class="price">🎥 Watch Ad</span></button>
     </div>
   </div>
-  <p style="color:var(--muted);font-size:13px;text-align:center;margin-top:12px" data-i18n="shopNote">Hint and Undo are also available inside a level — by stars or by watching an ad.</p>
+  <p style="color:var(--muted);font-size:13px;text-align:center;margin-top:12px" data-i18n="shopNote">Hint, Undo and Extra Tube are also available inside a level — by watching an ad.</p>
 </div>
 
 <!-- ================= WIN MODAL ================= -->
 <div class="modal hidden" id="winModal">
   <div class="box">
     <h2 data-i18n="youWin">🎉 You Win!</h2>
-    <div class="stars" id="winStars">★★★</div>
     <p id="winText"></p>
     <p class="coin" style="font-size:18px;font-weight:800" id="winReward"></p>
+    <button class="big-btn hidden" id="btnWinReward" style="background:linear-gradient(135deg,#fbbf24,#f59e0b);color:#451a03">🎥 <span data-i18n="claimReward">Claim Reward</span></button>
     <button class="big-btn" id="btnNext" data-i18n="next">Next Level →</button>
     <button class="ghost-btn" id="btnWinHome" style="width:100%;margin-top:10px" data-i18n="home">Home</button>
   </div>
@@ -457,7 +455,6 @@ body.net-gated *{animation-play-state:paused !important}
 <div class="modal hidden" id="choiceModal">
   <div class="box">
     <div class="drop" id="choiceIcon">💧</div>
-    <div class="float-stars">★ ★ ★</div>
     <h2 id="choiceTitle"></h2>
     <p id="choiceText"></p>
     <button class="big-btn" id="btnChoiceYes"></button>
@@ -623,16 +620,42 @@ body.net-gated *{animation-play-state:paused !important}
     return arr;
   }
 
-  /* Random deal: `colors` colours x 4 layers into colors+2 tubes. */
-  function randomDeal(colors, rand) {
+  /* Random deal: `colors` colours x 4 layers into colors+emptyTubes
+     tubes (default 2 empty tubes, the classic layout). */
+  function randomDeal(colors, rand, emptyTubes) {
     var pool = [];
     for (var c = 0; c < colors; c++) for (var k = 0; k < CAP; k++) pool.push(c);
     shuffle(pool, rand);
     var tubes = [];
     for (var i = 0; i < colors; i++) tubes.push(pool.slice(i * CAP, (i + 1) * CAP));
-    tubes.push([]);
-    tubes.push([]);
+    var empt = (typeof emptyTubes === "number") ? emptyTubes : 2;
+    for (var e = 0; e < empt; e++) tubes.push([]);
     return tubes;
+  }
+
+  /* One forward pour that fills an empty tube WITHOUT emptying its
+     source (k < source length). Used to turn a verified 2-empty deal
+     into a 1-empty level: random 1-empty deals are almost never
+     solvable at 8+ colours (the solver exhausts the whole reachable
+     state space), but a solvable 2-empty deal stays solvable after
+     one such pour ~97-100% of the time. Returns the new state, or
+     null when no such pour exists. The caller must solver-verify
+     the result (solve() with the game's node limit). */
+  function fillOneEmpty(state, rand) {
+    var pours = [];
+    for (var f = 0; f < state.length; f++) {
+      var src = state[f];
+      if (!src.length) continue;
+      var run = topRun(src);
+      for (var t = 0; t < state.length; t++) {
+        if (t === f || state[t].length) continue;
+        var kMax = Math.min(run.len, src.length - 1);
+        for (var k = 1; k <= kMax; k++) pours.push({ from: f, to: t, count: k });
+      }
+    }
+    if (!pours.length) return null;
+    var mv = pours[Math.floor(rand() * pours.length)];
+    return applyMove(state, mv);
   }
 
   /* Generate one solvable level: shuffle + solver verify, retry.
@@ -653,10 +676,21 @@ body.net-gated *{animation-play-state:paused !important}
     return null;
   }
 
-  /* Colours for a bundled level number (1-based). */
+  /* Colours for a bundled level number (1-based). v6: steep ramp —
+     only levels 1-2 are easy (3 colours); colours rise fast after
+     that and reach 12 by level 55. Levels 3+ have exactly ONE empty
+     tube (colors+2 tubes total) — see the level notes below. */
   function colorsForLevel(n) {
-    var c = 3 + Math.floor((n - 1) / 7);
-    return c > 10 ? 10 : c;
+    if (n <= 2) return 3;
+    if (n <= 5) return 4;
+    if (n <= 9) return 5;
+    if (n <= 14) return 6;
+    if (n <= 20) return 7;
+    if (n <= 27) return 8;
+    if (n <= 35) return 9;
+    if (n <= 44) return 10;
+    if (n <= 54) return 11;
+    return 12;
   }
   /* Colours for endless levels after the bundled + remote levels.
      Rises fast (v5: harder endless) — 10 colours to 75, 11 to 90,
@@ -700,7 +734,7 @@ body.net-gated *{animation-play-state:paused !important}
   var api = {
     CAP: CAP, topRun: topRun, isSolved: isSolved, stateKey: stateKey,
     cloneState: cloneState, legalMoves: legalMoves, applyMove: applyMove,
-    solve: solve, rng: rng, shuffle: shuffle, randomDeal: randomDeal,
+    solve: solve, rng: rng, shuffle: shuffle, randomDeal: randomDeal, fillOneEmpty: fillOneEmpty,
     generateLevel: generateLevel, colorsForLevel: colorsForLevel,
     colorsForEndless: colorsForEndless, validateLevel: validateLevel,
     hintMove: hintMove
@@ -712,13 +746,26 @@ body.net-gated *{animation-play-state:paused !important}
 
 <script>
 /* ================= Data ================= */
-/* Level notes (verified with the solver + a BFS optimal solver):
-   - Level 5 par is 8: BFS-proven optimal is 7 moves, so the old par
-     of 6 made 3 stars impossible. - Level 57 had two identical tubes
-     [4,9,6,8]; fixed 2026-11-27 by swapping one top layer between
-     tubes 2 and 5 (colour counts unchanged, solver-verified, BFS
-     optimal 33 <= par 54). */
-var LEVELS = [{"id":1,"colors":3,"par":11,"tubes":[[0,1,2,0],[2,1,0,1],[2,0,1,2],[],[]]},{"id":2,"colors":3,"par":8,"tubes":[[1,0,2,2],[1,1,0,2],[2,0,0,1],[],[]]},{"id":3,"colors":3,"par":9,"tubes":[[0,1,2,1],[1,1,2,0],[0,0,2,2],[],[]]},{"id":4,"colors":3,"par":11,"tubes":[[0,0,1,2],[2,0,1,1],[0,2,1,2],[],[]]},{"id":5,"colors":3,"par":8,"tubes":[[2,1,0,0],[2,0,0,2],[1,1,1,2],[],[]]},{"id":6,"colors":3,"par":8,"tubes":[[1,1,2,0],[2,0,0,1],[2,1,2,0],[],[]]},{"id":7,"colors":3,"par":8,"tubes":[[0,0,1,1],[2,2,1,0],[2,1,2,0],[],[]]},{"id":8,"colors":4,"par":12,"tubes":[[3,3,1,0],[0,0,2,2],[1,1,2,3],[2,3,0,1],[],[]]},{"id":9,"colors":4,"par":16,"tubes":[[2,1,0,0],[3,2,3,2],[0,1,3,3],[0,1,2,1],[],[]]},{"id":10,"colors":4,"par":17,"tubes":[[3,2,3,0],[1,2,3,3],[0,2,0,1],[1,0,2,1],[],[]]},{"id":11,"colors":4,"par":16,"tubes":[[3,0,1,0],[2,0,3,0],[3,1,1,2],[2,3,2,1],[],[]]},{"id":12,"colors":4,"par":11,"tubes":[[0,2,2,3],[2,0,2,1],[0,1,3,3],[1,1,3,0],[],[]]},{"id":13,"colors":4,"par":13,"tubes":[[1,1,1,2],[3,3,0,2],[0,2,0,0],[2,3,1,3],[],[]]},{"id":14,"colors":4,"par":12,"tubes":[[0,2,2,0],[3,1,3,0],[1,3,2,2],[3,0,1,1],[],[]]},{"id":15,"colors":5,"par":18,"tubes":[[4,0,3,4],[2,4,4,3],[3,2,0,1],[1,1,0,2],[3,2,1,0],[],[]]},{"id":16,"colors":5,"par":25,"tubes":[[1,0,3,4],[2,1,3,1],[4,4,2,2],[0,4,3,0],[0,3,2,1],[],[]]},{"id":17,"colors":5,"par":16,"tubes":[[3,4,1,3],[3,4,2,0],[4,2,0,1],[2,0,1,1],[0,3,4,2],[],[]]},{"id":18,"colors":5,"par":19,"tubes":[[3,0,4,2],[1,4,1,4],[0,1,3,1],[4,0,0,2],[2,2,3,3],[],[]]},{"id":19,"colors":5,"par":17,"tubes":[[3,1,2,2],[0,3,4,4],[2,0,1,4],[4,1,0,3],[1,0,3,2],[],[]]},{"id":20,"colors":5,"par":20,"tubes":[[0,1,4,2],[3,1,3,4],[1,4,4,2],[0,3,0,2],[0,2,3,1],[],[]]},{"id":21,"colors":5,"par":18,"tubes":[[2,4,4,0],[3,0,1,3],[3,0,1,1],[4,2,1,0],[4,2,2,3],[],[]]},{"id":22,"colors":6,"par":29,"tubes":[[2,3,1,1],[5,1,2,4],[2,4,0,5],[4,1,2,0],[3,5,3,4],[0,5,0,3],[],[]]},{"id":23,"colors":6,"par":24,"tubes":[[3,1,4,0],[4,1,2,3],[4,1,5,2],[5,5,2,3],[4,0,0,3],[1,5,2,0],[],[]]},{"id":24,"colors":6,"par":21,"tubes":[[2,5,0,5],[1,0,1,4],[3,1,4,4],[0,4,1,2],[5,0,2,3],[3,5,3,2],[],[]]},{"id":25,"colors":6,"par":24,"tubes":[[2,5,0,0],[2,1,5,3],[4,4,3,4],[1,2,3,5],[0,1,0,4],[2,5,1,3],[],[]]},{"id":26,"colors":6,"par":24,"tubes":[[4,2,4,5],[5,0,5,3],[4,2,1,2],[1,0,1,3],[0,4,2,1],[3,3,0,5],[],[]]},{"id":27,"colors":6,"par":28,"tubes":[[2,5,2,1],[0,5,4,3],[0,3,2,5],[1,4,0,4],[0,2,3,1],[1,3,5,4],[],[]]},{"id":28,"colors":6,"par":28,"tubes":[[0,4,4,3],[2,3,1,1],[2,2,5,1],[5,3,0,1],[4,2,3,4],[0,5,0,5],[],[]]},{"id":29,"colors":7,"par":28,"tubes":[[5,2,1,1],[2,4,2,5],[1,3,6,3],[6,6,4,1],[0,5,4,0],[5,0,0,3],[4,3,6,2],[],[]]},{"id":30,"colors":7,"par":32,"tubes":[[6,5,3,3],[2,6,6,1],[4,2,1,3],[1,0,0,1],[4,2,4,5],[4,0,5,3],[6,0,2,5],[],[]]},{"id":31,"colors":7,"par":31,"tubes":[[5,4,1,0],[2,3,4,3],[0,2,6,1],[6,2,6,6],[0,3,3,5],[4,4,2,5],[1,0,5,1],[],[]]},{"id":32,"colors":7,"par":29,"tubes":[[1,2,6,2],[5,0,1,0],[2,1,4,0],[5,5,3,1],[0,6,6,5],[4,2,4,4],[6,3,3,3],[],[]]},{"id":33,"colors":7,"par":32,"tubes":[[1,6,3,4],[0,2,6,5],[1,6,5,3],[3,0,5,2],[4,5,2,4],[0,3,1,1],[4,2,6,0],[],[]]},{"id":34,"colors":7,"par":22,"tubes":[[2,3,3,1],[5,6,4,6],[2,0,1,3],[0,4,6,0],[2,6,5,5],[4,4,1,5],[0,3,1,2],[],[]]},{"id":35,"colors":7,"par":29,"tubes":[[0,6,2,0],[2,4,1,3],[0,3,5,6],[2,4,4,5],[3,1,3,1],[6,0,1,5],[4,5,2,6],[],[]]},{"id":36,"colors":8,"par":36,"tubes":[[4,6,0,3],[2,6,2,0],[7,1,1,3],[5,1,4,5],[5,1,2,6],[0,4,6,7],[3,7,7,5],[0,3,4,2],[],[]]},{"id":37,"colors":8,"par":30,"tubes":[[5,7,2,4],[0,2,5,6],[3,1,7,7],[0,2,4,1],[5,3,3,5],[6,1,0,6],[4,6,1,3],[7,2,0,4],[],[]]},{"id":38,"colors":8,"par":30,"tubes":[[2,5,7,6],[1,4,7,4],[1,7,1,2],[0,1,3,5],[4,3,3,5],[7,0,0,6],[0,6,4,6],[5,3,2,2],[],[]]},{"id":39,"colors":8,"par":36,"tubes":[[3,1,7,1],[2,4,0,0],[7,6,6,6],[4,7,7,5],[4,3,1,0],[6,2,2,1],[2,5,5,0],[3,5,3,4],[],[]]},{"id":40,"colors":8,"par":33,"tubes":[[5,4,6,0],[0,0,5,1],[2,4,2,3],[6,4,5,7],[7,3,2,1],[4,7,3,6],[6,2,5,0],[1,3,7,1],[],[]]},{"id":41,"colors":8,"par":37,"tubes":[[1,6,7,6],[0,1,5,3],[0,6,7,4],[2,6,7,3],[2,5,5,1],[0,3,4,0],[3,4,1,5],[2,4,2,7],[],[]]},{"id":42,"colors":8,"par":31,"tubes":[[4,1,0,4],[3,6,6,2],[2,4,6,1],[5,0,1,4],[7,0,5,6],[0,7,7,7],[5,1,3,2],[2,3,3,5],[],[]]},{"id":43,"colors":9,"par":44,"tubes":[[5,5,2,4],[0,4,2,3],[4,4,5,7],[1,7,0,8],[8,3,6,2],[8,0,3,8],[6,1,2,1],[0,1,6,7],[6,7,5,3],[],[]]},{"id":44,"colors":9,"par":37,"tubes":[[8,6,3,7],[5,0,2,6],[1,0,6,4],[2,1,4,7],[7,0,4,3],[1,1,8,3],[5,2,7,6],[8,2,8,3],[5,5,4,0],[],[]]},{"id":45,"colors":9,"par":40,"tubes":[[3,8,0,2],[1,6,7,2],[0,1,0,1],[8,3,3,4],[5,8,7,6],[4,2,5,4],[8,6,4,5],[7,6,3,2],[7,0,5,1],[],[]]},{"id":46,"colors":9,"par":33,"tubes":[[4,8,2,7],[2,0,1,3],[1,4,0,2],[3,8,4,0],[7,5,5,3],[6,8,2,8],[1,1,4,6],[6,6,3,5],[0,7,7,5],[],[]]},{"id":47,"colors":9,"par":43,"tubes":[[7,6,5,0],[8,4,6,4],[1,8,0,1],[1,2,3,3],[8,2,4,5],[7,0,3,2],[7,5,6,8],[3,7,0,5],[1,6,4,2],[],[]]},{"id":48,"colors":9,"par":34,"tubes":[[6,3,7,1],[3,3,6,7],[2,5,5,5],[0,4,7,4],[4,1,7,2],[8,8,4,0],[6,6,0,3],[8,5,8,1],[2,1,2,0],[],[]]},{"id":49,"colors":9,"par":33,"tubes":[[6,3,4,8],[7,1,6,8],[2,5,3,0],[7,1,6,7],[1,0,7,5],[5,2,8,4],[5,4,2,3],[6,8,3,4],[0,2,1,0],[],[]]},{"id":50,"colors":10,"par":51,"tubes":[[0,9,6,1],[2,4,5,1],[6,5,4,2],[0,1,8,8],[3,5,3,7],[0,4,5,2],[7,4,0,9],[8,1,7,6],[9,8,2,6],[9,7,3,3],[],[]]},{"id":51,"colors":10,"par":45,"tubes":[[6,0,3,7],[7,0,0,8],[4,9,7,1],[9,9,8,1],[2,5,5,5],[2,0,3,1],[3,7,6,9],[1,4,4,5],[8,2,4,3],[6,2,8,6],[],[]]},{"id":52,"colors":10,"par":40,"tubes":[[5,2,5,0],[8,2,1,6],[1,1,8,4],[7,6,5,4],[4,1,0,7],[6,2,7,9],[9,5,2,4],[0,7,3,3],[8,8,9,6],[3,9,0,3],[],[]]},{"id":53,"colors":10,"par":42,"tubes":[[5,8,1,3],[6,5,7,4],[7,7,3,4],[2,0,7,1],[6,5,4,9],[8,4,1,0],[3,2,9,3],[9,6,2,8],[0,0,9,2],[5,8,6,1],[],[]]},{"id":54,"colors":10,"par":31,"tubes":[[5,5,7,8],[1,9,0,2],[3,8,4,3],[6,1,3,7],[1,6,5,9],[9,1,8,4],[2,5,4,4],[9,6,2,8],[0,0,0,3],[6,2,7,7],[],[]]},{"id":55,"colors":10,"par":42,"tubes":[[8,5,0,8],[5,0,5,4],[1,3,9,7],[1,4,4,3],[5,7,8,0],[3,2,9,3],[6,8,2,6],[1,7,1,6],[2,9,6,2],[9,7,0,4],[],[]]},{"id":56,"colors":10,"par":44,"tubes":[[5,0,9,5],[9,3,7,1],[8,9,8,8],[7,0,1,6],[1,0,2,4],[3,5,2,1],[2,5,4,6],[6,8,4,9],[3,2,7,0],[7,4,6,3],[],[]]},{"id":57,"colors":10,"par":54,"tubes":[[4,9,6,8],[5,7,2,8],[5,1,2,3],[5,3,3,8],[4,9,6,2],[4,8,4,1],[6,9,1,6],[3,2,0,7],[1,7,0,9],[0,5,0,7],[],[]]},{"id":58,"colors":10,"par":40,"tubes":[[6,9,2,2],[9,3,9,6],[0,5,7,8],[6,5,0,5],[3,0,8,1],[5,3,7,8],[7,2,3,2],[4,1,6,1],[4,7,0,4],[8,9,1,4],[],[]]},{"id":59,"colors":10,"par":46,"tubes":[[0,5,6,5],[2,8,1,1],[4,3,9,6],[9,0,6,3],[8,5,5,9],[2,8,2,0],[4,8,7,6],[9,1,0,7],[2,1,3,4],[3,4,7,7],[],[]]},{"id":60,"colors":10,"par":50,"tubes":[[1,9,8,4],[9,7,2,4],[9,3,8,5],[1,0,6,0],[4,0,6,1],[7,2,6,8],[5,9,5,0],[7,6,1,7],[2,8,2,4],[3,3,3,5],[],[]]},{"id":61,"colors":10,"par":70,"tubes":[[6,1,0,3],[0,4,5,4],[2,1,9,7],[0,5,1,5],[9,8,9,4],[3,7,4,7],[0,8,2,9],[3,1,7,8],[6,6,3,5],[6,8,2,2],[],[]]},{"id":62,"colors":10,"par":58,"tubes":[[8,5,3,4],[9,0,9,1],[0,4,3,3],[7,9,7,7],[2,6,4,8],[8,1,1,0],[8,5,2,4],[5,6,9,2],[6,0,2,5],[3,1,6,7],[],[]]},{"id":63,"colors":10,"par":57,"tubes":[[2,1,1,4],[3,8,4,3],[0,7,2,4],[4,3,5,9],[8,9,2,8],[3,0,5,6],[6,7,0,1],[9,2,6,5],[7,5,9,0],[6,1,8,7],[],[]]},{"id":64,"colors":10,"par":58,"tubes":[[6,5,2,0],[5,4,8,3],[7,6,1,8],[3,9,2,4],[7,6,7,5],[0,9,8,0],[1,0,1,9],[5,3,4,1],[9,7,8,2],[4,2,3,6],[],[]]},{"id":65,"colors":10,"par":75,"tubes":[[6,2,1,9],[0,4,6,7],[3,8,1,7],[4,1,2,5],[4,8,9,1],[4,2,3,8],[6,7,5,2],[6,9,3,5],[7,0,5,9],[0,8,0,3],[],[]]},{"id":66,"colors":10,"par":58,"tubes":[[8,1,5,8],[7,2,6,1],[3,7,4,5],[3,8,1,9],[3,0,6,8],[0,9,5,6],[3,0,7,9],[1,9,4,4],[0,2,5,6],[4,2,7,2],[],[]]},{"id":67,"colors":10,"par":58,"tubes":[[1,9,4,8],[6,9,7,4],[9,0,1,3],[3,0,2,8],[3,5,7,5],[0,1,4,9],[7,5,2,8],[3,4,1,2],[8,6,7,0],[5,2,6,6],[],[]]},{"id":68,"colors":10,"par":69,"tubes":[[9,1,2,7],[9,3,1,0],[8,3,6,7],[0,6,5,1],[4,5,4,8],[7,0,8,9],[7,3,8,2],[9,0,6,6],[2,3,5,4],[4,2,1,5],[],[]]},{"id":69,"colors":10,"par":58,"tubes":[[4,2,1,7],[9,5,7,5],[0,4,3,8],[6,9,6,5],[5,4,2,3],[0,1,9,6],[0,3,8,4],[2,8,3,7],[0,6,7,9],[2,8,1,1],[],[]]},{"id":70,"colors":10,"par":62,"tubes":[[3,9,3,4],[6,1,9,7],[8,7,8,0],[5,6,9,4],[6,1,2,3],[7,3,4,5],[7,1,9,8],[0,6,5,2],[4,1,5,2],[0,0,8,2],[],[]]},{"id":71,"colors":11,"par":66,"tubes":[[0,6,10,10],[3,9,7,8],[8,6,4,8],[5,7,1,3],[4,3,10,10],[9,2,9,6],[0,8,7,5],[1,5,4,1],[9,4,2,6],[0,2,5,2],[3,0,1,7],[],[]]},{"id":72,"colors":11,"par":77,"tubes":[[6,6,7,6],[4,1,3,5],[0,9,5,2],[8,9,3,3],[7,4,5,6],[1,10,4,2],[10,8,0,10],[1,3,2,7],[8,8,4,9],[5,2,10,0],[1,0,9,7],[],[]]},{"id":73,"colors":11,"par":73,"tubes":[[5,2,2,10],[4,2,6,3],[6,4,10,9],[0,8,9,10],[4,0,8,7],[7,10,1,0],[4,3,1,5],[7,8,5,7],[3,8,0,6],[6,2,5,9],[1,9,1,3],[],[]]},{"id":74,"colors":11,"par":64,"tubes":[[2,0,3,7],[1,0,8,1],[8,7,6,2],[2,9,7,10],[5,9,5,10],[0,10,10,2],[5,3,8,4],[6,4,4,9],[4,1,7,9],[8,6,3,6],[5,1,3,0],[],[]]},{"id":75,"colors":11,"par":70,"tubes":[[2,4,2,4],[10,9,8,2],[1,0,10,0],[5,6,5,5],[3,6,7,6],[7,4,1,1],[1,8,9,0],[3,3,9,2],[3,10,5,4],[8,0,7,10],[6,9,7,8],[],[]]},{"id":76,"colors":11,"par":70,"tubes":[[5,2,6,7],[1,0,8,1],[9,10,6,6],[5,2,10,4],[3,9,1,7],[10,0,4,7],[4,9,0,5],[5,8,1,3],[6,3,0,2],[9,8,4,2],[10,8,7,3],[],[]]},{"id":77,"colors":11,"par":66,"tubes":[[7,4,6,6],[9,8,5,8],[2,10,3,10],[0,9,0,9],[1,8,2,6],[10,9,1,0],[1,5,4,1],[5,4,7,2],[10,8,0,3],[3,7,3,6],[5,4,2,7],[],[]]},{"id":78,"colors":11,"par":73,"tubes":[[7,7,5,4],[5,7,9,2],[6,4,1,3],[10,7,0,2],[8,10,3,8],[6,5,6,0],[2,9,9,4],[5,10,8,4],[3,9,2,0],[6,1,1,1],[10,8,3,0],[],[]]},{"id":79,"colors":12,"par":100,"tubes":[[10,3,7,11],[11,4,5,4],[9,2,7,8],[0,5,6,8],[6,9,6,5],[9,2,1,11],[6,4,4,7],[2,5,7,3],[3,0,1,1],[9,0,8,10],[2,10,0,11],[3,1,10,8],[],[]]},{"id":80,"colors":12,"par":74,"tubes":[[5,1,0,5],[11,4,6,0],[6,10,2,3],[1,10,1,2],[4,11,8,7],[10,2,11,2],[6,3,6,7],[9,11,0,5],[9,7,9,10],[8,0,7,4],[1,8,9,5],[4,3,8,3],[],[]]}];
+/* Level notes (v6, 2026-11-28 — MUCH HARDER, user order):
+   - Levels 1-2 are easy (3 colours, 2 empty tubes). From level 3 the
+     ramp is steep: colours rise fast (4 by L3, 12 by L55) and every
+     level has EXACTLY ONE empty tube (colors+2 tubes total).
+   - Generation: random 2-empty deal -> DFS solver verify -> ONE
+     forward "fill an empty" pour (k < source length) -> DFS re-verify
+     with the game's 200k node limit -> accept only if the DFS solution
+     is >= a per-colour minimum (12 moves at 4 colours, 46 at 12).
+     Every level below is solver-verified solvable, and the hint /
+     stuck-check DFS (same 200k limit) also solves states along the
+     solution path, so hints never break and "stuck" is never false.
+   - Why colors+2 tubes and not colors+1: a random 1-empty deal at
+     10+ colours is almost never solvable at all (the DFS exhausts the
+     whole reachable state space), so a pure colors+1-tube 1-empty
+     level cannot be generated reliably. colors+2 tubes with exactly
+     one empty tube is the hard format that works — still far harder
+     than the old 2-empty levels (solution lengths 12-106 moves).
+   - par = the DFS solution length (an achievable target; the hint
+     follows one DFS solution). No stars any more (v6 removed them). */
+var LEVELS = [{"id":1,"colors":3,"par":7,"tubes":[[1,1,1,2],[0,0,1,2],[0,2,2,0],[],[]]},{"id":2,"colors":3,"par":11,"tubes":[[1,0,1,0],[2,2,0,1],[2,2,0,1],[],[]]},{"id":3,"colors":4,"par":12,"tubes":[[2,2,1],[1,0,2,0],[2,3,1,0],[3,3,1,3],[],[0]]},{"id":4,"colors":4,"par":13,"tubes":[[1,2,2,0],[3,3,0],[1,2,3,3],[0,1,2,0],[1],[]]},{"id":5,"colors":4,"par":13,"tubes":[[1,1,3,0],[2,3,2,0],[0,1],[3,0,3,1],[2,2],[]]},{"id":6,"colors":5,"par":17,"tubes":[[2,1,2,0],[3,1,1],[1,0,0,3],[4,4,4,2],[3,4,0,3],[2],[]]},{"id":7,"colors":5,"par":20,"tubes":[[0,4,1,3],[4,0,3,2],[4,2,0,3],[0,1,2],[2,4,3,1],[],[1]]},{"id":8,"colors":5,"par":20,"tubes":[[4,2,1,1],[1,4,3,0],[4,0,2,3],[1,3,4],[0,2,3,2],[0],[]]},{"id":9,"colors":5,"par":30,"tubes":[[0,4,3,4],[3,1,2],[4,3,1,0],[1,1,2,2],[3,2,0,4],[0],[]]},{"id":10,"colors":6,"par":30,"tubes":[[0,1,0,3],[1,4,1],[3,1,2,5],[5,4,2,3],[0,0,2,4],[5,2,3,4],[],[5]]},{"id":11,"colors":6,"par":33,"tubes":[[3,2,5,1],[2,4,0,1],[0,4,3,0],[2,2,5,4],[1,5,0],[4,3,1,5],[],[3]]},{"id":12,"colors":6,"par":28,"tubes":[[3,2,5,1],[4,5,0,0],[2,3,0,3],[1,2,1,4],[5,3,4],[5,2,0,1],[4],[]]},{"id":13,"colors":6,"par":20,"tubes":[[2,1,0,3],[3,1,4,0],[2,2,0,1],[4,4,3],[5,5,5,0],[4,3,5,2],[],[1]]},{"id":14,"colors":6,"par":20,"tubes":[[1,0,3,3],[4,1,1,5],[5,4,3,0],[1,5,2,2],[4,0,2,2],[5,4,3],[0],[]]},{"id":15,"colors":7,"par":27,"tubes":[[4,4,5,0],[5,1,0,1],[6,5,4,2],[0,3,2,3],[3,0,1,2],[5,4,1,2],[6,3,6],[],[6]]},{"id":16,"colors":7,"par":31,"tubes":[[4,2,4,0],[1,5,3,5],[4,3,1,2],[4,1,6,0],[5,6,2,1],[3,6,0],[5,2,3,6],[0],[]]},{"id":17,"colors":7,"par":32,"tubes":[[3,0,5,5],[5,6,3,4],[1,0,4],[0,6,6,1],[2,4,5,1],[2,3,4,0],[2,3,6,1],[2],[]]},{"id":18,"colors":7,"par":31,"tubes":[[6,6,2,3],[5,6,5,0],[1,3,0,4],[6,1,5,4],[4,4,2,3],[3,1,0],[2,5,2,1],[0],[]]},{"id":19,"colors":7,"par":27,"tubes":[[4,5,4,3],[2,4,1,0],[0,3,2],[6,6,0,1],[1,5,5,1],[0,5,6,2],[3,2,3,6],[],[4]]},{"id":20,"colors":7,"par":27,"tubes":[[5,0,1],[3,2,6,2],[0,0,4,0],[1,1,2,2],[3,6,6,3],[5,5,3,4],[1,4,4,5],[6],[]]},{"id":21,"colors":8,"par":35,"tubes":[[3,4,5,1],[3,0,1,2],[0,6,0,1],[7,6,4,7],[5,4,3,3],[5,2,5,7],[2,2,0,1],[6,6,4],[],[7]]},{"id":22,"colors":8,"par":41,"tubes":[[4,0,0,5],[6,7,4,4],[6,6,0],[3,1,3,3],[7,5,1,5],[4,7,2,0],[1,7,3,5],[2,6,1,2],[],[2]]},{"id":23,"colors":8,"par":39,"tubes":[[0,4,4],[2,6,6,3],[3,2,7,5],[0,6,3,1],[0,2,2,7],[1,5,5,4],[3,1,0,7],[6,1,5,4],[7],[]]},{"id":24,"colors":8,"par":40,"tubes":[[6,0,3,2],[4,7,4,1],[6,3,2,3],[0,5],[3,0,6,1],[1,4,7,7],[7,2,5,1],[0,4,6,2],[],[5,5]]},{"id":25,"colors":8,"par":36,"tubes":[[6,4,5],[3,7,3,7],[0,5,5,6],[3,6,0,6],[2,7,1,1],[4,2,1,7],[2,3,4,2],[0,0,1,5],[4],[]]},{"id":26,"colors":8,"par":37,"tubes":[[6,4,6,1],[5,6],[3,3,0,0],[2,1,3,7],[7,1,2,7],[7,2,6,4],[4,5,3,4],[0,1,0,2],[],[5,5]]},{"id":27,"colors":8,"par":41,"tubes":[[1,7,5,5],[7,5,7,2],[3,6,2,0],[3,6,4],[6,3,2,0],[0,0,7,1],[4,6,2,1],[1,3,4,4],[5],[]]},{"id":28,"colors":9,"par":44,"tubes":[[4,5,8,2],[0,8,8,7],[0,5,6,3],[6,8,3],[2,4,1,7],[2,1,1,2],[0,6,6,3],[5,7,3,7],[4,5,4,0],[1],[]]},{"id":29,"colors":9,"par":35,"tubes":[[6,3,1,5],[8,1,5,2],[8,4],[0,7,7,4],[2,5,3,7],[0,1,6,4],[5,8,7,2],[3,1,8,6],[6,3,2,4],[],[0,0]]},{"id":30,"colors":9,"par":35,"tubes":[[7,5,0],[1,8,3,0],[2,2,2,3],[1,4,4,3],[6,7,2,3],[5,1,6,4],[0,8,8,6],[7,7,1,4],[8,5,0,5],[],[6]]},{"id":31,"colors":9,"par":34,"tubes":[[5,5,5,2],[1,4,1],[8,4,7,7],[6,3,0,6],[2,3,3,1],[5,2,7,4],[2,8,0,0],[4,7,6,3],[1,6,8,0],[8],[]]},{"id":32,"colors":9,"par":40,"tubes":[[1,1,6,7],[2,1,4,4],[8,3,4],[5,5,8,6],[8,2,6,6],[5,3,2,2],[7,0,5,7],[0,3,0,1],[4,8,0,3],[7],[]]},{"id":33,"colors":9,"par":52,"tubes":[[4,2,3,6],[5,0,0,5],[0,8,1],[3,6,5,8],[4,7,3,6],[3,1,7,4],[2,0,5,2],[4,6,1,1],[2,7,8,7],[],[8]]},{"id":34,"colors":9,"par":40,"tubes":[[8,8,4,3],[6,6,8,5],[5,3,0,5],[2,7,0,7],[7,3,2,2],[1,3,1,6],[8,4,1,5],[4,7],[4,2,6,1],[0,0],[]]},{"id":35,"colors":9,"par":34,"tubes":[[5,7,3,8],[2,0,7,2],[1,6,8,0],[4,3,3,4],[6,5,1,3],[4,4,6,5],[7,1,2,7],[1,5,0],[8,8,2,0],[6],[]]},{"id":36,"colors":10,"par":40,"tubes":[[6,7,1,3],[1,2,3,1],[9,5,4,7],[4,8,2],[0,6,5,9],[0,3,6,8],[6,0,4,8],[7,7,2,1],[3,5,8,5],[9,4,0,9],[2],[]]},{"id":37,"colors":10,"par":38,"tubes":[[0,6,1,7],[8,4,5,2],[9,3,6,7],[9,8,5,2],[0,4,3,7],[3,5,2,6],[7,4,1,1],[0,3,8,6],[8,9,5,0],[9,2,4],[1],[]]},{"id":38,"colors":10,"par":42,"tubes":[[4,5,1,7],[9,8,1,3],[4,2,0,2],[3,2,0,8],[0,6,3,7],[5,5],[6,3,4,4],[2,8,7,6],[5,8,6,1],[1,9,0,7],[9,9],[]]},{"id":39,"colors":10,"par":43,"tubes":[[8,0,4,5],[1,5,7,8],[8,3,6],[3,1,0,8],[6,0,7,3],[6,6,3,2],[4,5,1,2],[9,5,2,4],[1,7,9,0],[9,7,2,4],[],[9]]},{"id":40,"colors":10,"par":39,"tubes":[[0,5,9,3],[1,2,1,5],[8,0,6,7],[0,6,2,2],[4,3,7,4],[1,7,6,3],[4,9,8],[2,0,5,9],[8,5,6,8],[1,7,4,3],[],[9]]},{"id":41,"colors":10,"par":41,"tubes":[[3,3,6,5],[9,1,5,2],[4,5,0,1],[8,4,7,8],[9,0,3,6],[3,6,4,2],[8,8,0,2],[4,9,2,1],[0,7,1],[7,6,9,7],[],[5]]},{"id":42,"colors":10,"par":40,"tubes":[[2,6,3,6],[0,4,9,1],[2,3,4,9],[6,3,9,1],[8,8,4,1],[5,0,8,5],[5,0,5,7],[3,2,1,0],[8,7,7,9],[6,4,2],[],[7]]},{"id":43,"colors":10,"par":43,"tubes":[[2,7,9,3],[1,5,9,3],[2,1,4,2],[3,5,9,9],[5,2],[8,8,3,0],[4,8,7,4],[4,1,1,8],[6,5,6,0],[6,0,0,6],[],[7,7]]},{"id":44,"colors":10,"par":45,"tubes":[[5,1,2,4],[3,9,2,7],[8,3,0],[6,9,0,6],[8,5,3,0],[6,4,4,5],[8,4,7,8],[1,9,5,1],[7,3,9,6],[0,2,7,1],[2],[]]},{"id":45,"colors":11,"par":64,"tubes":[[8,1,8,9],[3,9,2,1],[3,0,5,5],[6,2,10,0],[7,2,4,4],[0,5,1,10],[4,6,5,9],[7,8,4],[3,9,10,2],[3,6,1,7],[7,8,0,10],[6],[]]},{"id":46,"colors":11,"par":49,"tubes":[[0,5,3,1],[9,4,3,6],[1,8,8,8],[10,3,2],[1,5,6,2],[2,5,6,9],[10,10,0,4],[4,3,5,0],[7,6,9,7],[1,10,4,2],[9,8,0,7],[7],[]]},{"id":47,"colors":11,"par":51,"tubes":[[6,1,8,5],[6,8,2,1],[1,4,9,5],[3,7,9,0],[3,10,6,2],[5,10,10,7],[6,2,8,3],[7,1,0,9],[0,7,3,8],[4,2,5],[4,9,10,0],[4],[]]},{"id":48,"colors":11,"par":62,"tubes":[[1,7,6,6],[4,10,3,1],[8,9,0,5],[7,10,2,9],[4,7,0,4],[8,5,9,2],[5,1,9,6],[10,8,0,3],[2,5,8,1],[10,3,2,0],[7,3,6],[4],[]]},{"id":49,"colors":11,"par":52,"tubes":[[6,10,7,6],[5,9,5,4],[0,2,7,8],[6,8,1,6],[3,0,9,1],[10,7,0,9],[4,7,4,2],[3,4,2,3],[3,9,8],[5,10,1,8],[5,1,10,0],[2],[]]},{"id":50,"colors":11,"par":58,"tubes":[[8,1,1,2],[3,0,9,4],[8,4,0],[1,2,7,3],[8,5,6,0],[10,5,6,9],[10,10,10,3],[6,7,1,7],[9,0,2,8],[2,4,4,5],[3,5,9,7],[],[6]]},{"id":51,"colors":11,"par":45,"tubes":[[2,6,5,4],[8,9,9,6],[4,0,3,9],[0,7,2,5],[0,1,3,5],[0,1,9,1],[4,7,2],[8,2,6,10],[3,8,3,4],[7,10,10,6],[5,7,10,1],[],[8]]},{"id":52,"colors":11,"par":47,"tubes":[[6,10,6,5],[10,7,9],[4,7,1,7],[3,3,8,9],[3,6,0,2],[8,5,10,1],[9,2,0,9],[0,8,0,4],[4,10,8,1],[7,3,2,6],[2,5,4,5],[1],[]]},{"id":53,"colors":11,"par":52,"tubes":[[10,0,0,2],[5,3,10,9],[2,3,3,1],[0,3,10,7],[8,1,6,5],[10,5,8,4],[6,1,2,7],[4,6,9],[9,9,1,8],[6,7,4,4],[8,7,5,0],[2],[]]},{"id":54,"colors":11,"par":44,"tubes":[[7,9,2,3],[3,6,6,7],[8,5,1],[1,4,0,1],[7,4,6,5],[4,0,7,10],[9,3,2,8],[9,0,8,3],[2,8,10,10],[9,6,2,5],[4,10,0,1],[],[5]]},{"id":55,"colors":12,"par":53,"tubes":[[4,5,0,9],[6,10,2,4],[9,7,2,7],[8,1,5,2],[11,8,4,11],[0,3,8,5],[10,3,0,9],[3,6,7,0],[7,3,2,6],[11,4,10],[10,6,11,1],[9,8,1,1],[],[5]]},{"id":56,"colors":12,"par":57,"tubes":[[7,2,4,10],[9,2,0,11],[9,10,1,3],[8,9,7,4],[4,6,10],[5,6,0,7],[3,11,4,6],[5,5,10,8],[2,3,3,0],[0,8,11,5],[2,1,11,7],[8,6,1,9],[1],[]]},{"id":57,"colors":12,"par":55,"tubes":[[0,2,7,4],[4,8,1],[3,6,1,3],[2,11,8,10],[2,6,5,10],[10,11,5,0],[11,5,0,3],[7,9,0,1],[9,10,8,11],[6,7,4,3],[1,9,6,2],[5,8,4,7],[9],[]]},{"id":58,"colors":12,"par":52,"tubes":[[0,7,3,2],[8,3,1,11],[10,4,1,10],[4,3,1,7],[6,0,10,9],[10,8,2,6],[2,5,11,5],[0,7,8,5],[4,0,11],[7,5,6,6],[3,9,1,2],[8,9,9,4],[11],[]]},{"id":59,"colors":12,"par":52,"tubes":[[0,3,9,8],[9,7,1,0],[1,3,10,7],[4,2,8],[9,7,1,6],[3,4,7,11],[3,5,0,11],[2,11,6,10],[1,9,6,6],[5,8,2,5],[4,11,2,4],[0,10,8,10],[5],[]]},{"id":60,"colors":12,"par":50,"tubes":[[0,7,2,0],[2,2,9,5],[11,11,6,11],[10,4,9,11],[1,10,6],[7,6,2,7],[5,3,0,7],[3,3,8,5],[4,8,10,4],[1,8,3,0],[1,4,9,5],[9,6,10,8],[],[1]]},{"id":61,"colors":12,"par":49,"tubes":[[5,1,9,6],[11,8,10,10],[2,0,9,11],[7,0,8,4],[5,11,0,8],[1,1,7,10],[3,3,9,11],[2,6,2,6],[6,0,4],[5,7,5,7],[3,4,3,9],[8,10,1,4],[],[2]]},{"id":62,"colors":12,"par":106,"tubes":[[1,2,4,0],[9,1,10],[0,11,11,1],[8,3,5,0],[7,2,10,3],[7,6,8,11],[7,4,2,9],[10,1,9,10],[6,5,3,4],[6,11,9,2],[5,7,8,5],[4,6,8,0],[],[3]]},{"id":63,"colors":12,"par":59,"tubes":[[10,6,5,2],[0,1,0,4],[1,6,11,3],[8,10,5,2],[6,4,1,10],[8,7,10,7],[3,3,3,7],[9,0,8,6],[7,9,2],[5,11,9,5],[4,9,11,2],[4,11,8,0],[],[1]]},{"id":64,"colors":12,"par":53,"tubes":[[9,5,0,7],[10,6,0,1],[4,3,8,0],[11,2,2,11],[0,4,11],[8,7,4,3],[1,3,6,7],[9,8,1,2],[9,11,7,6],[10,8,5,3],[10,4,6,2],[9,5,10,5],[1],[]]},{"id":65,"colors":12,"par":59,"tubes":[[1,6,2,8],[8,0,4,4],[6,5,8,11],[11,10,7,5],[6,2,9,11],[1,3,9,5],[7,2,1],[10,7,9,6],[4,0,5,11],[1,8,3,7],[9,0,3,2],[10,10,4,0],[3],[]]},{"id":66,"colors":12,"par":51,"tubes":[[2,10,2,4],[2,9,6,7],[8,0,6,4],[1,8],[6,7,0,0],[3,3,11,2],[6,5,4,11],[9,11,0,7],[7,5,5,8],[5,10,9,11],[3,10,4,10],[1,9,8,3],[],[1,1]]},{"id":67,"colors":12,"par":70,"tubes":[[5,9,6,8],[8,5,0,10],[1,7,0,4],[2,4,11,3],[9,3,4,4],[5,6,1,6],[10,7,8,2],[0,8,10,0],[6,11,1,7],[11,3,9,2],[9,1,11,2],[7,5,10],[3],[]]},{"id":68,"colors":12,"par":57,"tubes":[[6,11,1,4],[4,6,3,2],[6,0,2,1],[0,7,9],[4,10,7,9],[3,11,8,4],[1,0,3,9],[0,5,10,11],[10,3,1,2],[10,8,6,8],[5,5,7,11],[7,8,5,2],[],[9]]},{"id":69,"colors":12,"par":58,"tubes":[[3,11,2,0],[4,11,3],[10,7,6,1],[11,8,4,2],[5,9,2,5],[3,0,2,3],[9,9,1,11],[7,0,10,10],[4,1,8,8],[5,6,9,7],[4,5,7,0],[6,10,6,1],[],[8]]},{"id":70,"colors":12,"par":67,"tubes":[[10,8,6,10],[2,1,4,5],[0,4,1,6],[2,11,10,6],[9,11,7,9],[0,0,5,6],[11,7,8,7],[11,9,5,5],[10,1],[3,4,3,3],[9,1,3,4],[0,2,7,2],[],[8,8]]},{"id":71,"colors":12,"par":59,"tubes":[[10,10,4,3],[11,9,2,0],[4,5,1,9],[6,1,6,8],[10,8,8,6],[2,2,4,0],[5,0,11,11],[10,8,9,3],[3,5,7,11],[3,1,2],[7,7,6,4],[5,0,9,7],[],[1]]},{"id":72,"colors":12,"par":70,"tubes":[[8,3,3,0],[7,9,7,5],[1,3,7],[8,0,11,10],[2,8,4,3],[2,6,4,5],[11,1,4,11],[8,0,10,1],[6,1,10,2],[9,7,0,5],[6,9,4,11],[6,2,9,5],[10],[]]},{"id":73,"colors":12,"par":63,"tubes":[[8,3,9,10],[11,9,9,8],[10,0,2,7],[3,7,5,11],[5,6,1,1],[8,8,7,2],[9,6,6,4],[0,11,4,2],[4,0,3,5],[2,10,1],[0,1,11,6],[5,4,10,7],[],[3]]},{"id":74,"colors":12,"par":57,"tubes":[[0,4,5,10],[8,1,7,1],[7,7,2,3],[6,7],[11,1,4,11],[5,10,9,2],[2,9,8,6],[4,3,5,9],[0,4,6,0],[11,3,6,1],[3,2,9,5],[0,10,10,11],[],[8,8]]},{"id":75,"colors":12,"par":52,"tubes":[[0,2,1,1],[8,3,11,3],[3,0,4,5],[5,1,5,4],[10,4,1,9],[6,10,6,9],[7,10,7,8],[9,2,0,11],[2,4,7],[7,2,0,6],[9,8,3,10],[11,8,6,5],[11],[]]},{"id":76,"colors":12,"par":63,"tubes":[[5,0,7,11],[10,6,5,11],[8,8,7,0],[8,0,2,3],[2,0,6,8],[9,2,6,9],[1,7,1,5],[3,10,1,7],[3,10,4,5],[11,1,9,4],[11,3,9],[2,10,4,6],[4],[]]},{"id":77,"colors":12,"par":52,"tubes":[[2,0,11,6],[3,0,5,2],[7,3,3,1],[10,8,1,9],[6,11,0,9],[10,10,7,1],[7,8,5,2],[2,6,7,5],[5,0,3],[1,4,6,9],[4,10,11,9],[8,4,11,8],[],[4]]},{"id":78,"colors":12,"par":58,"tubes":[[5,10,5,1],[5,10,3],[3,9,1,6],[8,0,4,2],[0,9,4,9],[2,6,11,11],[0,5,4,2],[8,11,7,1],[0,1,7,3],[9,10,8,2],[7,8,7,6],[3,4,6,11],[],[10]]},{"id":79,"colors":12,"par":60,"tubes":[[0,1,8],[9,3,5,5],[4,10,5,9],[11,3,6,3],[8,0,11,10],[7,8,4,11],[9,0,10,7],[1,0,9,8],[3,7,2,2],[5,2,2,6],[6,1,4,6],[7,11,10,4],[],[1]]},{"id":80,"colors":12,"par":56,"tubes":[[8,10,11,7],[6,7,3,9],[1,9,0,4],[10,5,2,3],[1,1,10],[9,7,8,5],[8,7,11,6],[0,9,0,8],[6,5,0,2],[10,4,11,5],[3,4,2,11],[3,2,1,6],[4],[]]}];
 var BASE_LAYOUTS = {"3":[[0,2,1,1],[0,2,1,2],[0,1,0,2],[],[]],"4":[[0,1,3,0],[3,3,2,1],[0,2,1,2],[3,0,2,1],[],[]],"5":[[0,1,0,3],[4,4,1,1],[3,2,2,1],[2,0,0,4],[4,3,2,3],[],[]],"6":[[1,5,0,2],[4,2,3,1],[2,3,1,3],[0,4,2,0],[4,1,5,4],[5,5,3,0],[],[]],"7":[[5,3,3,0],[5,0,4,6],[2,3,2,5],[3,6,6,1],[5,1,2,0],[1,2,0,4],[6,4,1,4],[],[]],"8":[[0,3,7,5],[3,4,2,0],[1,3,6,2],[1,5,5,0],[6,7,3,6],[2,1,4,4],[4,0,1,7],[7,6,5,2],[],[]],"9":[[6,5,4,4],[5,5,4,3],[2,1,7,8],[1,4,2,0],[8,2,0,3],[2,3,0,7],[3,7,1,8],[5,0,6,6],[7,1,6,8],[],[]],"10":[[6,3,7,1],[7,0,0,9],[4,7,2,8],[2,4,6,6],[1,5,0,1],[8,3,4,5],[6,0,9,2],[8,1,9,2],[5,3,3,5],[7,9,4,8],[],[]],"11":[[9,8,4,1],[2,6,8,0],[5,3,4,6],[4,8,7,2],[2,10,6,5],[7,2,4,0],[0,3,3,10],[5,6,1,7],[10,0,1,8],[1,3,7,9],[5,9,9,10],[],[]],"12":[[9,0,4,9],[5,11,0,5],[1,7,10,10],[11,0,10,9],[5,0,3,11],[6,8,2,10],[8,9,7,2],[1,11,4,2],[8,3,6,1],[3,5,8,3],[1,6,6,2],[4,7,7,4],[],[]]};
 /* 12 water colours (indices 0..11) — chosen for maximum distinction:
    neighbours differ clearly in hue AND lightness, so no two colours
@@ -745,7 +792,6 @@ function slotGradientFlat(hex){
   var light = mixHex(hex, "#ffffff", 0.12), dark = mixHex(hex, "#000000", 0.35);
   return "linear-gradient(180deg, " + light + " 0%, " + hex + " 45%, " + dark + " 100%)";
 }
-var HINT_STARS = 30, FREE_UNDOS = 3; /* v5: stars are the only currency — no coins */
 var REMOTE_URL = "https://raw.githubusercontent.com/SumitYadav06/Dripply/main/www/extra-levels.json";
 
 /* ================= I18N ================= */
@@ -754,7 +800,7 @@ en:{
   tagline:"Water Sort Puzzle — sort every colour, clear every tube!",
   play:"▶ Play", levels:"🧩 Levels", settings:"⚙️ Settings", shop:"🛍️ Shop", home:"Home",
   dailyReward:"🎁 Daily Reward", dailyChallenge:"📅 Daily Challenge",
-  dailyDesc:"One special puzzle every day. Solve it for a free Hint!",
+  dailyDesc:"One special puzzle every day. Solve it for a reward!",
   playDaily:"Play Daily Puzzle", howTo:"❓ How to play",
   howToText:"Tap a tube, then tap another tube to pour. Pour only on the same colour or an empty tube. Sort every tube to one colour to win!",
   moves:"Moves", undo:"Undo", hint:"Hint", extraTube:"+ Tube",
@@ -763,34 +809,34 @@ en:{
   sound:"Sound", sound_s:"Pour, win and tap sounds",
   music:"Music", music_s:"Original background music",
   theme:"Theme", theme_s:"Background style",
-  reset:"Reset Progress", reset_s:"Stars and unlocked levels",
-  hint_s:"Shows one correct next move", tube_s:"One extra empty tube for a level",
+  reset:"Reset Progress", reset_s:"Unlocked levels",
   undoPack:"Undo Pack", undo_s:"+5 undos for your next level",
-  
-  shopNote:"Hint and Undo are also available inside a level — by stars or by watching an ad.",
+
+  shopNote:"Hint, Undo and Extra Tube are also available inside a level — by watching an ad.",
   level:"Level", daily:"Daily", endless:"Endless",
-  adIn:"Ad in", adNotFinished:"Ad not finished — no reward.", adNotReady:"Ad not ready yet — try again in a moment.",
-  noStars:"Not enough stars — watch an ad instead?",
-  noStarsTitle:"Out of Stars!", watchAdTitle:"Watch a Short Ad",
-  doubleTitle:"Double Your Reward?", noThanks:"No thanks",
-  watchAd:"Watch Ad", useStars:"Use Stars", cancel:"Cancel",
+  adNotFinished:"Ad not finished — no reward.", adNotReady:"Ad not ready yet — try again in a moment.",
+  watchAdTitle:"Watch a Short Ad",
+  watchAd:"Watch Ad", cancel:"Cancel",
   getHint:"Get a hint?", getTube:"Add an extra tube?", getUndo:"Get +5 undos?",
-  hintFree:"Hint is on the house!", freeHint:"free Hint", tubeUsed:"Extra tube already used in this level.",
+  tubeUsed:"Extra tube already used in this level.",
   noUndo:"No undos left.", noHint:"No hint found.", stuck:"😶 No moves left!",
   stuckText:"No more pours possible — undo a move or restart the level.", restart:"Restart",
   dailyDone:"Daily puzzle done! Come back tomorrow.",
-  dailyClaimed:"Daily reward claimed!", dailyDouble:"Double with ad?",
+  dailyClaimed:"Daily reward claimed!",
   streak:"day streak", locked:"Locked — finish the previous level first.",
-  resetDone:"Progress reset.", resetConfirm:"Reset all progress? Stars will be lost.",
-  needWatch:"Watch a short ad to continue.", starsEarned:"stars earned!",
+  resetDone:"Progress reset.", resetConfirm:"Reset all progress?",
+  needWatch:"Watch a short ad to continue.",
   completed:"Completed!", remoteLevels:"extra levels loaded from the web",
-  endlessDone:"Endless level complete!", newBest:"New best!"
+  claimReward:"Claim Reward",
+  exitLevelTitle:"Exit Level?", exitLevelText:"Leave this level? Your moves here will be lost.",
+  exitAppTitle:"Exit Dripply?", exitAppText:"Close the app?",
+  exit:"Exit", resume:"Resume",
 },
 hi:{
   tagline:"वॉटर सॉर्ट पज़ल — हर रंग अलग करो, हर ट्यूब साफ़ करो!",
   play:"▶ खेलें", levels:"🧩 लेवल", settings:"⚙️ सेटिंग्स", shop:"🛍️ दुकान", home:"होम",
   dailyReward:"🎁 रोज़ का इनाम", dailyChallenge:"📅 रोज़ की चुनौती",
-  dailyDesc:"हर दिन एक खास पज़ल। हल करो और मुफ़्त संकेत पाओ!",
+  dailyDesc:"हर दिन एक खास पज़ल। हल करो और इनाम पाओ!",
   playDaily:"रोज़ की पज़ल खेलें", howTo:"❓ कैसे खेलें",
   howToText:"एक ट्यूब पर टैप करो, फिर दूसरी ट्यूब पर टैप करके डालो। सिर्फ़ उसी रंग पर या खाली ट्यूब में डालो। हर ट्यूब को एक रंग का बनाकर जीतो!",
   moves:"चालें", undo:"वापस", hint:"संकेत", extraTube:"+ ट्यूब",
@@ -799,28 +845,28 @@ hi:{
   sound:"आवाज़", sound_s:"डालने, जीतने और टैप की आवाज़ें",
   music:"संगीत", music_s:"ओरिजिनल बैकग्राउंड संगीत",
   theme:"थीम", theme_s:"बैकग्राउंड स्टाइल",
-  reset:"प्रोग्रेस रीसेट", reset_s:"स्टार और खुले लेवल",
-  hint_s:"एक सही अगली चाल दिखाता है", tube_s:"एक लेवल के लिए एक extra खाली ट्यूब",
+  reset:"प्रोग्रेस रीसेट", reset_s:"खुले लेवल",
   undoPack:"वापस पैक", undo_s:"अगले लेवल के लिए +5 वापस",
-  
-  shopNote:"संकेत और वापस लेवल के अंदर भी मिलते हैं — स्टार से या विज्ञापन देखकर।",
+
+  shopNote:"संकेत, वापस और extra ट्यूब लेवल के अंदर भी मिलते हैं — विज्ञापन देखकर।",
   level:"लेवल", daily:"रोज़ की", endless:"अनंत",
-  adIn:"विज्ञापन", adNotFinished:"विज्ञापन पूरा नहीं हुआ — कोई इनाम नहीं।", adNotReady:"विज्ञापन अभी तैयार नहीं है — थोड़ी देर में फिर कोशिश करें।",
-  noStars:"स्टार कम हैं — विज्ञापन देखोगे?",
-  noStarsTitle:"स्टार खत्म हो गए!", watchAdTitle:"छोटा विज्ञापन देखें",
-  doubleTitle:"इनाम दोगुना करें?", noThanks:"नहीं चाहिए",
-  watchAd:"विज्ञापन देखें", useStars:"स्टार इस्तेमाल करें", cancel:"रद्द करें",
+  adNotFinished:"विज्ञापन पूरा नहीं हुआ — कोई इनाम नहीं।", adNotReady:"विज्ञापन अभी तैयार नहीं है — थोड़ी देर में फिर कोशिश करें।",
+  watchAdTitle:"छोटा विज्ञापन देखें",
+  watchAd:"विज्ञापन देखें", cancel:"रद्द करें",
   getHint:"संकेत लेना है?", getTube:"extra ट्यूब जोड़नी है?", getUndo:"+5 वापस लेने हैं?",
-  hintFree:"संकेत मुफ़्त में!", freeHint:"मुफ़्त संकेत", tubeUsed:"इस लेवल में extra ट्यूब पहले से इस्तेमाल हो चुकी है।",
+  tubeUsed:"इस लेवल में extra ट्यूब पहले से इस्तेमाल हो चुकी है।",
   noUndo:"वापस नहीं बचे।", noHint:"कोई संकेत नहीं मिला।", stuck:"😶 कोई चाल नहीं बची!",
   stuckText:"अब कोई डालना संभव नहीं — एक चाल वापस लो या लेवल फिर से शुरू करो।", restart:"फिर से खेलें",
   dailyDone:"रोज़ की पज़ल हो गई! कल फिर आना।",
-  dailyClaimed:"रोज़ का इनाम मिल गया!", dailyDouble:"विज्ञापन से दोगुना करें?",
+  dailyClaimed:"रोज़ का इनाम मिल गया!",
   streak:"दिन की लकीर", locked:"बंद है — पहले पिछला लेवल पूरा करो।",
-  resetDone:"प्रोग्रेस रीसेट हो गई।", resetConfirm:"सारी प्रोग्रेस रीसेट करनी है? स्टार खो जाएँगे।",
-  needWatch:"आगे बढ़ने के लिए छोटा विज्ञापन देखो।", starsEarned:"स्टार मिले!",
+  resetDone:"प्रोग्रेस रीसेट हो गई।", resetConfirm:"सारी प्रोग्रेस रीसेट करनी है?",
+  needWatch:"आगे बढ़ने के लिए छोटा विज्ञापन देखो।",
   completed:"पूरा हुआ!", remoteLevels:"वेब से extra लेवल लोड हुए",
-  endlessDone:"अनंत लेवल पूरा हुआ!", newBest:"नया बेस्ट!"
+  claimReward:"इनाम लें",
+  exitLevelTitle:"लेवल छोड़ें?", exitLevelText:"इस लेवल को छोड़ें? इस लेवल की चालें खत्म हो जाएँगी।",
+  exitAppTitle:"Dripply बंद करें?", exitAppText:"ऐप बंद करें?",
+  exit:"बाहर जाएँ", resume:"जारी रखें",
 }};
 var lang = "en";
 function t(k){ return (I18N[lang] && I18N[lang][k]) || I18N.en[k] || k; }
@@ -830,15 +876,18 @@ function applyLang(){
   document.getElementById("langLabel").textContent = (lang === "en") ? "हिन्दी" : "English";
   var lh = document.getElementById("langLabelHome");
   if (lh) lh.textContent = (lang === "en") ? "हिन्दी" : "English";
-  updateDailyUI(); updateStarsUI(); renderHomeProgress();
+  updateDailyUI(); renderHomeProgress();
 }
 
 /* ================= Save ================= */
 var SAVE_KEY = "dripply-save-v1";
 var save = null;
+/* v6: no stars, no free hints — helpers are rewarded-ad only.
+   Old saves keep loading: any stored stars/freeHints fields are
+   simply never read again. undoPacks (ad-bought) carries over. */
 function defaultSave(){
   return { v:2, lang:"en", sound:true, music:true, theme:"ocean",
-    unlocked:1, stars:{}, starsSpent:0, freeHints:0, completed:{}, undoPacks:0,
+    unlocked:1, completed:{}, undoPacks:0,
     daily:{ lastClaim:"", streak:0 }, dailyDone:{}, remoteSeen:0 };
 }
 function loadSave(){
@@ -848,15 +897,15 @@ function loadSave(){
       var d = JSON.parse(raw);
       if (d && d.v === 2) return d;
       if (d && d.v === 1){
-        /* v5 migration: coins removed (stars only). Stars and progress
-           carry over. Old remote ids 61-66 are now new bundled hard
-           levels, so any stars/completed recorded for them are cleared. */
+        /* v1 -> v2 migration: coins removed in v5, stars removed in
+           v6 — neither carries over. Progress (unlocked/completed)
+           carries over. Old remote ids 61-66 are now new bundled hard
+           levels, so any completed recorded for them is cleared. */
         var m = defaultSave();
         m.lang = d.lang || "en";
         m.sound = (d.sound !== false); m.music = (d.music !== false);
         m.theme = d.theme || "ocean";
         m.unlocked = d.unlocked || 1;
-        if (d.stars) for (var k in d.stars){ var n = parseInt(k, 10); if (n < 61 || n > 66) m.stars[k] = d.stars[k]; }
         if (d.completed) for (var k2 in d.completed){ var n2 = parseInt(k2, 10); if (n2 < 61 || n2 > 66) m.completed[k2] = d.completed[k2]; }
         m.undoPacks = d.undoPacks || 0;
         m.daily = d.daily || { lastClaim:"", streak:0 };
@@ -870,17 +919,6 @@ function loadSave(){
 }
 function saveSave(){
   try{ window.localStorage.setItem(SAVE_KEY, JSON.stringify(save)); }catch(e){}
-}
-/* Spendable star balance: best stars per level minus stars spent.
-   Stars are only earned by beating a level with MORE stars than
-   before, so they are genuinely scarce — replaying a 3-star level
-   earns nothing new, and the only way to get more is to win harder
-   levels or watch an ad. */
-function totalStars(){
-  var tot = 0;
-  for (var k in save.stars) tot += save.stars[k] || 0;
-  tot -= (save.starsSpent || 0);
-  return tot < 0 ? 0 : tot;
 }
 save = loadSave();
 /* Banner eligibility (binding rule): the Home banner may only appear
@@ -1110,12 +1148,6 @@ function showToast(msg){
   if (toastTimer) clearTimeout(toastTimer);
   toastTimer = setTimeout(function(){ el.classList.remove("show"); }, 2200);
 }
-function updateStarsUI(){
-  var tot = totalStars();
-  var els = ["starsHome", "starsLevels", "starsGame", "starsShop"];
-  for (var i = 0; i < els.length; i++){ var e = document.getElementById(els[i]); if (e) e.textContent = tot; }
-  renderHomeProgress();
-}
 function renderHomeProgress(){
   var total = 80 + remoteLevels.length;
   var cur2 = Math.min(save.unlocked, total);
@@ -1125,8 +1157,6 @@ function renderHomeProgress(){
   if (txt) txt.textContent = cur2 + " / " + total;
   var fill = document.getElementById("homeProgressFill");
   if (fill) fill.style.width = Math.round((cur2 / total) * 100) + "%";
-  var st = document.getElementById("homeStarsText");
-  if (st){ st.textContent = "⭐ " + totalStars(); } /* v5: one star number everywhere — the spendable balance */
 }
 function confetti(){
   var colors = ["#e53935", "#ffee58", "#2e7d32", "#2979ff", "#f48fb1", "#ff9100"];
@@ -1158,7 +1188,7 @@ function confetti(){
    * Placements: banner on Home only once 4 levels are completed,
      interstitial after every 5th level completed, rewarded only when
      the player taps Watch Ad
-     (Hint / Extra Tube / Undos / Daily double).
+     (Hint / Extra Tube / Undos / Daily reward claim).
      Nothing is forced during play. testMode is false (release). */
 window.UNITY_CONFIG = {
   gameId: '800457104',
@@ -1425,14 +1455,26 @@ function levelDef(n){
       return { id: r.id, colors: r.colors, par: r.par, tubes: S.cloneState(r.tubes), kind: "remote" };
     }
   }
-  /* Endless: seeded shuffle + solver verify, fallback = permuted base layout. */
+  /* Endless (v6): same hard curve as bundled — try up to 5 times to
+     turn a solver-verified 2-empty deal into a 1-empty level with
+     one forward fill pour (see the level notes above LEVELS); if all
+     tries fail, fall back to the 2-empty deal, then to a permuted
+     base layout. */
   var colors = S.colorsForEndless(n);
-  var gen = S.generateLevel(colors, S.rng(700000 + n * 7919), { maxAttempts: 25, maxNodes: 120000 });
-  if (gen) return { id: n, colors: colors, par: gen.par, tubes: gen.tubes, kind: "endless" };
+  for (var t = 0; t < 5; t++){
+    var gen = S.generateLevel(colors, S.rng(700000 + n * 7919 + t * 104729), { maxAttempts: 25, maxNodes: 120000 });
+    if (!gen) continue;
+    var filled = S.fillOneEmpty(gen.tubes, S.rng(900000 + n * 7919 + t * 7919));
+    if (!filled) continue;
+    var res = S.solve(filled, { maxNodes: 120000 });
+    if (res.solved) return { id: n, colors: colors, par: Math.max(colors * 2, res.moves.length), tubes: filled, kind: "endless" };
+  }
+  var gen2 = S.generateLevel(colors, S.rng(700000 + n * 7919), { maxAttempts: 25, maxNodes: 120000 });
+  if (gen2) return { id: n, colors: colors, par: gen2.par, tubes: gen2.tubes, kind: "endless" };
   var base = BASE_LAYOUTS[String(colors)] || BASE_LAYOUTS["10"];
   var tubes = permuteLayout(base, S.rng(31000 + n * 104729));
-  var res = S.solve(tubes, { maxNodes: 120000 });
-  return { id: n, colors: colors, par: Math.max(colors * 2, res.moves.length), tubes: tubes, kind: "endless" };
+  var res2 = S.solve(tubes, { maxNodes: 120000 });
+  return { id: n, colors: colors, par: Math.max(colors * 2, res2.moves.length), tubes: tubes, kind: "endless" };
 }
 /* Permute tube order + relabel colours of a verified layout — the
    result is guaranteed solvable (same puzzle, different look). */
@@ -1581,7 +1623,10 @@ function startLevel(n, kind){
     def: def,
     state: S.cloneState(def.tubes),
     moves: 0, selected: -1, history: [],
-    undosLeft: FREE_UNDOS + (save.undoPacks > 0 ? 5 : 0),
+    /* v6: NO free undos — undo is rewarded-ad only from the first
+       use (doUndo prompts the ad when undosLeft is 0). A shop-bought
+       Undo Pack (ad) starts the level with 5 undos instead. */
+    undosLeft: (save.undoPacks > 0 ? 5 : 0),
     tubeUsed: false, animating: false
   };
   hintCache = null;
@@ -1590,8 +1635,9 @@ function startLevel(n, kind){
     (def.kind === "daily" ? t("daily") + " • " : (def.kind === "endless" ? "∞ " : "")) + t("level") + " " + (def.kind === "daily" ? "" : def.id);
   document.getElementById("movesPar").textContent = def.par;
   document.getElementById("movesNow").textContent = "0";
-  document.getElementById("starsNow").textContent = "—";
   document.getElementById("winModal").classList.add("hidden");
+  document.getElementById("winReward").textContent = "";
+  document.getElementById("btnWinReward").classList.add("hidden");
   document.getElementById("stuckModal").classList.add("hidden");
   renderBoard();
   updateActionUI();
@@ -1599,12 +1645,6 @@ function startLevel(n, kind){
   showScreen("game");
   startMusic();
 }
-function starsFor(moves, par){
-  if (moves <= par) return 3;
-  if (moves <= Math.ceil(par * 1.5)) return 2;
-  return 1;
-}
-
 /* ================= Board rendering ================= */
 var boardEl = document.getElementById("board");
 function tubeEl(i){
@@ -1843,7 +1883,6 @@ function doPour(from, to, count){
       cur.selected = -1;
       renderBoardSelection();
       document.getElementById("movesNow").textContent = cur.moves;
-      document.getElementById("starsNow").textContent = "★".repeat(starsFor(cur.moves, cur.def.par));
       var fa = dstEl.querySelector(".fill-anim"); if (fa) fa.remove();
       paintSlots();
       srcEl.style.transition = "transform .35s ease";
@@ -1870,20 +1909,18 @@ function renderBoardSelection(){
 }
 
 /* ================= Win ================= */
-/* Win (v5, stars only): no coins are awarded. Stars are the only
-   currency — 1-3 by moves vs par. A daily win grants 1 free Hint. */
+/* Win (v6): no stars, no coins, no free Hint. Completing a level
+   only records progress. A daily win offers ONE rewarded ad for
+   +1 Undo Pack (the Claim Reward button); nothing is granted
+   without a completed ad. */
+var dailyRewardClaimed = false;
 function onWin(){
   sfxWin();
   confetti();
-  var stars = starsFor(cur.moves, cur.def.par);
-  var isNew = false;
   if (cur.def.kind === "bundled"){
-    var prev = save.stars[cur.def.id] || 0;
-    if (stars > prev){ save.stars[cur.def.id] = stars; isNew = true; }
     save.completed[cur.def.id] = 1;
     if (cur.def.id >= save.unlocked && cur.def.id < 80 + 1000) save.unlocked = Math.max(save.unlocked, cur.def.id + 1);
   } else if (cur.def.kind === "remote"){
-    save.stars[cur.def.id] = Math.max(save.stars[cur.def.id] || 0, stars);
     save.completed[cur.def.id] = 1;
     save.unlocked = Math.max(save.unlocked, cur.def.id + 1);
   } else if (cur.def.kind === "endless"){
@@ -1891,16 +1928,16 @@ function onWin(){
     save.unlocked = Math.max(save.unlocked, cur.def.id + 1);
   } else if (cur.def.kind === "daily"){
     save.dailyDone[cur.def.dateKey] = 1;
-    save.freeHints++;
   }
   saveSave();
-  updateStarsUI();
-  document.getElementById("winStars").textContent = "★".repeat(stars) + "☆".repeat(3 - stars);
+  renderHomeProgress();
   document.getElementById("winText").textContent =
-    (cur.def.kind === "daily" ? t("dailyChallenge") : t("level") + " " + cur.def.id) + " — " +
-    t("completed") + (isNew ? " " + t("newBest") : "");
-  document.getElementById("winReward").textContent =
-    (cur.def.kind === "daily") ? ("💡 +1 " + t("freeHint")) : ("★".repeat(stars) + " " + t("starsEarned"));
+    (cur.def.kind === "daily" ? t("dailyChallenge") : t("level") + " " + cur.def.id) + " — " + t("completed");
+  document.getElementById("winReward").textContent = "";
+  /* Daily win: Claim Reward button (ad-only, +1 Undo Pack). Hidden
+     for normal levels and after the reward is claimed once. */
+  dailyRewardClaimed = false;
+  document.getElementById("btnWinReward").classList.toggle("hidden", cur.def.kind !== "daily");
   document.getElementById("btnNext").style.display = (cur.def.kind === "daily") ? "none" : "";
   document.getElementById("winModal").classList.remove("hidden");
   maybeShowInterstitial(function(){ /* ad shown/dismissed; win modal stays */ });
@@ -1922,23 +1959,26 @@ function checkStuck(){
      reachable states can be dead ends). Same way out as stuck: Undo
      or Restart. The solver is cheap here (<=367 nodes / <=7ms across
      226 tested states), so this check runs after every pour. Without
-     it the player could also waste a Hint (30 stars) on a state that
+     it the player could also waste a Hint (ad) on a state that
      has no hint to give. */
   var res = S.solve(cur.state, { maxNodes: 200000 });
   if (!res.solved) onStuck();
 }
 
 /* ================= Undo / Hint / Extra tube ================= */
+/* v6: every helper is rewarded-ad only — the count labels show
+   "(🎥)" when no free uses are banked. Undo shows its banked count
+   (from a shop Undo Pack) when > 0, otherwise the ad icon. */
 function updateActionUI(){
-  document.getElementById("undoLeft").textContent = cur ? ("(" + cur.undosLeft + " " + t("undo").toLowerCase() + ")") : "";
-  document.getElementById("hintCost").textContent = "(" + HINT_STARS + " ⭐ / 🎥)" + (save.freeHints > 0 ? " • 💡" + save.freeHints : "");
+  document.getElementById("undoLeft").textContent = cur ? ((cur.undosLeft > 0) ? ("(" + cur.undosLeft + " " + t("undo").toLowerCase() + ")") : "(🎥)") : "";
+  document.getElementById("hintCost").textContent = "(🎥)";
   document.getElementById("tubeCost").textContent = "(🎥)";
 }
 function doUndo(){
   if (!cur || cur.animating) return;
   if (!cur.history.length){ showToast(t("noUndo")); return; }
   if (cur.undosLeft <= 0){
-    askAdOnly(t("getUndo"), function(){
+    askAdOnly("getUndo", function(){
       cur.undosLeft += 5; updateActionUI(); applyUndo();
     });
     return;
@@ -1963,17 +2003,11 @@ function applyUndo(){
    the player makes the hinted move (see doPour); any other move
    invalidates it and the next hint re-solves. */
 var hintCache = null; /* {key, moves} */
-/* Hint (v5): a free Hint from the daily reward is used first;
-   otherwise it costs 30 stars, or a rewarded ad. Stars are scarce,
-   so most players will watch the ad. */
+/* Hint (v6): rewarded-ad only — no free Hints, no stars. The ad
+   must complete before the hinted move is shown. */
 function doHint(){
   if (!cur || cur.animating) return;
-  if (save.freeHints > 0){
-    save.freeHints--; saveSave(); updateStarsUI(); updateActionUI();
-    showHintMove();
-    return;
-  }
-  askStarsOrAd(t("getHint"), HINT_STARS, function(){ showHintMove(); });
+  askAdOnly("getHint", function(){ showHintMove(); });
 }
 function showHintMove(){
   var key = S.stateKey(cur.state);
@@ -1995,7 +2029,7 @@ function showHintMove(){
 function doExtraTube(){
   if (!cur || cur.animating) return;
   if (cur.tubeUsed){ showToast(t("tubeUsed")); return; }
-  askAdOnly(t("getTube"), function(){
+  askAdOnly("getTube", function(){
     cur.tubeUsed = true;
     hintCache = null;
     cur.history.push(S.cloneState(cur.state));
@@ -2005,25 +2039,15 @@ function doExtraTube(){
     sfxReward();
   });
 }
-/* Pay with stars if possible; otherwise offer the rewarded ad.
-   Stars are scarce (earned only by beating levels with more stars),
-   so players who run out must watch an ad. */
-function askStarsOrAd(question, cost, onPaid){
-  if (totalStars() >= cost){
-    save.starsSpent += cost; saveSave(); updateStarsUI(); updateActionUI();
-    onPaid();
-    return;
-  }
-  showChoiceModal({icon:"💡", title:"noStarsTitle", text:"noStars", yes:"watchAd", yesIcon:"▶ ", no:"cancel",
-    onYes:function(){ watchRewardedAd(function(){ onPaid(); }); }});
-}
-/* Watch Ad only (no star option): Extra Tube and extra Undo. */
-function askAdOnly(question, onPaid){
-  showChoiceModal({icon:"🎥", title:"watchAdTitle", text:"needWatch", yes:"watchAd", yesIcon:"▶ ", no:"cancel",
+/* Watch Ad only (v6): Hint, Extra Tube and extra Undo — there is
+   no stars option any more. questionKey is an i18n key and is shown
+   as the modal text, so the player sees what the ad is for. */
+function askAdOnly(questionKey, onPaid){
+  showChoiceModal({icon:"🎥", title:"watchAdTitle", text:questionKey, yes:"watchAd", yesIcon:"▶ ", no:"cancel",
     onYes:function(){ watchRewardedAd(function(){ onPaid(); }); }});
 }
 /* Designed 3D choice modal — replaces every native confirm() in the
-   game (Hint no-stars, Extra Tube/Undo ad-only, Daily double, Reset).
+   game (Hint/Extra Tube/Undo ad-only, Daily reward, Reset, Exit).
    Behaviour is identical to the old confirms: Yes runs onYes (for ads
    the reward is granted ONLY when Unity reports it earned — see
    watchRewardedAd); No runs onNo, or nothing when no onNo is given. */
@@ -2055,7 +2079,6 @@ function renderLevels(){
     b.className = "lv" + (save.completed[n] ? " done" : "") + (locked ? " locked" : "") + (isRemote ? " remote" : "");
     b.textContent = n;
     if (isRemote){ var tg = document.createElement("span"); tg.className = "tag"; tg.textContent = "WEB"; b.appendChild(tg); }
-    if (save.stars[n]){ var st = document.createElement("span"); st.className = "st"; st.textContent = "★".repeat(save.stars[n]); b.appendChild(st); }
     if (locked) b.textContent = "🔒";
     (function (num, isLocked){
       b.addEventListener("click", function(){
@@ -2083,33 +2106,33 @@ function nextStreak(){
   var yKey = y.getFullYear() + "-" + (y.getMonth() + 1) + "-" + y.getDate();
   return (save.daily.lastClaim === yKey) ? (save.daily.streak || 0) + 1 : 1;
 }
-/* Daily reward (v5, stars-only): 1 free Hint, +1 per streak day
-   after the first, capped at 3. Double with ad = twice the hints. */
+/* Daily reward (v6): Undo Packs, rewarded-ad only — no free
+   hints. 1 Undo Pack per day, 2 from a 2+ day streak. The claim
+   button always asks for one short ad; nothing is granted free. */
 function dailyAmount(){
-  return Math.min(3, nextStreak());
+  return nextStreak() >= 2 ? 2 : 1;
 }
 function updateDailyUI(){
   var key = todayKey();
   var claimed = save.daily.lastClaim === key;
-  document.getElementById("dailyAmt").textContent = "💡 " + dailyAmount() + " " + t("freeHint");
+  document.getElementById("dailyAmt").textContent = "↩️ " + dailyAmount() + " " + t("undoPack");
   document.getElementById("dailyInfo").textContent =
     claimed ? t("dailyClaimed") : ((save.daily.streak || 0) + " " + t("streak"));
   document.getElementById("btnDailyClaim").style.display = claimed ? "none" : "";
   var done = !!save.dailyDone[key];
   document.getElementById("dailyState").textContent = done ? "✅ " + t("completed") : t("playDaily");
 }
-function claimDaily(doubleIt){
+function claimDaily(){
   var key = todayKey();
   if (save.daily.lastClaim === key) return;
   var amt = dailyAmount();
-  if (doubleIt) amt *= 2;
   save.daily.streak = nextStreak();
-  save.freeHints += amt;
+  save.undoPacks = (save.undoPacks || 0) + amt;
   save.daily.lastClaim = key;
   saveSave();
-  updateStarsUI(); updateDailyUI();
+  updateDailyUI();
   sfxReward();
-  showToast("💡 +" + amt + " " + t("freeHint") + " • " + t("dailyClaimed"));
+  showToast("↩️ +" + amt + " " + t("undoPack") + " • " + t("dailyClaimed"));
 }
 
 /* ================= Wiring ================= */
@@ -2118,19 +2141,18 @@ function bind(id, fn){
   if (el) el.addEventListener("click", function(){ audio(); sfxClick(); fn(); });
 }
 bind("btnPlay", function(){ startLevel(save.unlocked, "bundled"); });
-bind("btnLevels", function(){ renderLevels(); updateStarsUI(); if (window.UnityAdsNative) window.UnityAdsNative.showHomeBanner(); showScreen("levels"); });
-bind("btnLevelsBack", function(){ updateStarsUI(); showScreen("home"); });
+bind("btnLevels", function(){ renderLevels(); if (window.UnityAdsNative) window.UnityAdsNative.showHomeBanner(); showScreen("levels"); });
+bind("btnLevelsBack", function(){ renderHomeProgress(); showScreen("home"); });
 bind("btnEndless", function(){ startLevel(Math.max(save.unlocked, 97), "endless"); });
 bind("btnDaily", function(){
   if (save.dailyDone[todayKey()]){ showToast(t("dailyDone")); return; }
   startLevel(0, "daily");
 });
 bind("btnDailyClaim", function(){
-  showChoiceModal({icon:"🎁", title:"doubleTitle", text:"dailyDouble", yes:"watchAd", yesIcon:"▶ ", no:"noThanks",
-    onYes:function(){ watchRewardedAd(function(){ claimDaily(true); }); },
-    onNo:function(){ claimDaily(false); }});
+  showChoiceModal({icon:"🎁", title:"dailyReward", text:"needWatch", yes:"watchAd", yesIcon:"▶ ", no:"cancel",
+    onYes:function(){ watchRewardedAd(function(){ claimDaily(); }); }});
 });
-bind("btnGameHome", function(){ updateStarsUI(); updateDailyUI(); showScreen("home"); if (window.UnityAdsNative) window.UnityAdsNative.showHomeBanner(); });
+bind("btnGameHome", function(){ renderHomeProgress(); updateDailyUI(); showScreen("home"); if (window.UnityAdsNative) window.UnityAdsNative.showHomeBanner(); });
 bind("btnRestart", function(){ if (cur) startLevel(cur.def.kind === "daily" ? 0 : cur.def.id, cur.def.kind); });
 bind("btnUndo", function(){ doUndo(); });
 bind("btnHint", function(){ doHint(); });
@@ -2140,9 +2162,19 @@ bind("btnNext", function(){
   var next = (currentKind === "endless") ? currentLevelNum + 1 : currentLevelNum + 1;
   startLevel(next, currentKind === "endless" ? "endless" : "bundled");
 });
+bind("btnWinReward", function(){
+  if (dailyRewardClaimed) return;
+  watchRewardedAd(function(){
+    dailyRewardClaimed = true;
+    save.undoPacks = (save.undoPacks || 0) + 1; saveSave();
+    document.getElementById("btnWinReward").classList.add("hidden");
+    document.getElementById("winReward").textContent = "↩️ +1 " + t("undoPack");
+    sfxReward();
+  });
+});
 bind("btnWinHome", function(){
   document.getElementById("winModal").classList.add("hidden");
-  updateStarsUI(); updateDailyUI(); showScreen("home");
+  renderHomeProgress(); updateDailyUI(); showScreen("home");
   if (window.UnityAdsNative) window.UnityAdsNative.showHomeBanner();
 });
 bind("btnStuckUndo", function(){
@@ -2163,7 +2195,7 @@ bind("btnChoiceNo", function(){
 });
 bind("btnSettings", function(){ showScreen("settings"); });
 bind("btnSettingsBack", function(){ showScreen("home"); });
-bind("btnShop", function(){ updateStarsUI(); showScreen("shop"); });
+bind("btnShop", function(){ showScreen("shop"); });
 bind("btnShopBack", function(){ showScreen("settings"); });
 bind("btnLang", function(){
   lang = (lang === "en") ? "hi" : "en";
@@ -2185,7 +2217,7 @@ function doReset(){
   save.lang = keepLang; save.theme = keepTheme;
   lang = keepLang;
   saveSave();
-  applyLang(); setTheme(keepTheme); updateStarsUI(); updateDailyUI();
+  applyLang(); setTheme(keepTheme); updateDailyUI();
   showToast(t("resetDone"));
   showScreen("home");
 }
@@ -2225,27 +2257,106 @@ for (var ti = 0; ti < themeBtns.length; ti++){
     setTheme(this.getAttribute("data-theme-btn"));
   });
 }
-/* Shop (v5, stars only): a Hint costs 30 stars (stored as a free Hint
-   for a later level) or a rewarded ad; Undo Pack is ad only. */
+/* Shop (v6): ad only — the Undo Pack is bought with one rewarded
+   ad and gives +5 undos at the start of the next level played. */
 var buyBtns = document.querySelectorAll("[data-buy]");
 for (var bi = 0; bi < buyBtns.length; bi++){
   buyBtns[bi].addEventListener("click", function(){
     audio(); sfxClick();
     var kind = this.getAttribute("data-buy");
-    if (kind === "hint"){
-      if (totalStars() >= HINT_STARS){
-        save.starsSpent += HINT_STARS;
-        save.freeHints++;
-        saveSave(); updateStarsUI();
-        showToast("💡 +1 " + t("freeHint"));
-      } else {
-        watchRewardedAd(function(){ save.freeHints++; saveSave(); updateStarsUI(); showToast("💡 " + t("hintFree")); });
-      }
-    } else if (kind === "undo"){
+    if (kind === "undo"){
       watchRewardedAd(function(){ save.undoPacks++; saveSave(); showToast("↩️ +5 " + t("undo")); });
     }
   });
 }
+
+/* ================= Back button (v6) ================= */
+/* Android back button: the app must NEVER exit on one back press
+   (v5 bug — one press during gameplay closed the whole app to the
+   phone home screen with no prompt). Native: Capacitor App
+   backButton listener. Web (Pages test site): a history pushState
+   trap runs the same logic instead of navigating away.
+   - A modal is open -> back closes the top modal.
+   - Game screen -> Exit/Resume modal (Exit = app Home screen).
+   - Home screen -> Exit/Resume modal (Exit = close the app).
+   - Levels/Settings -> Home. Shop -> Settings.
+   - Net-gate overlay showing -> ignore (the gate must stay). */
+var webExitAllowed = false;
+function currentScreen(){
+  var screens = ["home", "levels", "game", "settings", "shop"];
+  for (var i = 0; i < screens.length; i++){
+    var el = document.getElementById("screen-" + screens[i]);
+    if (el && el.classList.contains("active")) return screens[i];
+  }
+  return "home";
+}
+function anyModalOpen(){
+  var ids = ["winModal", "stuckModal", "choiceModal", "updateModal"];
+  for (var i = 0; i < ids.length; i++){
+    var el = document.getElementById(ids[i]);
+    if (el && !el.classList.contains("hidden")) return ids[i];
+  }
+  return null;
+}
+function closeTopModal(){
+  var id = anyModalOpen();
+  if (!id) return false;
+  if (id === "choiceModal"){ choiceYesCb = null; choiceNoCb = null; hideChoiceModal(); }
+  else document.getElementById(id).classList.add("hidden");
+  return true;
+}
+function exitToHome(){
+  document.getElementById("winModal").classList.add("hidden");
+  document.getElementById("stuckModal").classList.add("hidden");
+  renderHomeProgress(); updateDailyUI(); showScreen("home");
+  if (window.UnityAdsNative) window.UnityAdsNative.showHomeBanner();
+}
+function exitApp(){
+  var capApp = (window.Capacitor && window.Capacitor.Plugins && window.Capacitor.Plugins.App) || null;
+  if (capApp && capApp.exitApp){ capApp.exitApp(); return; }
+  /* Web fallback: allow the trapped history entry to be left. */
+  webExitAllowed = true;
+  history.back();
+}
+function handleBackButton(){
+  var gate = document.getElementById("netGate");
+  if (gate && gate.classList.contains("show")) return;
+  if (closeTopModal()) return;
+  var screen = currentScreen();
+  if (screen === "game"){
+    showChoiceModal({icon:"🚪", title:"exitLevelTitle", text:"exitLevelText", yes:"exit", no:"resume",
+      onYes:function(){ exitToHome(); }});
+  } else if (screen === "home"){
+    showChoiceModal({icon:"🚪", title:"exitAppTitle", text:"exitAppText", yes:"exit", no:"resume",
+      onYes:function(){ exitApp(); }});
+  } else if (screen === "levels" || screen === "settings"){
+    renderHomeProgress(); showScreen("home");
+  } else if (screen === "shop"){
+    showScreen("settings");
+  }
+}
+/* Native (Capacitor APK): the backButton listener fires instead of
+   the system default (which would close the app). Guarded so the
+   Pages/web build never touches the plugin. */
+(function(){
+  var capApp = (window.Capacitor && window.Capacitor.Plugins && window.Capacitor.Plugins.App) || null;
+  if (capApp && capApp.addListener){
+    capApp.addListener("backButton", function(){ handleBackButton(); });
+    return;
+  }
+  /* Web fallback: trap one history entry on boot. A back press pops
+     it and runs the same logic, then re-pushes the trap — the page
+     never navigates away unless the user confirmed Exit
+     (webExitAllowed). */
+  try {
+    history.pushState({ dripplyTrap: 1 }, "");
+    window.addEventListener("popstate", function(){
+      if (webExitAllowed) return;
+      handleBackButton();
+      try { history.pushState({ dripplyTrap: 1 }, ""); } catch (e) {}
+    });
+  } catch (e) {}
+})();
 
 /* ================= Boot ================= */
 applyLang();
@@ -2253,7 +2364,7 @@ setTheme(save.theme || "ocean");
 document.getElementById("tglSound").classList.toggle("on", soundOn);
 document.getElementById("tglMusic").classList.toggle("on", musicOn);
 syncMuteUI();
-updateStarsUI();
+renderHomeProgress();
 updateDailyUI();
 document.addEventListener("click", function(){ startMusic(); }, { once: true });
 if (window.UnityAdsNative) window.UnityAdsNative.init();
