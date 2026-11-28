@@ -1341,14 +1341,32 @@ function maybeShowInterstitial(done){
   }
 }
 
-/* ================= Daily notification (once a day) =================
-   APK only, via Capacitor LocalNotifications. On first open (a few
-   seconds after load) it asks for permission; if granted it schedules
-   ONE daily notification at 10:00 AM local time. The flag makes sure
-   this is scheduled only once. Web preview: harmless no-op. */
+/* ================= Daily notification v2 — rotating messages + app icon =================
+   APK only, via Capacitor LocalNotifications.
+   v1 scheduled ONE fixed message forever and set no icon, so Android fell back
+   to the launcher icon as the small icon and showed the white-circle "!"
+   instead of the app icon. v2 fixes both:
+   - cancels the old v1 notification (id 1) and any stale v2 ids (1-7), then
+     schedules the next 7 days at 10:00 AM, one notification per day, body
+     rotating through 3 messages (day-of-year % 3);
+   - smallIcon "ic_stat_icon" = white silhouette in res/drawable-*
+     (the small-icon slot only shows a white silhouette — colour is stripped);
+     largeIcon "ic_notif_large" = full-colour app icon in res/drawable-*,
+     shown big in the notification shade.
+   Refreshes at most once a day (localStorage flag), so the 7-day window never
+   runs dry while the app is opened at least once a week. Web preview:
+   harmless no-op (plugin absent). */
 (function () {
   try {
-    if (window.localStorage.getItem('dripply-notif-scheduled-v1')) return;
+    var MSGS = [
+      "आज की पज़ल सुलझाओ, दिमाग चलाओ 💧",
+      "आज का डेली पज़ल तैयार है — खेलने आओ 💧",
+      "पानी सही ट्यूब में डालो, लेवल पार करो 💧"
+    ];
+    var FLAG = 'dripply-notif-v2-ts';
+    var last = 0;
+    try { last = parseInt(window.localStorage.getItem(FLAG) || '0', 10) || 0; } catch (e) {}
+    if (Date.now() - last < 24 * 60 * 60 * 1000) return;
     setTimeout(function () {
       try {
         var Cap = window.Capacitor;
@@ -1357,16 +1375,32 @@ function maybeShowInterstitial(done){
         var LN = Cap.Plugins.LocalNotifications;
         LN.requestPermissions().then(function (res) {
           var granted = res && (res.display === 'granted');
-          if (!granted) return;
-          var notif = {
-            id: 1,
-            title: "Dripply",
-            body: "Dripply — aaj ka puzzle solve karo! 💧",
-            schedule: { on: { hour: 10, minute: 0 }, repeats: true, allowWhileIdle: true }
-          };
-          return LN.schedule({ notifications: [notif] });
-        }).then(function () {
-          try { window.localStorage.setItem('dripply-notif-scheduled-v1', '1'); } catch (e) {}
+          if (!granted) return null;
+          var ids = [];
+          for (var k = 1; k <= 7; k++) ids.push({ id: k });
+          var doy = function (d) { return Math.floor((d - new Date(d.getFullYear(), 0, 0)) / 86400000); };
+          var list = [];
+          var now = new Date();
+          for (var i = 0; i < 7; i++) {
+            var d = new Date(now.getFullYear(), now.getMonth(), now.getDate() + i, 10, 0, 0);
+            if (d.getTime() <= now.getTime()) continue;
+            list.push({
+              id: list.length + 1,
+              title: "Dripply",
+              body: MSGS[doy(d) % MSGS.length],
+              smallIcon: "ic_stat_icon",
+              largeIcon: "ic_notif_large",
+              iconColor: "#00ACC1",
+              schedule: { at: d, allowWhileIdle: true }
+            });
+          }
+          return LN.cancel({ notifications: ids }).catch(function () {}).then(function () {
+            if (!list.length) return null;
+            return LN.schedule({ notifications: list });
+          });
+        }).then(function (r) {
+          if (r === null || r === undefined) return;
+          try { window.localStorage.setItem(FLAG, String(Date.now())); } catch (e) {}
         }).catch(function () {});
       } catch (e) {}
     }, 3000);
